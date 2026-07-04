@@ -1,26 +1,239 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Mang Crinkle palette (from menu sample) */
+  --color-mang-cream: #f5e8c8;
+  --color-mang-cream-light: #fffaf0;
+  --color-mang-tan: #e2cfa3;
+  --color-mang-tan-dark: #d4bc8a;
+  --color-mang-brown: #3d2418;
+  --color-mang-brown-mid: #5c3d2e;
+  --color-mang-orange: #e8a040;
+  --color-mang-orange-bright: #f5b84a;
+  --color-mang-purple: #8b6cb5;
+
+  /* Legacy aliases → mang colours */
+  --color-brand-red: #3d2418;
+  --color-brand-red-dark: #2a180f;
+  --color-brand-cream: #f5e8c8;
+  --color-brand-yellow: #e8a040;
+  --color-brand-orange: #e8a040;
+  --color-brand-dark: #3d2418;
+
+  --font-display: "Bebas Neue", sans-serif;
+  --font-body: "Open Sans", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-mang-cream);
+  color: var(--color-mang-brown);
+  font-family: var(--font-body);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.cart-slide-in {
+  animation: slide-in-right 0.3s ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+/* ── 3D Push Buttons ── */
+.push-btn {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  text-decoration: none;
+  color: inherit;
+}
+
+.push-btn::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  height: 100%;
+  width: 100%;
+  border-radius: 9999px;
+  background-color: #3d2418;
+  border: 1px solid #3d2418;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.push-btn__surface {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 9999px;
+  padding: 0.58rem 1.35rem;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+  background: #fffaf0;
+  color: #3d2418;
+  box-shadow: inset 0 0 0 1px #3d2418;
+  transition: transform 0.1s cubic-bezier(0.215, 0.61, 0.355, 1);
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .push-btn:hover .push-btn__surface {
+    transform: translate(3px, 3px);
+  }
+
+  .push-btn--pop:hover .push-btn__surface {
+    transform: translate(-1.5px, -1.5px);
+  }
+}
+
+.push-btn--red .push-btn__surface,
+.push-btn--brown .push-btn__surface {
+  background: #e8a040;
+  color: #3d2418;
+}
+
+.push-btn--red::after,
+.push-btn--brown::after {
+  background-color: #3d2418;
+  border-color: #3d2418;
+}
+
+.push-btn--yellow .push-btn__surface {
+  background: #f5b84a;
+  color: #3d2418;
+}
+
+.push-btn--white .push-btn__surface {
+  background: #fffaf0;
+  color: #3d2418;
+}
+
+.push-btn--outline .push-btn__surface {
+  background: transparent;
+  color: #fffaf0;
+  box-shadow: inset 0 0 0 2px #fffaf0;
+}
+
+.push-btn--outline::after {
+  background-color: transparent;
+  border-color: #fffaf0;
+}
+
+.push-btn--outline-dark .push-btn__surface {
+  background: transparent;
+  color: #3d2418;
+  box-shadow: inset 0 0 0 2px #3d2418;
+}
+
+.push-btn--full {
+  display: block;
+  width: 100%;
+}
+
+.push-btn--full .push-btn__surface {
+  width: 100%;
+  display: block;
+  white-space: normal;
+}
+
+.push-btn--lg .push-btn__surface {
+  padding: 0.75rem 2.5rem;
+  font-size: 1.125rem;
+  letter-spacing: 0.1em;
+}
+
+.push-btn--sm .push-btn__surface {
+  padding: 0.4rem 1rem;
+  font-size: 0.8125rem;
+}
+
+.push-btn:disabled,
+.push-btn[disabled] {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ── Mang Crinkle typography ── */
+.menu-logo {
+  font-family: var(--font-display);
+  color: #e8a040;
+  -webkit-text-stroke: 2px #3d2418;
+  paint-order: stroke fill;
+  text-shadow:
+    3px 3px 0 #3d2418,
+    4px 4px 0 rgba(61, 36, 24, 0.25);
+  letter-spacing: 0.02em;
+}
+
+.menu-logo-sub {
+  font-family: var(--font-display);
+  color: #e8a040;
+  -webkit-text-stroke: 1.5px #3d2418;
+  text-shadow: 2px 2px 0 #3d2418;
+}
+
+.menu-title-3d {
+  font-family: var(--font-display);
+  color: #c4956a;
+  -webkit-text-stroke: 2px #3d2418;
+  text-shadow:
+    2px 2px 0 #3d2418,
+    3px 3px 0 rgba(61, 36, 24, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.menu-box {
+  box-shadow: 4px 4px 0 rgba(61, 36, 24, 0.12);
 }
