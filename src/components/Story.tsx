@@ -1,4 +1,5 @@
 import Button from "@/components/Button";
+import { PLACEHOLDERS } from "@/lib/images";
 
 const storyQuotes = [
   "Every bite deserves a little more crinkle",
@@ -30,8 +31,7 @@ export default function Story() {
             <div
               className="aspect-[4/5] rounded-2xl bg-cover bg-center border-2 border-mang-orange/40"
               style={{
-                backgroundImage:
-                  "url(https://images.unsplash.com/photo-1558961363-fa8fdf64db35?w=600&h=750&fit=crop)",
+                backgroundImage: `url(${PLACEHOLDERS.cookie})`,
               }}
             />
           </div>

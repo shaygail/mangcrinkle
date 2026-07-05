@@ -1,9 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { Product } from "@/types";
 import { isDrink } from "@/lib/cart";
+import { getProductPlaceholder } from "@/lib/images";
 import { useCart } from "@/context/CartContext";
+import ProductImage from "@/components/ProductImage";
 import Button from "@/components/Button";
 
 interface ProductCardProps {
@@ -16,9 +17,10 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <article className="group flex flex-col bg-mang-tan border-2 border-mang-brown rounded-2xl overflow-hidden shadow-[3px_3px_0_rgba(74,44,26,0.2)]">
       <div className="relative aspect-square overflow-hidden bg-mang-cream">
-        <Image
+        <ProductImage
           src={product.image}
           alt={product.name}
+          fallback={getProductPlaceholder(product)}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-300"
           sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"

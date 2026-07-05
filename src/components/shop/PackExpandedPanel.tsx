@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
 import { Product } from "@/types";
+import { getProductPlaceholder } from "@/lib/images";
+import ProductImage from "@/components/ProductImage";
 import PackCustomizerForm from "./PackCustomizerForm";
 
 interface PackExpandedPanelProps {
@@ -30,9 +31,10 @@ export default function PackExpandedPanel({
       <div className="grid lg:grid-cols-2 gap-8 lg:gap-14 items-start">
         {/* Product image */}
         <div className="relative aspect-[4/5] bg-mang-tan overflow-hidden border border-mang-brown/15">
-          <Image
+          <ProductImage
             src={pack.image}
             alt={pack.name}
+            fallback={getProductPlaceholder(pack)}
             fill
             className="object-cover"
             sizes="(max-width: 1024px) 100vw, 50vw"

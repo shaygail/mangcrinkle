@@ -1,11 +1,11 @@
 import { Product } from "@/types";
+import { PLACEHOLDERS } from "@/lib/images";
 
-const cookieImg =
-  "https://images.unsplash.com/photo-1558961363-fa8fdf64db35?w=400&h=400&fit=crop";
-const drinkImg =
-  "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=400&fit=crop";
-const icedImg =
-  "https://images.unsplash.com/photo-1517701590429-b2bdb35f5989?w=400&h=400&fit=crop";
+const cookieImg = PLACEHOLDERS.cookie;
+const drinkImg = PLACEHOLDERS.drinkHot;
+const icedImg = PLACEHOLDERS.drinkIced;
+const packImg = PLACEHOLDERS.pack;
+const lavaImg = PLACEHOLDERS.lava;
 
 const drinkNote = "Whole milk included. Alternative milk +$1.00 in cart.";
 
@@ -96,7 +96,7 @@ export const products: Product[] = [
     name: "3 Pack Crinkles",
     description: "Mix & match any flavours. Premium +$0.50, Signature +$1.00 per crinkle.",
     price: 13.0,
-    image: cookieImg,
+    image: packImg,
     category: "crinkle-pack",
   },
   {
@@ -104,7 +104,7 @@ export const products: Product[] = [
     name: "6 Pack Crinkles",
     description: "Mix & match any flavours. Premium +$0.50, Signature +$1.00 per crinkle.",
     price: 25.0,
-    image: cookieImg,
+    image: packImg,
     category: "crinkle-pack",
   },
   {
@@ -112,7 +112,7 @@ export const products: Product[] = [
     name: "12 Pack Crinkles",
     description: "Mix & match any flavours. Premium +$0.50, Signature +$1.00 per crinkle.",
     price: 48.0,
-    image: cookieImg,
+    image: packImg,
     category: "crinkle-pack",
   },
   // Lava crinkles
@@ -121,7 +121,7 @@ export const products: Product[] = [
     name: "Lava Crinkle — Each",
     description: "Rich, gooey and made to melt.",
     price: 6.5,
-    image: cookieImg,
+    image: lavaImg,
     category: "lava",
   },
   {
@@ -129,7 +129,7 @@ export const products: Product[] = [
     name: "Lava Crinkle — 3 Pack",
     description: "Rich, gooey and made to melt.",
     price: 19.0,
-    image: cookieImg,
+    image: lavaImg,
     category: "lava",
   },
   {
@@ -137,7 +137,7 @@ export const products: Product[] = [
     name: "Lava Crinkle — 6 Pack",
     description: "Rich, gooey and made to melt.",
     price: 38.0,
-    image: cookieImg,
+    image: lavaImg,
     category: "lava",
   },
   {
@@ -145,7 +145,7 @@ export const products: Product[] = [
     name: "Lava Crinkle — 12 Pack",
     description: "Pre-order required. Please allow 2–3 days.",
     price: 76.0,
-    image: cookieImg,
+    image: lavaImg,
     category: "lava",
     badge: "Pre-order",
     note: "Pre-order required. Allow 2–3 days.",

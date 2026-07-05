@@ -1,11 +1,12 @@
 import { Recipe } from "@/types";
 
+import { PLACEHOLDERS } from "@/lib/images";
+
 export const recipes: Recipe[] = [
   {
     id: "blt",
     title: "BLT with Terry Ho's Yum Yum Sauce",
-    image:
-      "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=600&h=400&fit=crop",
+    image: PLACEHOLDERS.cookie,
     prep: "10 min",
     cook: "10 min",
     serves: "1-2",
@@ -15,8 +16,7 @@ export const recipes: Recipe[] = [
   {
     id: "salmon-bowl",
     title: "Salmon Bowl with Terry Ho's Yum Yum Sauce",
-    image:
-      "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop",
+    image: PLACEHOLDERS.cookie,
     prep: "15 min",
     cook: "15 min",
     serves: "2",
@@ -26,8 +26,7 @@ export const recipes: Recipe[] = [
   {
     id: "shrimp-fried-rice",
     title: "Shrimp Fried Rice with Terry Ho's Yum Yum Sauce",
-    image:
-      "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=600&h=400&fit=crop",
+    image: PLACEHOLDERS.cookie,
     prep: "15 min",
     cook: "15 min",
     serves: "2-3",
@@ -37,8 +36,7 @@ export const recipes: Recipe[] = [
   {
     id: "hibachi-vegetables",
     title: "Hibachi Vegetables with Terry Ho's Yum Yum Sauce",
-    image:
-      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&h=400&fit=crop",
+    image: PLACEHOLDERS.cookie,
     prep: "10 min",
     cook: "10 min",
     serves: "3-4",

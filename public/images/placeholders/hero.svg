@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" fill="none" preserveAspectRatio="xMidYMid slice">
+  <rect width="1920" height="1080" fill="#f5e8c8"/>
+  <circle cx="480" cy="420" r="120" fill="#e2cfa3" opacity="0.6"/>
+  <circle cx="960" cy="540" r="180" fill="#e2cfa3" opacity="0.75"/>
+  <circle cx="1440" cy="480" r="140" fill="#e2cfa3" opacity="0.6"/>
+  <circle cx="760" cy="620" r="70" fill="#d4bc8a" opacity="0.5"/>
+  <circle cx="1180" cy="650" r="90" fill="#d4bc8a" opacity="0.5"/>
+  <text x="960" y="920" text-anchor="middle" fill="#3d2418" opacity="0.15" font-family="Georgia, serif" font-size="120" font-style="italic">made to crave</text>
+</svg>

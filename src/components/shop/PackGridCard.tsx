@@ -1,8 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { Product } from "@/types";
+import { getProductPlaceholder } from "@/lib/images";
 import Button from "@/components/Button";
+import ProductImage from "@/components/ProductImage";
 
 interface PackGridCardProps {
   pack: Product;
@@ -29,9 +30,10 @@ export default function PackGridCard({
         className="relative aspect-square overflow-hidden bg-mang-cream w-full cursor-pointer"
         aria-expanded={isActive}
       >
-        <Image
+        <ProductImage
           src={pack.image}
           alt={pack.name}
+          fallback={getProductPlaceholder(pack)}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-300"
           sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"

@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { bestSellers } from "@/data/products";
 import { useCart } from "@/context/CartContext";
+import { getProductPlaceholder } from "@/lib/images";
+import ProductImage from "@/components/ProductImage";
 import Button from "@/components/Button";
 
 export default function BestSellers() {
@@ -20,9 +21,10 @@ export default function BestSellers() {
 
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           <div className="relative aspect-square max-w-lg mx-auto w-full">
-            <Image
+            <ProductImage
               src={product.image}
               alt={product.name}
+              fallback={getProductPlaceholder(product)}
               fill
               className="object-cover rounded-2xl border-2 border-mang-brown shadow-[4px_4px_0_rgba(61,36,24,0.15)]"
               sizes="(max-width: 1024px) 100vw, 50vw"

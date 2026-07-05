@@ -1,16 +1,18 @@
-import Image from "next/image";
+import ProductImage from "@/components/ProductImage";
+import { PLACEHOLDERS } from "@/lib/images";
 import Button from "@/components/Button";
 
 export default function Hero() {
   return (
     <section className="relative min-h-[70vh] lg:min-h-[80vh] flex items-center justify-center overflow-hidden bg-mang-cream">
-      <Image
-        src="https://images.unsplash.com/photo-1558961363-fa8fdf64db35?w=1920&h=1080&fit=crop"
+      <ProductImage
+        src={PLACEHOLDERS.hero}
         alt="Mang Crinkle cookies"
         fill
         className="object-cover opacity-30"
         priority
         sizes="100vw"
+        fallback={PLACEHOLDERS.hero}
       />
       <div className="absolute inset-0 bg-mang-cream/60" />
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">

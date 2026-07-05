@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { useCart } from "@/context/CartContext";
+import { getProductPlaceholder } from "@/lib/images";
 import Button from "@/components/Button";
+import ProductImage from "@/components/ProductImage";
 import { PackFlavourPicker } from "@/components/shop/PackFlavourPicker";
 import {
   formatPackSelectionsSummary,
@@ -82,9 +83,10 @@ export default function CartDrawer() {
                 return (
                   <li key={item.lineId} className="flex gap-4">
                     <div className="relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden bg-mang-tan border border-mang-brown/20">
-                      <Image
+                      <ProductImage
                         src={item.product.image}
                         alt={item.product.name}
+                        fallback={getProductPlaceholder(item.product)}
                         fill
                         className="object-cover"
                         sizes="80px"

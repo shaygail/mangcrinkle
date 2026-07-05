@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <rect width="400" height="400" fill="#e2cfa3"/>
+  <circle cx="200" cy="175" r="95" fill="#d4bc8a" stroke="#3d2418" stroke-width="3"/>
+  <circle cx="200" cy="175" r="35" fill="#e8a040" opacity="0.85"/>
+  <circle cx="170" cy="155" r="10" fill="#3d2418" opacity="0.3"/>
+  <circle cx="225" cy="150" r="9" fill="#3d2418" opacity="0.3"/>
+  <circle cx="235" cy="195" r="10" fill="#3d2418" opacity="0.3"/>
+  <text x="200" y="320" text-anchor="middle" fill="#3d2418" font-family="Georgia, serif" font-size="22" font-style="italic">Mang Crinkle</text>
+  <text x="200" y="352" text-anchor="middle" fill="#5c3d2e" font-family="system-ui, sans-serif" font-size="13" letter-spacing="3">LAVA CRINKLE</text>
+</svg>

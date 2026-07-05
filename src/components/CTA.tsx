@@ -1,4 +1,5 @@
 import Button from "@/components/Button";
+import { PLACEHOLDERS } from "@/lib/images";
 
 export default function CTA() {
   return (
@@ -6,8 +7,7 @@ export default function CTA() {
       <div
         className="absolute inset-0 bg-cover bg-center opacity-20"
         style={{
-          backgroundImage:
-            "url(https://images.unsplash.com/photo-1558961363-fa8fdf64db35?w=1920&h=800&fit=crop)",
+          backgroundImage: `url(${PLACEHOLDERS.hero})`,
         }}
       />
       <div className="relative z-10 max-w-4xl mx-auto px-4 text-center text-mang-cream">
