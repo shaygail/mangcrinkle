@@ -14,7 +14,9 @@ export function getProductPlaceholder(product: Product): string {
     case "crinkle-pack":
       return PLACEHOLDERS.pack;
     case "lava":
-      return PLACEHOLDERS.lava;
+      return product.id.includes("ube")
+        ? "/images/lava/ube.jpeg"
+        : "/images/lava/choco.jpeg";
     case "hot-drink":
       return PLACEHOLDERS.drinkHot;
     case "iced-drink":

@@ -5,7 +5,8 @@ const cookieImg = PLACEHOLDERS.cookie;
 const drinkImg = PLACEHOLDERS.drinkHot;
 const icedImg = PLACEHOLDERS.drinkIced;
 const packImg = PLACEHOLDERS.pack;
-const lavaImg = PLACEHOLDERS.lava;
+const lavaUbeImg = "/images/lava/ube.jpeg";
+const lavaChocoImg = "/images/lava/choco.jpeg";
 
 const drinkNote = "Whole milk included. Alternative milk +$1.00 in cart.";
 
@@ -117,11 +118,19 @@ export const products: Product[] = [
   },
   // Lava crinkles
   {
-    id: "lava-single",
-    name: "Lava Crinkle — Each",
-    description: "Rich, gooey and made to melt.",
+    id: "lava-ube",
+    name: "Lava Ube Crinkle — Each",
+    description: "Rich, gooey ube crinkle with a melty centre.",
     price: 6.5,
-    image: lavaImg,
+    image: lavaUbeImg,
+    category: "lava",
+  },
+  {
+    id: "lava-choco",
+    name: "Lava Chocolate Crinkle — Each",
+    description: "Rich, gooey chocolate crinkle with a melty centre.",
+    price: 6.5,
+    image: lavaChocoImg,
     category: "lava",
   },
   {
@@ -129,7 +138,7 @@ export const products: Product[] = [
     name: "Lava Crinkle — 3 Pack",
     description: "Rich, gooey and made to melt.",
     price: 19.0,
-    image: lavaImg,
+    image: lavaChocoImg,
     category: "lava",
   },
   {
@@ -137,7 +146,7 @@ export const products: Product[] = [
     name: "Lava Crinkle — 6 Pack",
     description: "Rich, gooey and made to melt.",
     price: 38.0,
-    image: lavaImg,
+    image: lavaUbeImg,
     category: "lava",
   },
   {
@@ -145,7 +154,7 @@ export const products: Product[] = [
     name: "Lava Crinkle — 12 Pack",
     description: "Pre-order required. Please allow 2–3 days.",
     price: 76.0,
-    image: lavaImg,
+    image: lavaChocoImg,
     category: "lava",
     badge: "Pre-order",
     note: "Pre-order required. Allow 2–3 days.",
@@ -376,6 +385,7 @@ export const bestSellers = products.filter(
   (p) =>
     p.id === "ube" ||
     p.id === "ube-matcha" ||
-    p.id === "lava-single" ||
+    p.id === "lava-ube" ||
+    p.id === "lava-choco" ||
     p.id === "iced-ube-marble-matcha"
 );
