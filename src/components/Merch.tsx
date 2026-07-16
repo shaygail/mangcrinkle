@@ -1,10 +1,14 @@
 import Link from "next/link";
-import { products } from "@/data/products";
+import { getProducts } from "@/lib/strapi";
 import ProductCard from "./ProductCard";
 
-export default function Merch() {
+export default async function Merch() {
+  const products = await getProducts();
   const featuredProducts = products
-    .filter((p) => p.category === "crinkle-signature" || p.category === "crinkle-premium")
+    .filter(
+      (p) =>
+        p.category === "crinkle-signature" || p.category === "crinkle-premium"
+    )
     .slice(0, 4);
 
   return (

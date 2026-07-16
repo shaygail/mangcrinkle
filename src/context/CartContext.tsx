@@ -18,6 +18,7 @@ import {
   isPackSelectionsComplete,
   normalizeCartItem,
 } from "@/lib/cart";
+import { useProducts } from "@/context/ProductsContext";
 
 export interface AddItemOptions {
   packSelections?: string[];
@@ -43,6 +44,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 const CART_STORAGE_KEY = "mang-crinkle-cart";
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const { products } = useProducts();
   const [items, setItems] = useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
@@ -81,7 +83,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
       if (isPack(product)) {
         if (
           !packSelections ||
-          !isPackSelectionsComplete(packSelections, getPackSize(product))
+          !isPackSelectionsComplete(
+            products,
+            packSelections,
+            getPackSize(product)
+          )
         ) {
           return;
         }
@@ -105,7 +111,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       });
       setIsOpen(true);
     },
-    []
+    [products]
   );
 
   const removeItem = useCallback((lineId: string) => {
@@ -154,6 +160,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         if (!item || !isPack(item.product)) return prev;
         if (
           !isPackSelectionsComplete(
+            products,
             packSelections,
             getPackSize(item.product)
           )
@@ -185,14 +192,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
         ];
       });
     },
-    []
+    [products]
   );
 
   const clearCart = useCallback(() => setItems([]), []);
 
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = items.reduce(
-    (sum, item) => sum + getItemUnitPrice(item) * item.quantity,
+    (sum, item) => sum + getItemUnitPrice(products, item) * item.quantity,
     0
   );
 

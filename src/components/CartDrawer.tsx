@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
+import { useProducts } from "@/context/ProductsContext";
 import { getProductPlaceholder } from "@/lib/images";
 import Button from "@/components/Button";
 import ProductImage from "@/components/ProductImage";
@@ -16,6 +17,7 @@ import {
 import { MilkType } from "@/types";
 
 export default function CartDrawer() {
+  const { products } = useProducts();
   const {
     items,
     isOpen,
@@ -75,7 +77,7 @@ export default function CartDrawer() {
           ) : (
             <ul className="space-y-6">
               {items.map((item) => {
-                const unitPrice = getItemUnitPrice(item);
+                const unitPrice = getItemUnitPrice(products, item);
                 const drink = isDrink(item.product);
                 const pack = isPack(item.product);
                 const packExpanded = expandedPackLine === item.lineId;
@@ -111,7 +113,10 @@ export default function CartDrawer() {
                             Your crinkles
                           </p>
                           <p className="text-xs text-mang-brown/80 mb-2 leading-relaxed">
-                            {formatPackSelectionsSummary(item.packSelections)}
+                            {formatPackSelectionsSummary(
+                              products,
+                              item.packSelections
+                            )}
                           </p>
                           <button
                             type="button"

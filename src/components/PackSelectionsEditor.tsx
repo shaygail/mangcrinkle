@@ -1,9 +1,10 @@
 "use client";
 
 import { Product } from "@/types";
+import { getCrinkleFlavours } from "@/data/products";
+import { useProducts } from "@/context/ProductsContext";
 import {
   calculatePackUnitPrice,
-  crinkleFlavours,
   getPackSize,
   PREMIUM_UPGRADE,
   SIGNATURE_UPGRADE,
@@ -29,7 +30,9 @@ export default function PackSelectionsEditor({
   onChange,
   compact = false,
 }: PackSelectionsEditorProps) {
+  const { products } = useProducts();
   const packSize = getPackSize(pack);
+  const crinkleFlavours = getCrinkleFlavours(products);
 
   const updateSlot = (index: number, crinkleId: string) => {
     const next = [...selections];
@@ -38,9 +41,18 @@ export default function PackSelectionsEditor({
   };
 
   const grouped = [
-    { label: "Standard", items: crinkleFlavours.filter((c) => c.category === "crinkle-standard") },
-    { label: "Premium", items: crinkleFlavours.filter((c) => c.category === "crinkle-premium") },
-    { label: "Signature", items: crinkleFlavours.filter((c) => c.category === "crinkle-signature") },
+    {
+      label: "Standard",
+      items: crinkleFlavours.filter((c) => c.category === "crinkle-standard"),
+    },
+    {
+      label: "Premium",
+      items: crinkleFlavours.filter((c) => c.category === "crinkle-premium"),
+    },
+    {
+      label: "Signature",
+      items: crinkleFlavours.filter((c) => c.category === "crinkle-signature"),
+    },
   ];
 
   return (
@@ -80,7 +92,8 @@ export default function PackSelectionsEditor({
       ))}
 
       <p className="text-sm font-bold text-mang-orange pt-1">
-        Pack total: ${calculatePackUnitPrice(pack, selections).toFixed(2)}
+        Pack total: $
+        {calculatePackUnitPrice(products, pack, selections).toFixed(2)}
       </p>
     </div>
   );

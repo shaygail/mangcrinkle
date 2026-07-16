@@ -1,5 +1,5 @@
 import { CartItem, MilkType, Product } from "@/types";
-import { crinkleFlavours, getProductById } from "@/data/products";
+import { getProductById } from "@/data/products";
 
 export const ALT_MILK_PRICE = 1.0;
 export const PREMIUM_UPGRADE = 0.5;
@@ -28,8 +28,11 @@ export function getPackSize(product: Product): number {
   return 0;
 }
 
-export function getCrinkleUpgradeFee(crinkleId: string): number {
-  const crinkle = getProductById(crinkleId);
+export function getCrinkleUpgradeFee(
+  products: Product[],
+  crinkleId: string
+): number {
+  const crinkle = getProductById(products, crinkleId);
   if (!crinkle) return 0;
   if (crinkle.category === "crinkle-premium") return PREMIUM_UPGRADE;
   if (crinkle.category === "crinkle-signature") return SIGNATURE_UPGRADE;
@@ -46,22 +49,24 @@ export function createEmptyPackSelections(pack: Product): string[] {
 }
 
 export function isPackSelectionsComplete(
+  products: Product[],
   selections: string[],
   packSize: number
 ): boolean {
   if (selections.length !== packSize) return false;
   return selections.every(
-    (id) => id !== "" && getProductById(id) !== undefined
+    (id) => id !== "" && getProductById(products, id) !== undefined
   );
 }
 
 export function calculatePackUnitPrice(
+  products: Product[],
   pack: Product,
   selections: string[]
 ): number {
   const upgrades = selections
     .filter((id) => id !== "")
-    .reduce((sum, id) => sum + getCrinkleUpgradeFee(id), 0);
+    .reduce((sum, id) => sum + getCrinkleUpgradeFee(products, id), 0);
   return pack.price + upgrades;
 }
 
@@ -78,9 +83,12 @@ export function getCartLineId(
   return product.id;
 }
 
-export function getItemUnitPrice(item: CartItem): number {
+export function getItemUnitPrice(
+  products: Product[],
+  item: CartItem
+): number {
   if (isPack(item.product) && item.packSelections?.length) {
-    return calculatePackUnitPrice(item.product, item.packSelections);
+    return calculatePackUnitPrice(products, item.product, item.packSelections);
   }
 
   const base = item.product.price;
@@ -94,11 +102,17 @@ export function getMilkLabel(milk: MilkType): string {
   return milkOptions.find((o) => o.value === milk)?.label ?? milk;
 }
 
-export function getCrinkleLabel(crinkleId: string): string {
-  return getProductById(crinkleId)?.name ?? crinkleId;
+export function getCrinkleLabel(
+  products: Product[],
+  crinkleId: string
+): string {
+  return getProductById(products, crinkleId)?.name ?? crinkleId;
 }
 
-export function formatPackSelectionsSummary(selections: string[]): string {
+export function formatPackSelectionsSummary(
+  products: Product[],
+  selections: string[]
+): string {
   const counts = selections.reduce<Record<string, number>>((acc, id) => {
     acc[id] = (acc[id] ?? 0) + 1;
     return acc;
@@ -106,7 +120,9 @@ export function formatPackSelectionsSummary(selections: string[]): string {
 
   return Object.entries(counts)
     .map(([id, count]) =>
-      count > 1 ? `${getCrinkleLabel(id)} ×${count}` : getCrinkleLabel(id)
+      count > 1
+        ? `${getCrinkleLabel(products, id)} ×${count}`
+        : getCrinkleLabel(products, id)
     )
     .join(", ");
 }
@@ -129,5 +145,3 @@ export function normalizeCartItem(
     packSelections,
   };
 }
-
-export { crinkleFlavours };

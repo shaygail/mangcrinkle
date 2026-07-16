@@ -14,10 +14,12 @@ import ProductCard from "@/components/ProductCard";
 import PackSection from "@/components/shop/PackSection";
 import AddedToCartDialog from "@/components/AddedToCartDialog";
 import { useCart } from "@/context/CartContext";
+import { useProducts } from "@/context/ProductsContext";
 
 function ShopContent() {
   const searchParams = useSearchParams();
   const activeFilter = (searchParams.get("category") as ShopFilter) || "all";
+  const { products } = useProducts();
   const { openCart } = useCart();
   const [addedItem, setAddedItem] = useState<string | null>(null);
 
@@ -62,7 +64,10 @@ function ShopContent() {
       {/* Product sections */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 lg:py-14 space-y-14 lg:space-y-20">
         {visibleSections.map((section) => {
-          const sectionProducts = getProductsForSection(section.categories);
+          const sectionProducts = getProductsForSection(
+            products,
+            section.categories
+          );
           if (sectionProducts.length === 0) return null;
 
           return (

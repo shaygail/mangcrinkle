@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Product } from "@/types";
 import { useCart } from "@/context/CartContext";
+import { useProducts } from "@/context/ProductsContext";
 import {
   calculatePackUnitPrice,
   createEmptyPackSelections,
@@ -24,6 +25,7 @@ export default function PackCustomizerForm({
   namePrefix = "shop",
   variant = "default",
 }: PackCustomizerFormProps) {
+  const { products } = useProducts();
   const { addItem } = useCart();
   const packSize = getPackSize(pack);
   const [selections, setSelections] = useState(() =>
@@ -31,8 +33,8 @@ export default function PackCustomizerForm({
   );
   const [quantity, setQuantity] = useState(1);
 
-  const isComplete = isPackSelectionsComplete(selections, packSize);
-  const unitTotal = calculatePackUnitPrice(pack, selections);
+  const isComplete = isPackSelectionsComplete(products, selections, packSize);
+  const unitTotal = calculatePackUnitPrice(products, pack, selections);
   const lineTotal = unitTotal * quantity;
   const incompleteCount = selections.filter((id) => id === "").length;
 

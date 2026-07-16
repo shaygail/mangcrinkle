@@ -10,7 +10,12 @@ const lavaChocoImg = "/images/lava/choco.jpeg";
 
 const drinkNote = "Whole milk included. Alternative milk +$1.00 in cart.";
 
-export const products: Product[] = [
+/**
+ * Offline / error fallback catalogue. Live product data is fetched from Strapi
+ * via `getProducts()` in `src/lib/strapi.ts`. Keep this array in sync with the
+ * seed script so the site still works when the CMS is unreachable.
+ */
+export const fallbackProducts: Product[] = [
   // Standard crinkles – $4.50 each
   {
     id: "classic-chocolate",
@@ -304,14 +309,19 @@ export const products: Product[] = [
   },
 ];
 
-export const crinkleFlavours = products.filter(
-  (p) =>
-    p.category === "crinkle-standard" ||
-    p.category === "crinkle-premium" ||
-    p.category === "crinkle-signature"
-);
+export function getCrinkleFlavours(products: Product[]): Product[] {
+  return products.filter(
+    (p) =>
+      p.category === "crinkle-standard" ||
+      p.category === "crinkle-premium" ||
+      p.category === "crinkle-signature"
+  );
+}
 
-export function getProductById(id: string): Product | undefined {
+export function getProductById(
+  products: Product[],
+  id: string
+): Product | undefined {
   return products.find((p) => p.id === id);
 }
 
@@ -370,22 +380,33 @@ export const shopSections = [
   },
 ];
 
-export function getProductsForFilter(filter: ShopFilter): Product[] {
+export function getProductsForFilter(
+  products: Product[],
+  filter: ShopFilter
+): Product[] {
   if (filter === "all") return products;
   const section = shopSections.find((s) => s.filter === filter);
   if (!section) return products;
   return products.filter((p) => section.categories.includes(p.category));
 }
 
-export function getProductsForSection(categories: string[]): Product[] {
+export function getProductsForSection(
+  products: Product[],
+  categories: string[]
+): Product[] {
   return products.filter((p) => categories.includes(p.category));
 }
 
-export const bestSellers = products.filter(
-  (p) =>
-    p.id === "ube" ||
-    p.id === "ube-matcha" ||
-    p.id === "lava-ube" ||
-    p.id === "lava-choco" ||
-    p.id === "iced-ube-marble-matcha"
-);
+const BEST_SELLER_IDS = [
+  "ube",
+  "ube-matcha",
+  "lava-ube",
+  "lava-choco",
+  "iced-ube-marble-matcha",
+] as const;
+
+export function getBestSellers(products: Product[]): Product[] {
+  return products.filter((p) =>
+    (BEST_SELLER_IDS as readonly string[]).includes(p.id)
+  );
+}

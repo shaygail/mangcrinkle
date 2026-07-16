@@ -2,15 +2,16 @@
 
 import { useState } from "react";
 import { Product } from "@/types";
+import { getCrinkleFlavours } from "@/data/products";
+import { useProducts } from "@/context/ProductsContext";
 import {
-  crinkleFlavours,
   getCrinkleLabel,
   getCrinkleUpgradeFee,
   getPackSize,
 } from "@/lib/cart";
 
-function upgradeSuffix(crinkleId: string): string {
-  const fee = getCrinkleUpgradeFee(crinkleId);
+function upgradeSuffix(products: Product[], crinkleId: string): string {
+  const fee = getCrinkleUpgradeFee(products, crinkleId);
   if (fee === 0) return "";
   return fee === 0.5 ? " +$0.50" : " +$1.00";
 }
@@ -30,6 +31,7 @@ function FlavourPills({
   onSelect,
   namePrefix,
   variant,
+  products,
 }: {
   pack: Product;
   slotIndex: number;
@@ -37,7 +39,9 @@ function FlavourPills({
   onSelect: (crinkleId: string) => void;
   namePrefix: string;
   variant: "default" | "editorial";
+  products: Product[];
 }) {
+  const crinkleFlavours = getCrinkleFlavours(products);
   const tiers = [
     {
       label: "Standard",
@@ -79,7 +83,7 @@ function FlavourPills({
             />
             <span className={pillClass}>
               {crinkle.name}
-              {upgradeSuffix(crinkle.id)}
+              {upgradeSuffix(products, crinkle.id)}
             </span>
           </label>
         ))}
@@ -109,7 +113,7 @@ function FlavourPills({
                 />
                 <span className={pillClass}>
                   {crinkle.name}
-                  {upgradeSuffix(crinkle.id)}
+                  {upgradeSuffix(products, crinkle.id)}
                 </span>
               </label>
             ))}
@@ -127,6 +131,7 @@ export function PackFlavourPicker({
   namePrefix = "pack",
   variant = "default",
 }: PackFlavourPickerProps) {
+  const { products } = useProducts();
   const packSize = getPackSize(pack);
   const [openSlot, setOpenSlot] = useState(0);
 
@@ -201,7 +206,7 @@ export function PackFlavourPicker({
                   }`}
                 >
                   {selected
-                    ? getCrinkleLabel(selections[i])
+                    ? getCrinkleLabel(products, selections[i])
                     : unlocked
                       ? "Choose a flavour to continue"
                       : `Pick crinkle ${i} first`}
@@ -222,6 +227,7 @@ export function PackFlavourPicker({
                 onSelect={(crinkleId) => updateSlot(i, crinkleId)}
                 namePrefix={namePrefix}
                 variant={variant}
+                products={products}
               />
             )}
           </details>

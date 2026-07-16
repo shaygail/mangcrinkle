@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { bestSellers } from "@/data/products";
+import { getBestSellers } from "@/data/products";
+import { useProducts } from "@/context/ProductsContext";
 import { useCart } from "@/context/CartContext";
 import { getProductPlaceholder } from "@/lib/images";
 import ProductImage from "@/components/ProductImage";
@@ -9,8 +10,12 @@ import Button from "@/components/Button";
 
 export default function BestSellers() {
   const [current, setCurrent] = useState(0);
+  const { products } = useProducts();
   const { addItem } = useCart();
+  const bestSellers = getBestSellers(products);
   const product = bestSellers[current];
+
+  if (!product) return null;
 
   return (
     <section className="py-16 lg:py-24 bg-mang-cream">
@@ -53,7 +58,9 @@ export default function BestSellers() {
             <div className="flex items-center gap-4 mt-8 justify-center lg:justify-start">
               <button
                 onClick={() =>
-                  setCurrent((c) => (c - 1 + bestSellers.length) % bestSellers.length)
+                  setCurrent(
+                    (c) => (c - 1 + bestSellers.length) % bestSellers.length
+                  )
                 }
                 className="p-2 border-2 border-mang-brown/25 rounded-full hover:border-mang-brown hover:text-mang-orange text-mang-brown transition-colors"
                 aria-label="Previous slide"
@@ -75,7 +82,9 @@ export default function BestSellers() {
                 ))}
               </div>
               <button
-                onClick={() => setCurrent((c) => (c + 1) % bestSellers.length)}
+                onClick={() =>
+                  setCurrent((c) => (c + 1) % bestSellers.length)
+                }
                 className="p-2 border-2 border-mang-brown/25 rounded-full hover:border-mang-brown hover:text-mang-orange text-mang-brown transition-colors"
                 aria-label="Next slide"
               >
