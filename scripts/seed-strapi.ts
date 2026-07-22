@@ -4,12 +4,32 @@
  * Usage:
  *   npx tsx scripts/seed-strapi.ts
  *
- * Requires STRAPI_URL and STRAPI_API_TOKEN in the environment
- * (or a local .env.local — load manually / via your shell).
+ * Reads STRAPI_URL and STRAPI_API_TOKEN from .env.local (or the shell).
  * Images are skipped; upload them in the Strapi admin after seeding.
  */
 
+import { readFileSync, existsSync } from "fs";
+import { join } from "path";
 import { fallbackProducts } from "../src/data/products";
+
+function loadEnvLocal() {
+  const envPath = join(process.cwd(), ".env.local");
+  if (!existsSync(envPath)) return;
+
+  const content = readFileSync(envPath, "utf8").replace(/^\uFEFF/, "");
+
+  for (const line of content.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const eq = trimmed.indexOf("=");
+    if (eq === -1) continue;
+    const key = trimmed.slice(0, eq).trim();
+    const value = trimmed.slice(eq + 1).trim();
+    if (key && !process.env[key]) process.env[key] = value;
+  }
+}
+
+loadEnvLocal();
 
 async function main() {
   const strapiUrl = process.env.STRAPI_URL;
@@ -21,6 +41,24 @@ async function main() {
   }
   if (!token) {
     console.error("STRAPI_API_TOKEN is required");
+    console.error(
+      "Create .env.local with STRAPI_URL and STRAPI_API_TOKEN, then re-run."
+    );
+    process.exit(1);
+  }
+
+  // Preflight: Product content type must exist in Strapi Admin first
+  const probe = await fetch(`${strapiUrl}/api/products`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (probe.status === 404) {
+    console.error(
+      "Strapi returned 404 for /api/products — the Product collection type"
+    );
+    console.error(
+      "has not been created yet. In Strapi Admin → Content-Type Builder,"
+    );
+    console.error("create Product with fields from data/strapi-product-schema.json");
     process.exit(1);
   }
 
