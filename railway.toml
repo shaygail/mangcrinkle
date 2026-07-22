@@ -1,0 +1,11 @@
+# Next.js frontend (mangcrinkle) service config.
+# Set the mangcrinkle service Root Directory to "/" (repo root).
+# The Strapi service must use Root Directory "strapi" — see strapi/railway.toml.
+
+[build]
+buildCommand = "npm ci && npm run build"
+
+[deploy]
+startCommand = "npm run start"
+healthcheckPath = "/"
+healthcheckTimeout = 120

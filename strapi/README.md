@@ -18,12 +18,29 @@ Public **find** / **findOne** permissions are enabled automatically on bootstrap
 
 ## Deploy on Railway (monorepo)
 
-1. Push this repo to GitHub (if not already).
-2. Railway → **Strapi** service → **Settings → Source**.
-3. Connect your **mangcrinkle** GitHub repo.
-4. Set **Root Directory** to `strapi`.
-5. Keep existing env vars (`DATABASE_URL`, `APP_KEYS`, `JWT_SECRET`, etc.) — copy them from the old template service if redeploying fresh.
-6. **Deploy**.
+This repo has **two services**. Each must use a different root directory:
+
+| Service | Root Directory | Start command | Healthcheck |
+|---------|----------------|---------------|-------------|
+| **mangcrinkle** (Next.js) | `/` (repo root) | `npm run start` | `/` |
+| **Strapi** (CMS) | `strapi` | `yarn start` | `/admin` |
+
+### Strapi service setup
+
+1. Railway → **Strapi** service → **Settings → Source**
+2. Connect **shaygail/mangcrinkle** repo
+3. Set **Root Directory** to **`strapi`** ← critical
+4. Keep existing env vars (`DATABASE_URL`, `APP_KEYS`, `JWT_SECRET`, `URL`, etc.)
+5. **Deploy**
+
+If Root Directory is wrong, Railway builds Next.js (`npm run build`) but healthchecks `/admin` — that always fails.
+
+### Next.js service setup
+
+1. Railway → **mangcrinkle** service → **Settings → Source**
+2. Root Directory: **`/`** (empty / repo root)
+3. Healthcheck path: **`/`** (not `/admin`)
+4. Add env vars: `STRAPI_URL`, `STRAPI_API_TOKEN`
 
 After deploy, open `/admin`, create your admin user, then from the repo root run:
 

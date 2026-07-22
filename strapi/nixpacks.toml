@@ -1,0 +1,14 @@
+# Force Railway/Railpack to build Strapi with yarn from this directory.
+# Requires the Strapi service Root Directory to be set to "strapi" in Railway.
+
+[phases.setup]
+nixPkgs = ["nodejs_22", "yarn"]
+
+[phases.install]
+cmds = ["yarn install --frozen-lockfile"]
+
+[phases.build]
+cmds = ["yarn build"]
+
+[start]
+cmd = "yarn start"
