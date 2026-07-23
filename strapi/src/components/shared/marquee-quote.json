@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_shared_marquee_quotes",
+  "info": {
+    "displayName": "Marquee Quote",
+    "description": "Short quote shown in scrolling marquee"
+  },
+  "attributes": {
+    "text": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

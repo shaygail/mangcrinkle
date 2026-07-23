@@ -16,6 +16,24 @@ Pre-configured Strapi 5 instance for the Mang Crinkle menu. The **Product** cont
 
 Public **find** / **findOne** permissions are enabled automatically on bootstrap.
 
+### Content types
+
+| Type | API | Editable in Admin |
+|------|-----|-------------------|
+| **Product** | `/api/products` | Content Manager → Product |
+| **Homepage** (single) | `/api/homepage` | Content Manager → Homepage — hero, story, CTA copy + **images** |
+| **Testimonial** | `/api/testimonials` | Content Manager → Testimonial |
+| **Order Step** | `/api/order-steps` | Content Manager → Order Step |
+
+After deploy, seed from repo root:
+
+```bash
+npx tsx scripts/seed-strapi.ts      # products
+npx tsx scripts/seed-homepage.ts    # homepage copy, testimonials, order steps
+```
+
+Upload **heroImage**, **storyImage**, and **ctaBackgroundImage** on the Homepage entry in Admin.
+
 ## Deploy on Railway (monorepo)
 
 This repo has **two services**. Each must use a different root directory:

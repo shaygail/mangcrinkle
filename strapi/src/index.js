@@ -1,18 +1,23 @@
 'use strict';
 
-const PUBLIC_PRODUCT_ACTIONS = [
+const PUBLIC_READ_ACTIONS = [
   'api::product.product.find',
   'api::product.product.findOne',
+  'api::homepage.homepage.find',
+  'api::testimonial.testimonial.find',
+  'api::testimonial.testimonial.findOne',
+  'api::order-step.order-step.find',
+  'api::order-step.order-step.findOne',
 ];
 
-async function enablePublicProductRead(strapi) {
+async function enablePublicRead(strapi) {
   const publicRole = await strapi.db
     .query('plugin::users-permissions.role')
     .findOne({ where: { type: 'public' } });
 
   if (!publicRole) return;
 
-  for (const action of PUBLIC_PRODUCT_ACTIONS) {
+  for (const action of PUBLIC_READ_ACTIONS) {
     const existing = await strapi.db
       .query('plugin::users-permissions.permission')
       .findOne({ where: { action, role: publicRole.id } });
@@ -38,13 +43,10 @@ module.exports = {
 
   async bootstrap({ strapi }) {
     try {
-      await enablePublicProductRead(strapi);
-      strapi.log.info('Public read permissions enabled for Product API');
+      await enablePublicRead(strapi);
+      strapi.log.info('Public read permissions enabled for CMS APIs');
     } catch (error) {
-      strapi.log.warn(
-        'Could not set Product public permissions on bootstrap:',
-        error
-      );
+      strapi.log.warn('Could not set public permissions on bootstrap:', error);
     }
   },
 };

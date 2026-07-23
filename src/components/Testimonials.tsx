@@ -1,20 +1,32 @@
 "use client";
 
 import { useState } from "react";
-import { testimonials } from "@/data/testimonials";
+import { HomepageContent, HomepageTestimonial } from "@/data/homepage";
 
-export default function Testimonials() {
+interface TestimonialsProps {
+  content: HomepageContent;
+  testimonials: HomepageTestimonial[];
+}
+
+export default function Testimonials({
+  content,
+  testimonials,
+}: TestimonialsProps) {
   const [current, setCurrent] = useState(0);
+  const titleLines = content.testimonialsTitle.split("\n");
+
+  if (testimonials.length === 0) return null;
 
   return (
     <section className="py-16 lg:py-24 bg-mang-tan">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="menu-title-3d text-4xl lg:text-5xl text-center mb-4 leading-tight">
-          They Bite.
-          <br />
-          They Crave.
-          <br />
-          They Come Back.
+          {titleLines.map((line, i) => (
+            <span key={i}>
+              {line}
+              {i < titleLines.length - 1 && <br />}
+            </span>
+          ))}
         </h2>
 
         <div className="max-w-2xl mx-auto mt-12 text-center">
@@ -42,7 +54,7 @@ export default function Testimonials() {
             <div className="flex gap-2">
               {testimonials.map((_, i) => (
                 <button
-                  key={i}
+                  key={testimonials[i].id}
                   onClick={() => setCurrent(i)}
                   className={`w-2.5 h-2.5 rounded-full transition-colors ${
                     i === current ? "bg-mang-brown" : "bg-mang-tan-dark"
@@ -52,7 +64,9 @@ export default function Testimonials() {
               ))}
             </div>
             <button
-              onClick={() => setCurrent((c) => (c + 1) % testimonials.length)}
+              onClick={() =>
+                setCurrent((c) => (c + 1) % testimonials.length)
+              }
               className="p-2 border-2 border-mang-brown/25 rounded-full hover:border-mang-brown text-mang-brown transition-colors"
               aria-label="Next testimonial"
             >

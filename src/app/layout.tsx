@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import { CartProvider } from "@/context/CartContext";
 import { ProductsProvider } from "@/context/ProductsContext";
-import { getProducts } from "@/lib/strapi";
+import { getHomepage, getProducts } from "@/lib/strapi";
 
 const bebasNeue = Bebas_Neue({
   weight: "400",
@@ -31,14 +31,17 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const products = await getProducts();
+  const [products, homepage] = await Promise.all([
+    getProducts(),
+    getHomepage(),
+  ]);
 
   return (
     <html lang="en" className={`${bebasNeue.variable} ${openSans.variable}`}>
       <body className="min-h-screen flex flex-col antialiased">
         <ProductsProvider initialProducts={products}>
           <CartProvider>
-            <AnnouncementBar />
+            <AnnouncementBar text={homepage.announcementText} />
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />

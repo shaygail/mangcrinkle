@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "order_steps",
+  "info": {
+    "singularName": "order-step",
+    "pluralName": "order-steps",
+    "displayName": "Order Step",
+    "description": "How-to-order steps on the homepage"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "stepNumber": {
+      "type": "string",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "emoji": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "sortOrder": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

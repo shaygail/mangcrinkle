@@ -1,0 +1,94 @@
+{
+  "kind": "singleType",
+  "collectionName": "homepages",
+  "info": {
+    "singularName": "homepage",
+    "pluralName": "homepages",
+    "displayName": "Homepage",
+    "description": "Homepage copy and images"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "announcementText": {
+      "type": "string"
+    },
+    "heroTitle": {
+      "type": "string",
+      "required": true
+    },
+    "heroSubtitle": {
+      "type": "string"
+    },
+    "heroDescription": {
+      "type": "text"
+    },
+    "heroButtonText": {
+      "type": "string"
+    },
+    "heroButtonLink": {
+      "type": "string",
+      "default": "/shop"
+    },
+    "heroImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "tagline": {
+      "type": "text"
+    },
+    "storyTitle": {
+      "type": "string"
+    },
+    "storyBody": {
+      "type": "text"
+    },
+    "storyButtonText": {
+      "type": "string"
+    },
+    "storyImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "storyMarqueeQuotes": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.marquee-quote"
+    },
+    "howToOrderTitle": {
+      "type": "string"
+    },
+    "howToOrderSubtitle": {
+      "type": "text"
+    },
+    "howToOrderButtonText": {
+      "type": "string"
+    },
+    "testimonialsTitle": {
+      "type": "text"
+    },
+    "ctaTitle": {
+      "type": "string"
+    },
+    "ctaBody": {
+      "type": "text"
+    },
+    "ctaButtonText": {
+      "type": "string"
+    },
+    "ctaMarqueeText": {
+      "type": "string"
+    },
+    "ctaBackgroundImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    }
+  }
+}

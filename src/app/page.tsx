@@ -5,17 +5,28 @@ import Recipes from "@/components/Recipes";
 import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
 import Merch from "@/components/Merch";
+import {
+  getHomepage,
+  getOrderSteps,
+  getTestimonials,
+} from "@/lib/strapi";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [homepage, testimonials, orderSteps] = await Promise.all([
+    getHomepage(),
+    getTestimonials(),
+    getOrderSteps(),
+  ]);
+
   return (
     <>
-      <Hero />
-      <Tagline />
+      <Hero content={homepage} />
+      <Tagline content={homepage} />
       <BestSellers />
-      <Story />
-      <Recipes />
-      <Testimonials />
-      <CTA />
+      <Story content={homepage} />
+      <Recipes content={homepage} steps={orderSteps} />
+      <Testimonials content={homepage} testimonials={testimonials} />
+      <CTA content={homepage} />
       <Merch />
     </>
   );
