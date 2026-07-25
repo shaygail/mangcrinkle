@@ -225,9 +225,7 @@ export async function getHomepage(): Promise<HomepageContent> {
   const { url } = getStrapiConfig();
   if (!url) return fallbackHomepage;
 
-  const res = await strapiFetch(
-    "/api/homepage?populate[heroImage]=*&populate[storyImage]=*&populate[ctaBackgroundImage]=*&populate[storyMarqueeQuotes]=*"
-  );
+  const res = await strapiFetch("/api/homepage?populate=*");
   if (!res?.ok) {
     console.error(`Strapi homepage fetch failed: ${res?.status ?? "no response"}`);
     return fallbackHomepage;
