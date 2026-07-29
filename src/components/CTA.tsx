@@ -16,7 +16,7 @@ export default function CTA({ content }: CTAProps) {
         }}
       />
       <div className="relative z-10 max-w-4xl mx-auto px-4 text-center text-mang-cream">
-        <h2 className="menu-title-3d text-4xl lg:text-6xl mb-6 !text-mang-orange">
+        <h2 className="menu-title-3d-accent text-4xl lg:text-6xl mb-6">
           {content.ctaTitle}
         </h2>
         <p className="text-lg lg:text-xl text-mang-cream/85 mb-8 max-w-2xl mx-auto font-serif italic">

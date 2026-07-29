@@ -225,13 +225,45 @@ body {
 
 .menu-title-3d {
   font-family: var(--font-display);
-  color: #c4956a;
-  -webkit-text-stroke: 2px #3d2418;
-  text-shadow:
-    2px 2px 0 #3d2418,
-    3px 3px 0 rgba(61, 36, 24, 0.2);
+  color: #3d2418;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  /* Orange offset shadow — readable on cream, keeps menu-poster feel */
+  text-shadow: 2px 2px 0 #e8a040;
+}
+
+/* Display titles on light sections (product names, card headings) */
+.menu-product-title {
+  font-family: var(--font-display);
+  color: #3d2418;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  line-height: 1.05;
+}
+
+/* Body copy on light backgrounds */
+.menu-body-text {
+  color: #3d2418;
+  font-family: var(--font-body);
+  line-height: 1.6;
+}
+
+.menu-price {
+  font-family: var(--font-display);
+  color: #3d2418;
+  letter-spacing: 0.03em;
+  line-height: 1;
+}
+
+/* Accent headings on dark backgrounds (story, CTA) */
+.menu-title-3d-accent {
+  font-family: var(--font-display);
+  color: #e8a040;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  text-shadow: 2px 2px 0 #2a180f;
 }
 
 .menu-box {

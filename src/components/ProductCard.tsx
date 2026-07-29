@@ -38,10 +38,10 @@ export default function ProductCard({ product }: ProductCardProps) {
             {product.tier}
           </p>
         )}
-        <h3 className="font-bold text-mang-brown text-sm lg:text-base leading-tight mb-1">
+        <h3 className="menu-product-title text-sm lg:text-base mb-1">
           {product.name}
         </h3>
-        <p className="text-mang-brown/70 text-xs leading-relaxed mb-3 flex-1">
+        <p className="menu-body-text text-xs mb-3 flex-1 opacity-90">
           {product.description}
           {isDrink(product) && (
             <span className="block mt-1 text-mang-brown/50">
@@ -55,7 +55,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             {product.note}
           </p>
         )}
-        <p className="font-bold text-mang-brown text-lg mb-3">
+        <p className="menu-price text-xl mb-3">
           ${product.price.toFixed(2)}
         </p>
         <Button

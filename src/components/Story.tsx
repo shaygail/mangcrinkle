@@ -14,7 +14,7 @@ export default function Story({ content }: StoryProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="menu-title-3d text-4xl lg:text-5xl mb-6 !text-mang-orange">
+            <h2 className="menu-title-3d-accent text-4xl lg:text-5xl mb-6">
               {content.storyTitle}
             </h2>
             <p className="text-mang-cream/85 text-lg mb-8 leading-relaxed font-serif">

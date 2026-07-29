@@ -20,7 +20,7 @@ export default function BestSellers() {
   return (
     <section className="py-16 lg:py-24 bg-mang-cream">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="menu-title-3d text-4xl lg:text-5xl text-center mb-12">
+        <h2 className="menu-title-3d text-4xl lg:text-5xl text-center mb-12 leading-tight">
           Fan Favourites
         </h2>
 
@@ -37,13 +37,13 @@ export default function BestSellers() {
           </div>
 
           <div className="text-center lg:text-left">
-            <h3 className="menu-title-3d text-3xl lg:text-4xl mb-4">
+            <h3 className="menu-product-title text-3xl lg:text-4xl mb-4">
               {product.name}
             </h3>
-            <p className="text-mang-brown-mid text-lg mb-2 italic font-serif">
+            <p className="menu-body-text text-base lg:text-lg mb-3 max-w-md mx-auto lg:mx-0">
               {product.description}
             </p>
-            <p className="text-mang-orange font-bold text-2xl mb-6">
+            <p className="menu-price text-3xl lg:text-4xl mb-6">
               ${product.price.toFixed(2)}
             </p>
             <div className="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
