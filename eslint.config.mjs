@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Strapi uses CommonJS require — not part of the Next.js app
+    "strapi/**",
   ]),
 ]);
 

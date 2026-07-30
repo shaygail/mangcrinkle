@@ -56,6 +56,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         const parsed = JSON.parse(stored) as Array<
           Partial<CartItem> & { product: Product }
         >;
+        // Hydrate cart from localStorage after mount (client-only)
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional SSR-safe hydration
         setItems(parsed.map((item) => normalizeCartItem(item)));
       }
     } catch {

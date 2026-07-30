@@ -1,4 +1,16 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mang Crinkle
+
+Menu-poster storefront for Mang Crinkle — browse the menu, build a cart, and place pickup orders.
+
+## Project plan
+
+See **[PHASES.md](./PHASES.md)** for the full architecture, phase tracker, deployment checklist, and go-live plan.
+
+| Phase | Status |
+|-------|--------|
+| 1 — Storefront & cart | ✅ Complete |
+| 2 — Strapi CMS + order emails | ✅ Code complete (Resend config pending) |
+| 3 — Tie it all together | 🔲 Go-live checklist in PHASES.md |
 
 ## Getting Started
 

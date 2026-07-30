@@ -27,6 +27,44 @@ export interface CartItem {
   packSelections?: string[];
 }
 
+export interface OrderCustomer {
+  name: string;
+  email: string;
+  phone: string;
+  notes?: string;
+}
+
+export interface OrderItemPayload {
+  productId: string;
+  quantity: number;
+  milk?: MilkType;
+  packSelections?: string[];
+}
+
+export interface OrderRequest {
+  customer: OrderCustomer;
+  items: OrderItemPayload[];
+  /** Honeypot — must be empty */
+  website?: string;
+}
+
+export interface OrderLine {
+  name: string;
+  quantity: number;
+  unitPrice: number;
+  lineTotal: number;
+  milk?: string;
+  packSummary?: string;
+}
+
+export interface OrderSummary {
+  orderId: string;
+  customer: OrderCustomer;
+  lines: OrderLine[];
+  subtotal: number;
+  createdAt: string;
+}
+
 export interface Recipe {
   id: string;
   title: string;

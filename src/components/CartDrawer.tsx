@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { useProducts } from "@/context/ProductsContext";
 import { getProductPlaceholder } from "@/lib/images";
 import Button from "@/components/Button";
+import CheckoutForm from "@/components/CheckoutForm";
 import ProductImage from "@/components/ProductImage";
 import { PackFlavourPicker } from "@/components/shop/PackFlavourPicker";
 import {
@@ -31,24 +32,44 @@ export default function CartDrawer() {
   } = useCart();
 
   const [expandedPackLine, setExpandedPackLine] = useState<string | null>(null);
+  const [step, setStep] = useState<"cart" | "checkout" | "success">("cart");
+  const [orderId, setOrderId] = useState<string | null>(null);
+
+  const handleClose = useCallback(() => {
+    setStep("cart");
+    setOrderId(null);
+    setExpandedPackLine(null);
+    closeCart();
+  }, [closeCart]);
+
+  const activeExpandedPackLine =
+    expandedPackLine &&
+    items.some((item) => item.lineId === expandedPackLine)
+      ? expandedPackLine
+      : null;
 
   if (!isOpen) return null;
+
+  const title =
+    step === "checkout"
+      ? "Checkout"
+      : step === "success"
+        ? "Order placed"
+        : `Your Cart${itemCount > 0 ? ` (${itemCount})` : ""}`;
 
   return (
     <>
       <div
         className="fixed inset-0 bg-mang-brown/40 z-50 fade-in"
-        onClick={closeCart}
+        onClick={handleClose}
         aria-hidden="true"
       />
 
       <div className="fixed right-0 top-0 h-full w-full max-w-md bg-mang-cream z-50 shadow-2xl cart-slide-in flex flex-col border-l-2 border-mang-brown/20">
         <div className="flex items-center justify-between p-6 border-b border-mang-brown/15">
-          <h2 className="menu-title-3d text-2xl">
-            Your Cart{itemCount > 0 ? ` (${itemCount})` : ""}
-          </h2>
+          <h2 className="menu-title-3d text-2xl">{title}</h2>
           <button
-            onClick={closeCart}
+            onClick={handleClose}
             className="p-2 text-mang-brown hover:text-mang-orange transition-colors"
             aria-label="Close cart"
           >
@@ -69,7 +90,28 @@ export default function CartDrawer() {
         </div>
 
         <div className="flex-1 overflow-y-auto p-6">
-          {items.length === 0 ? (
+          {step === "success" ? (
+            <div className="text-center py-12">
+              <p className="text-5xl mb-4">✓</p>
+              <p className="menu-body-text text-lg mb-2">Thanks — we got your order!</p>
+              {orderId && (
+                <p className="text-sm text-mang-brown/60 mb-4">
+                  Reference: <strong>{orderId}</strong>
+                </p>
+              )}
+              <p className="text-sm text-mang-brown/70">
+                We&apos;ll email you shortly to confirm pickup details.
+              </p>
+            </div>
+          ) : step === "checkout" ? (
+            <CheckoutForm
+              onBack={() => setStep("cart")}
+              onSuccess={(id) => {
+                setOrderId(id);
+                setStep("success");
+              }}
+            />
+          ) : items.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-5xl mb-4">🍪</p>
               <p className="text-mang-brown/60 text-lg">Your cart is empty.</p>
@@ -80,7 +122,7 @@ export default function CartDrawer() {
                 const unitPrice = getItemUnitPrice(products, item);
                 const drink = isDrink(item.product);
                 const pack = isPack(item.product);
-                const packExpanded = expandedPackLine === item.lineId;
+                const packExpanded = activeExpandedPackLine === item.lineId;
 
                 return (
                   <li key={item.lineId} className="flex gap-4">
@@ -214,7 +256,7 @@ export default function CartDrawer() {
           )}
         </div>
 
-        {items.length > 0 && (
+        {step === "cart" && items.length > 0 && (
           <div className="border-t border-mang-brown/15 p-6 space-y-4 bg-mang-tan/50">
             <div className="flex justify-between items-center">
               <span className="font-bold text-mang-brown">Subtotal</span>
@@ -222,15 +264,23 @@ export default function CartDrawer() {
                 ${subtotal.toFixed(2)}
               </span>
             </div>
-            <Button variant="brown" fullWidth>
+            <Button variant="brown" fullWidth onClick={() => setStep("checkout")}>
               Checkout
             </Button>
             <button
-              onClick={closeCart}
+              onClick={handleClose}
               className="w-full text-center text-sm text-mang-brown/60 hover:text-mang-brown underline"
             >
               Continue Shopping
             </button>
+          </div>
+        )}
+
+        {step === "success" && (
+          <div className="border-t border-mang-brown/15 p-6 bg-mang-tan/50">
+            <Button variant="brown" fullWidth onClick={handleClose}>
+              Done
+            </Button>
           </div>
         )}
       </div>

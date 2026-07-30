@@ -1,7 +1,7 @@
 "use client";
 
 import Image, { ImageProps } from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PLACEHOLDERS } from "@/lib/images";
 
 type ProductImageProps = Omit<ImageProps, "src" | "alt"> & {
@@ -10,22 +10,21 @@ type ProductImageProps = Omit<ImageProps, "src" | "alt"> & {
   fallback?: string;
 };
 
-export default function ProductImage({
-  src,
+type InnerProps = Omit<ProductImageProps, "src" | "fallback"> & {
+  resolvedSrc: string;
+  fallback: string;
+};
+
+function ProductImageInner({
+  resolvedSrc,
+  fallback,
   alt,
-  fallback = PLACEHOLDERS.cookie,
   className,
   fill,
   ...props
-}: ProductImageProps) {
-  const resolvedSrc = src || fallback;
+}: InnerProps) {
   const [imgSrc, setImgSrc] = useState(resolvedSrc);
   const [showAlt, setShowAlt] = useState(false);
-
-  useEffect(() => {
-    setImgSrc(src || fallback);
-    setShowAlt(false);
-  }, [src, fallback]);
 
   const altFallbackClass = fill
     ? `absolute inset-0 ${className ?? ""}`
@@ -62,6 +61,25 @@ export default function ProductImage({
         }
         setShowAlt(true);
       }}
+    />
+  );
+}
+
+export default function ProductImage({
+  src,
+  alt,
+  fallback = PLACEHOLDERS.cookie,
+  ...props
+}: ProductImageProps) {
+  const resolvedSrc = src || fallback;
+
+  return (
+    <ProductImageInner
+      key={resolvedSrc}
+      resolvedSrc={resolvedSrc}
+      fallback={fallback}
+      alt={alt}
+      {...props}
     />
   );
 }

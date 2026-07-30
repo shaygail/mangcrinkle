@@ -37,7 +37,7 @@ export default function BestSellers() {
           </div>
 
           <div className="text-center lg:text-left">
-            <h3 className="menu-product-title text-3xl lg:text-4xl mb-4">
+            <h3 className="menu-product-title-3d text-3xl lg:text-4xl mb-4">
               {product.name}
             </h3>
             <p className="menu-body-text text-base lg:text-lg mb-3 max-w-md mx-auto lg:mx-0">
