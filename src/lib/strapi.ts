@@ -31,8 +31,9 @@ type StrapiEntry = Record<string, unknown> & {
 const REVALIDATE_SECONDS = 60;
 
 function getStrapiConfig() {
+  const rawUrl = process.env.STRAPI_URL;
   return {
-    url: process.env.STRAPI_URL,
+    url: rawUrl?.replace(/\/+$/, ""),
     token: process.env.STRAPI_API_TOKEN,
   };
 }

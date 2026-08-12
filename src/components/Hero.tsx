@@ -21,10 +21,10 @@ export default function Hero({ content }: HeroProps) {
       />
       <div className="absolute inset-0 bg-mang-cream/60" />
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-        <h1 className="menu-logo text-6xl sm:text-7xl lg:text-8xl leading-none mb-2">
+        <h1 className="menu-logo text-5xl sm:text-6xl lg:text-8xl leading-none mb-2 px-2">
           {content.heroTitle}
         </h1>
-        <p className="menu-logo-sub text-2xl sm:text-3xl mb-6">
+        <p className="menu-logo-sub text-xl sm:text-2xl lg:text-3xl mb-6">
           {content.heroSubtitle}
         </p>
         <p className="text-mang-brown text-sm font-bold uppercase tracking-widest mb-8 max-w-md mx-auto">

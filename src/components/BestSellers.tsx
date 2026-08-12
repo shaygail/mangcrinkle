@@ -46,23 +46,23 @@ export default function BestSellers() {
             <p className="menu-price text-3xl lg:text-4xl mb-6">
               ${product.price.toFixed(2)}
             </p>
-            <div className="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
-              <Button variant="brown" pop onClick={() => addItem(product)}>
+            <div className="flex flex-col w-full sm:flex-row gap-3 sm:gap-5 justify-center lg:justify-start">
+              <Button variant="brown" pop fullWidth className="sm:w-auto" onClick={() => addItem(product)}>
                 Add to Cart
               </Button>
-              <Button href="/shop" variant="cream">
+              <Button href="/shop" variant="cream" fullWidth className="sm:w-auto">
                 View Menu
               </Button>
             </div>
 
-            <div className="flex items-center gap-4 mt-8 justify-center lg:justify-start">
+            <div className="flex items-center gap-2 sm:gap-4 mt-8 justify-center lg:justify-start">
               <button
                 onClick={() =>
                   setCurrent(
                     (c) => (c - 1 + bestSellers.length) % bestSellers.length
                   )
                 }
-                className="p-2 border-2 border-mang-brown/25 rounded-full hover:border-mang-brown hover:text-mang-orange text-mang-brown transition-colors"
+                className="min-h-11 min-w-11 p-2.5 border-2 border-mang-brown/25 rounded-full hover:border-mang-brown hover:text-mang-orange text-mang-brown transition-colors flex items-center justify-center"
                 aria-label="Previous slide"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -74,18 +74,22 @@ export default function BestSellers() {
                   <button
                     key={i}
                     onClick={() => setCurrent(i)}
-                    className={`w-2.5 h-2.5 rounded-full transition-colors ${
-                      i === current ? "bg-mang-brown" : "bg-mang-tan-dark"
-                    }`}
+                    className="min-h-11 min-w-11 flex items-center justify-center"
                     aria-label={`Go to slide ${i + 1}`}
-                  />
+                  >
+                    <span
+                      className={`w-2.5 h-2.5 rounded-full transition-colors ${
+                        i === current ? "bg-mang-brown" : "bg-mang-tan-dark"
+                      }`}
+                    />
+                  </button>
                 ))}
               </div>
               <button
                 onClick={() =>
                   setCurrent((c) => (c + 1) % bestSellers.length)
                 }
-                className="p-2 border-2 border-mang-brown/25 rounded-full hover:border-mang-brown hover:text-mang-orange text-mang-brown transition-colors"
+                className="min-h-11 min-w-11 p-2.5 border-2 border-mang-brown/25 rounded-full hover:border-mang-brown hover:text-mang-orange text-mang-brown transition-colors flex items-center justify-center"
                 aria-label="Next slide"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

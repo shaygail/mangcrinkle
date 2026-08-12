@@ -44,7 +44,7 @@ export default function Testimonials({
                   (c) => (c - 1 + testimonials.length) % testimonials.length
                 )
               }
-              className="p-2 border-2 border-mang-brown/25 rounded-full hover:border-mang-brown text-mang-brown transition-colors"
+              className="min-h-11 min-w-11 p-2.5 border-2 border-mang-brown/25 rounded-full hover:border-mang-brown text-mang-brown transition-colors flex items-center justify-center"
               aria-label="Previous testimonial"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,18 +56,22 @@ export default function Testimonials({
                 <button
                   key={testimonials[i].id}
                   onClick={() => setCurrent(i)}
-                  className={`w-2.5 h-2.5 rounded-full transition-colors ${
-                    i === current ? "bg-mang-brown" : "bg-mang-tan-dark"
-                  }`}
+                  className="min-h-11 min-w-11 flex items-center justify-center"
                   aria-label={`Go to testimonial ${i + 1}`}
-                />
+                >
+                  <span
+                    className={`w-2.5 h-2.5 rounded-full transition-colors ${
+                      i === current ? "bg-mang-brown" : "bg-mang-tan-dark"
+                    }`}
+                  />
+                </button>
               ))}
             </div>
             <button
               onClick={() =>
                 setCurrent((c) => (c + 1) % testimonials.length)
               }
-              className="p-2 border-2 border-mang-brown/25 rounded-full hover:border-mang-brown text-mang-brown transition-colors"
+              className="min-h-11 min-w-11 p-2.5 border-2 border-mang-brown/25 rounded-full hover:border-mang-brown text-mang-brown transition-colors flex items-center justify-center"
               aria-label="Next testimonial"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

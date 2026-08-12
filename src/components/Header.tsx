@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "@/context/CartContext";
 
 const navLinks = [
@@ -11,18 +11,30 @@ const navLinks = [
   { href: "#order", label: "How to Order" },
 ];
 
+const navLinkClass =
+  "block min-h-11 px-2 py-3 text-sm font-bold uppercase tracking-wider text-mang-brown hover:text-mang-orange border-b border-mang-brown/10 last:border-0 flex items-center";
+
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { itemCount, openCart } = useCart();
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
 
   return (
     <header className="sticky top-0 z-40 bg-mang-cream border-b-2 border-mang-brown/15">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           <button
-            className="lg:hidden p-2 -ml-2 text-mang-brown"
+            className="lg:hidden min-h-11 min-w-11 p-2.5 -ml-2 text-mang-brown flex items-center justify-center"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"
+            aria-expanded={menuOpen}
           >
             <svg
               className="w-6 h-6"
@@ -71,7 +83,7 @@ export default function Header() {
 
           <button
             onClick={openCart}
-            className="relative p-2 flex items-center gap-2 text-mang-brown hover:text-mang-orange transition-colors"
+            className="relative min-h-11 min-w-11 p-2.5 flex items-center justify-center gap-2 text-mang-brown hover:text-mang-orange transition-colors"
             aria-label="Open cart"
           >
             <svg
@@ -88,7 +100,7 @@ export default function Header() {
               />
             </svg>
             {itemCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-mang-orange text-mang-brown text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border border-mang-brown">
+              <span className="absolute top-1 right-1 bg-mang-orange text-mang-brown text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border border-mang-brown">
                 {itemCount}
               </span>
             )}
@@ -100,14 +112,14 @@ export default function Header() {
       </div>
 
       {menuOpen && (
-        <div className="lg:hidden border-t border-mang-brown/15 bg-mang-cream fade-in">
-          <nav className="flex flex-col py-4 px-4">
+        <div className="lg:hidden border-t border-mang-brown/15 bg-mang-cream fade-in max-h-[calc(100dvh-4rem)] overflow-y-auto">
+          <nav className="flex flex-col py-2 px-2">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className="py-3 text-sm font-bold uppercase tracking-wider text-mang-brown hover:text-mang-orange border-b border-mang-brown/10 last:border-0"
+                className={navLinkClass}
               >
                 {link.label}
               </Link>

@@ -32,7 +32,7 @@ function ShopContent() {
     <div className="bg-mang-cream min-h-screen">
       {/* Header */}
       <section className="py-12 lg:py-16 px-4 text-center border-b-2 border-mang-brown/20">
-        <h1 className="menu-logo text-5xl sm:text-6xl lg:text-7xl leading-none mb-2">
+        <h1 className="menu-logo text-4xl sm:text-5xl lg:text-7xl leading-none mb-2">
           Mang Crinkle
         </h1>
         <p className="menu-logo-sub text-xl sm:text-2xl mb-4">made to crave</p>
@@ -44,12 +44,12 @@ function ShopContent() {
 
       {/* Category filters */}
       <section className="sticky top-16 lg:top-20 z-30 bg-mang-cream/95 backdrop-blur-sm border-b border-mang-brown/20 py-4 px-4">
-        <div className="max-w-6xl mx-auto flex gap-2 justify-start sm:justify-center flex-wrap overflow-x-auto">
+        <div className="max-w-6xl mx-auto flex gap-2 justify-start sm:justify-center flex-wrap">
           {shopFilters.map((filter) => (
             <Link
               key={filter.id}
               href={filter.id === "all" ? "/shop" : `/shop?category=${filter.id}`}
-              className={`px-4 py-2 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider whitespace-nowrap border-2 transition-colors ${
+              className={`inline-flex items-center min-h-11 px-4 py-2.5 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider whitespace-nowrap border-2 transition-colors ${
                 activeFilter === filter.id
                   ? "bg-mang-brown text-mang-cream border-mang-brown"
                   : "bg-mang-tan text-mang-brown border-mang-brown/30 hover:border-mang-brown"
@@ -87,7 +87,7 @@ function ShopContent() {
                   onAdded={(name) => setAddedItem(name)}
                 />
               ) : (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+                <div className="grid grid-cols-1 min-[400px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
                   {sectionProducts.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}

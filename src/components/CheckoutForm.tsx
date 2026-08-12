@@ -103,7 +103,7 @@ export default function CheckoutForm({ onBack, onSuccess }: CheckoutFormProps) {
           autoComplete="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full bg-mang-cream border border-mang-brown/25 rounded-xl px-3 py-2.5 text-mang-brown focus:outline-none focus:border-mang-orange"
+          className="w-full min-h-11 bg-mang-cream border border-mang-brown/25 rounded-xl px-3 py-3 text-base text-mang-brown focus:outline-none focus:border-mang-orange"
         />
       </div>
 
@@ -121,7 +121,7 @@ export default function CheckoutForm({ onBack, onSuccess }: CheckoutFormProps) {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full bg-mang-cream border border-mang-brown/25 rounded-xl px-3 py-2.5 text-mang-brown focus:outline-none focus:border-mang-orange"
+          className="w-full min-h-11 bg-mang-cream border border-mang-brown/25 rounded-xl px-3 py-3 text-base text-mang-brown focus:outline-none focus:border-mang-orange"
         />
       </div>
 
@@ -139,7 +139,7 @@ export default function CheckoutForm({ onBack, onSuccess }: CheckoutFormProps) {
           autoComplete="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          className="w-full bg-mang-cream border border-mang-brown/25 rounded-xl px-3 py-2.5 text-mang-brown focus:outline-none focus:border-mang-orange"
+          className="w-full min-h-11 bg-mang-cream border border-mang-brown/25 rounded-xl px-3 py-3 text-base text-mang-brown focus:outline-none focus:border-mang-orange"
         />
       </div>
 
@@ -157,7 +157,7 @@ export default function CheckoutForm({ onBack, onSuccess }: CheckoutFormProps) {
           placeholder="Preferred pickup time, dietary notes, etc."
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          className="w-full bg-mang-cream border border-mang-brown/25 rounded-xl px-3 py-2.5 text-mang-brown focus:outline-none focus:border-mang-orange resize-none"
+          className="w-full min-h-11 bg-mang-cream border border-mang-brown/25 rounded-xl px-3 py-3 text-base text-mang-brown focus:outline-none focus:border-mang-orange resize-none"
         />
       </div>
 
@@ -185,7 +185,7 @@ export default function CheckoutForm({ onBack, onSuccess }: CheckoutFormProps) {
         type="button"
         onClick={onBack}
         disabled={submitting}
-        className="w-full text-center text-sm text-mang-brown/60 hover:text-mang-brown underline disabled:opacity-50"
+        className="w-full min-h-11 text-center text-sm text-mang-brown/60 hover:text-mang-brown underline disabled:opacity-50 py-3"
       >
         Back to cart
       </button>

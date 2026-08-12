@@ -212,9 +212,9 @@ body {
 .menu-logo {
   font-family: var(--font-display);
   color: #f5b84a;
-  -webkit-text-stroke: 1.5px #3d2418;
+  -webkit-text-stroke: 0.75px #3d2418;
   paint-order: stroke fill;
-  text-shadow: 3px 3px 0 #3d2418;
+  text-shadow: 1.5px 1.5px 0 #3d2418;
   letter-spacing: 0.03em;
   line-height: 1;
   -webkit-font-smoothing: antialiased;
@@ -223,9 +223,9 @@ body {
 .menu-logo-sub {
   font-family: var(--font-display);
   color: #f5b84a;
-  -webkit-text-stroke: 1px #3d2418;
+  -webkit-text-stroke: 0.5px #3d2418;
   paint-order: stroke fill;
-  text-shadow: 2px 2px 0 #3d2418;
+  text-shadow: 1px 1px 0 #3d2418;
   line-height: 1.1;
   -webkit-font-smoothing: antialiased;
 }
@@ -233,12 +233,12 @@ body {
 .menu-title-3d {
   font-family: var(--font-display);
   color: #f5b84a;
-  -webkit-text-stroke: 1.25px #3d2418;
+  -webkit-text-stroke: 0.75px #3d2418;
   paint-order: stroke fill;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   line-height: 1.15;
-  text-shadow: 3px 3px 0 #3d2418;
+  text-shadow: 1.5px 1.5px 0 #3d2418;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -255,12 +255,12 @@ body {
 .menu-product-title-3d {
   font-family: var(--font-display);
   color: #f5b84a;
-  -webkit-text-stroke: 1px #3d2418;
+  -webkit-text-stroke: 0.5px #3d2418;
   paint-order: stroke fill;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   line-height: 1.1;
-  text-shadow: 2px 2px 0 #3d2418;
+  text-shadow: 1px 1px 0 #3d2418;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -282,38 +282,44 @@ body {
 .menu-title-3d-accent {
   font-family: var(--font-display);
   color: #f5e8c8;
-  -webkit-text-stroke: 1.25px #2a180f;
+  -webkit-text-stroke: 0.75px #2a180f;
   paint-order: stroke fill;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   line-height: 1.15;
-  text-shadow: 3px 3px 0 #2a180f;
+  text-shadow: 1.5px 1.5px 0 #2a180f;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Tighter 3D strokes on small screens so letterforms stay clear */
+/* Lighter 3D on small screens */
 @media (max-width: 640px) {
   .menu-logo {
-    -webkit-text-stroke: 1px #3d2418;
-    text-shadow: 2px 2px 0 #3d2418;
+    -webkit-text-stroke: 0.5px #3d2418;
+    text-shadow: 1px 1px 0 #3d2418;
   }
 
   .menu-logo-sub {
-    -webkit-text-stroke: 0.75px #3d2418;
-    text-shadow: 1.5px 1.5px 0 #3d2418;
+    -webkit-text-stroke: 0.4px #3d2418;
+    text-shadow: 0.5px 0.5px 0 #3d2418;
   }
 
   .menu-title-3d {
-    -webkit-text-stroke: 1px #3d2418;
-    text-shadow: 2px 2px 0 #3d2418;
+    -webkit-text-stroke: 0.5px #3d2418;
+    text-shadow: 1px 1px 0 #3d2418;
   }
 
   .menu-product-title-3d {
-    -webkit-text-stroke: 0.75px #3d2418;
-    text-shadow: 1.5px 1.5px 0 #3d2418;
+    -webkit-text-stroke: 0.4px #3d2418;
+    text-shadow: 0.5px 0.5px 0 #3d2418;
   }
 }
 
 .menu-box {
   box-shadow: 4px 4px 0 rgba(61, 36, 24, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
 }

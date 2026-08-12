@@ -66,7 +66,7 @@ function FlavourPills({
   const pillClass =
     variant === "editorial"
       ? "inline-flex min-h-11 items-center justify-center px-4 py-2.5 text-[10px] sm:text-[11px] font-bold tracking-[0.15em] uppercase border border-mang-brown/30 text-mang-brown leading-tight text-center peer-checked:bg-mang-brown peer-checked:text-mang-cream peer-checked:border-mang-brown transition-colors hover:border-mang-brown/60"
-      : "block px-3 py-2 text-[10px] sm:text-[11px] tracking-[0.12em] uppercase border border-mang-brown/25 text-mang-brown leading-snug peer-checked:bg-mang-brown peer-checked:text-mang-cream peer-checked:border-mang-brown transition-colors";
+      : "inline-flex min-h-11 items-center justify-center px-3 py-2 text-[10px] sm:text-[11px] tracking-[0.12em] uppercase border border-mang-brown/25 text-mang-brown leading-snug peer-checked:bg-mang-brown peer-checked:text-mang-cream peer-checked:border-mang-brown transition-colors";
 
   if (variant === "editorial") {
     return (

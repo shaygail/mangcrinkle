@@ -25,7 +25,7 @@ export default function PackSection({ packs, onAdded }: PackSectionProps) {
 
   return (
     <>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
         {packs.map((pack) => (
           <PackGridCard
             key={pack.id}
@@ -37,11 +37,18 @@ export default function PackSection({ packs, onAdded }: PackSectionProps) {
       </div>
 
       {expandedPack && (
-        <PackExpandedPanel
-          pack={expandedPack}
-          onClose={() => setExpandedPackId(null)}
-          onAdded={handleAdded}
-        />
+        <>
+          <div
+            className="lg:hidden fixed inset-0 bg-mang-brown/40 z-40"
+            onClick={() => setExpandedPackId(null)}
+            aria-hidden="true"
+          />
+          <PackExpandedPanel
+            pack={expandedPack}
+            onClose={() => setExpandedPackId(null)}
+            onAdded={handleAdded}
+          />
+        </>
       )}
     </>
   );

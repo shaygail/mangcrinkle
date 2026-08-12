@@ -1,5 +1,8 @@
 import Link from "next/link";
 
+const footerLinkClass =
+  "block min-h-11 py-2 flex items-center hover:text-mang-orange transition-colors";
+
 export default function Footer() {
   return (
     <footer className="bg-mang-brown text-mang-cream">
@@ -11,22 +14,22 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2 text-mang-cream/75 text-sm">
               <li>
-                <Link href="/shop" className="hover:text-mang-orange transition-colors">
+                <Link href="/shop" className={footerLinkClass}>
                   Shop All
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=crinkles" className="hover:text-mang-orange transition-colors">
+                <Link href="/shop?category=crinkles" className={footerLinkClass}>
                   Crinkles
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=lava" className="hover:text-mang-orange transition-colors">
+                <Link href="/shop?category=lava" className={footerLinkClass}>
                   Lava Crinkles
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=iced-drinks" className="hover:text-mang-orange transition-colors">
+                <Link href="/shop?category=iced-drinks" className={footerLinkClass}>
                   Drinks
                 </Link>
               </li>
@@ -38,17 +41,17 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2 text-mang-cream/75 text-sm">
               <li>
-                <Link href="/" className="hover:text-mang-orange transition-colors">
+                <Link href="/" className={footerLinkClass}>
                   Home
                 </Link>
               </li>
               <li>
-                <a href="#about" className="hover:text-mang-orange transition-colors">
+                <a href="#about" className={footerLinkClass}>
                   About
                 </a>
               </li>
               <li>
-                <a href="#order" className="hover:text-mang-orange transition-colors">
+                <a href="#order" className={footerLinkClass}>
                   How to Order
                 </a>
               </li>
@@ -64,7 +67,7 @@ export default function Footer() {
                   href="#"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-mang-orange transition-colors"
+                  className={footerLinkClass}
                 >
                   Instagram
                 </a>
@@ -74,7 +77,7 @@ export default function Footer() {
                   href="#"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-mang-orange transition-colors"
+                  className={footerLinkClass}
                 >
                   Facebook
                 </a>
@@ -84,7 +87,7 @@ export default function Footer() {
                   href="#"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-mang-orange transition-colors"
+                  className={footerLinkClass}
                 >
                   TikTok
                 </a>

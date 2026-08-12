@@ -6,11 +6,21 @@ import {
 } from "@/lib/order";
 import { OrderSummary } from "@/types";
 
+const TEST_SENDER = "Mang Crinkle <onboarding@resend.dev>";
+
 function getEmailConfig() {
+  const to = process.env.ORDER_EMAIL_TO;
+  const replyTo = process.env.ORDER_EMAIL_REPLY_TO ?? to;
+  const ownerFrom = process.env.ORDER_EMAIL_FROM ?? TEST_SENDER;
+  const customerFrom =
+    process.env.ORDER_EMAIL_FROM_CUSTOMER ?? ownerFrom ?? TEST_SENDER;
+
   return {
     apiKey: process.env.RESEND_API_KEY,
-    to: process.env.ORDER_EMAIL_TO,
-    from: process.env.ORDER_EMAIL_FROM ?? "Mang Crinkle <onboarding@resend.dev>",
+    to,
+    replyTo,
+    ownerFrom,
+    customerFrom,
   };
 }
 
@@ -22,7 +32,7 @@ export function isEmailConfigured(): boolean {
 export async function sendOrderEmails(
   order: OrderSummary
 ): Promise<{ ok: true } | { ok: false; error: string }> {
-  const { apiKey, to, from } = getEmailConfig();
+  const { apiKey, to, replyTo, ownerFrom, customerFrom } = getEmailConfig();
 
   if (!apiKey || !to) {
     console.error("Email not configured: RESEND_API_KEY and ORDER_EMAIL_TO required.");
@@ -32,7 +42,7 @@ export async function sendOrderEmails(
   const resend = new Resend(apiKey);
 
   const ownerResult = await resend.emails.send({
-    from,
+    from: ownerFrom,
     to: [to],
     replyTo: order.customer.email,
     subject: `New order ${order.orderId} — ${order.customer.name}`,
@@ -46,8 +56,9 @@ export async function sendOrderEmails(
   }
 
   const customerResult = await resend.emails.send({
-    from,
+    from: customerFrom,
     to: [order.customer.email],
+    replyTo: replyTo ?? undefined,
     subject: `Order received — ${order.orderId}`,
     text: formatCustomerConfirmationText(order),
   });

@@ -38,10 +38,10 @@ export default function ProductCard({ product }: ProductCardProps) {
             {product.tier}
           </p>
         )}
-        <h3 className="menu-product-title text-sm lg:text-base mb-1">
+        <h3 className="menu-product-title text-sm lg:text-base mb-1 line-clamp-2">
           {product.name}
         </h3>
-        <p className="menu-body-text text-xs mb-3 flex-1 opacity-90">
+        <p className="menu-body-text text-xs mb-3 flex-1 opacity-90 line-clamp-3 sm:line-clamp-none">
           {product.description}
           {isDrink(product) && (
             <span className="block mt-1 text-mang-brown/50">

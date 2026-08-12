@@ -23,9 +23,9 @@ import {
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function generateOrderId(): string {
-  const stamp = Date.now().toString(36).toUpperCase();
-  const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
-  return `MC-${stamp}-${rand}`;
+  // Short 4-digit reference for emails and pickup (e.g. MC-4829)
+  const num = Math.floor(1000 + Math.random() * 9000);
+  return `MC-${num}`;
 }
 
 export function validateOrderRequest(body: unknown):

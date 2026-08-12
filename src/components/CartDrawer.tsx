@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { useProducts } from "@/context/ProductsContext";
 import { getProductPlaceholder } from "@/lib/images";
@@ -42,6 +42,14 @@ export default function CartDrawer() {
     closeCart();
   }, [closeCart]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
   const activeExpandedPackLine =
     expandedPackLine &&
     items.some((item) => item.lineId === expandedPackLine)
@@ -65,12 +73,12 @@ export default function CartDrawer() {
         aria-hidden="true"
       />
 
-      <div className="fixed right-0 top-0 h-full w-full max-w-md bg-mang-cream z-50 shadow-2xl cart-slide-in flex flex-col border-l-2 border-mang-brown/20">
-        <div className="flex items-center justify-between p-6 border-b border-mang-brown/15">
-          <h2 className="menu-title-3d text-2xl">{title}</h2>
+      <div className="fixed right-0 top-0 h-[100dvh] w-full max-w-md bg-mang-cream z-50 shadow-2xl cart-slide-in flex flex-col border-l-2 border-mang-brown/20">
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-mang-brown/15 shrink-0">
+          <h2 className="menu-title-3d text-xl sm:text-2xl">{title}</h2>
           <button
             onClick={handleClose}
-            className="p-2 text-mang-brown hover:text-mang-orange transition-colors"
+            className="min-h-11 min-w-11 p-2.5 flex items-center justify-center text-mang-brown hover:text-mang-orange transition-colors"
             aria-label="Close cart"
           >
             <svg
@@ -89,7 +97,7 @@ export default function CartDrawer() {
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 overscroll-contain">
           {step === "success" ? (
             <div className="text-center py-12">
               <p className="text-5xl mb-4">✓</p>
@@ -125,7 +133,8 @@ export default function CartDrawer() {
                 const packExpanded = activeExpandedPackLine === item.lineId;
 
                 return (
-                  <li key={item.lineId} className="flex gap-4">
+                  <li key={item.lineId} className="flex flex-col sm:flex-row gap-3 sm:gap-4 pb-6 border-b border-mang-brown/10 last:border-0 last:pb-0">
+                    <div className="flex gap-3 sm:gap-4 flex-1 min-w-0">
                     <div className="relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden bg-mang-tan border border-mang-brown/20">
                       <ProductImage
                         src={item.product.image}
@@ -137,9 +146,14 @@ export default function CartDrawer() {
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-sm text-mang-brown leading-tight mb-1">
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                      <h3 className="font-bold text-sm text-mang-brown leading-tight">
                         {item.product.name}
                       </h3>
+                      <p className="font-bold text-sm text-mang-brown shrink-0 sm:hidden">
+                        ${(unitPrice * item.quantity).toFixed(2)}
+                      </p>
+                      </div>
                       <p className="text-mang-orange font-bold text-sm">
                         ${unitPrice.toFixed(2)}
                         {item.milk && item.milk !== "whole" && (
@@ -167,7 +181,7 @@ export default function CartDrawer() {
                                 packExpanded ? null : item.lineId
                               )
                             }
-                            className="text-xs text-mang-brown font-bold underline hover:text-mang-orange"
+                            className="min-h-11 inline-flex items-center py-2 text-xs text-mang-brown font-bold underline hover:text-mang-orange"
                           >
                             {packExpanded ? "Hide flavours" : "Edit flavours"}
                           </button>
@@ -203,7 +217,7 @@ export default function CartDrawer() {
                                 e.target.value as MilkType
                               )
                             }
-                            className="w-full text-xs bg-mang-cream border border-mang-brown/25 rounded-lg px-2 py-1.5 text-mang-brown focus:outline-none focus:border-mang-orange"
+                            className="w-full min-h-11 text-base sm:text-xs bg-mang-cream border border-mang-brown/25 rounded-lg px-3 py-2.5 sm:py-1.5 text-mang-brown focus:outline-none focus:border-mang-orange"
                           >
                             {milkOptions.map((opt) => (
                               <option key={opt.value} value={opt.value}>
@@ -220,19 +234,19 @@ export default function CartDrawer() {
                             onClick={() =>
                               updateQuantity(item.lineId, item.quantity - 1)
                             }
-                            className="px-2 py-1 hover:bg-mang-tan text-sm text-mang-brown"
+                            className="min-h-11 min-w-11 flex items-center justify-center hover:bg-mang-tan text-lg text-mang-brown"
                             aria-label="Decrease quantity"
                           >
                             −
                           </button>
-                          <span className="px-3 py-1 text-sm border-x border-mang-brown/25 text-mang-brown">
+                          <span className="min-w-10 px-2 py-1 text-sm border-x border-mang-brown/25 text-mang-brown text-center">
                             {item.quantity}
                           </span>
                           <button
                             onClick={() =>
                               updateQuantity(item.lineId, item.quantity + 1)
                             }
-                            className="px-2 py-1 hover:bg-mang-tan text-sm text-mang-brown"
+                            className="min-h-11 min-w-11 flex items-center justify-center hover:bg-mang-tan text-lg text-mang-brown"
                             aria-label="Increase quantity"
                           >
                             +
@@ -240,13 +254,14 @@ export default function CartDrawer() {
                         </div>
                         <button
                           onClick={() => removeItem(item.lineId)}
-                          className="text-xs text-mang-brown/50 hover:text-mang-brown underline"
+                          className="min-h-11 inline-flex items-center text-xs text-mang-brown/50 hover:text-mang-brown underline px-1"
                         >
                           Remove
                         </button>
                       </div>
                     </div>
-                    <p className="font-bold text-sm text-mang-brown">
+                    </div>
+                    <p className="hidden sm:block font-bold text-sm text-mang-brown shrink-0">
                       ${(unitPrice * item.quantity).toFixed(2)}
                     </p>
                   </li>
@@ -257,7 +272,7 @@ export default function CartDrawer() {
         </div>
 
         {step === "cart" && items.length > 0 && (
-          <div className="border-t border-mang-brown/15 p-6 space-y-4 bg-mang-tan/50">
+          <div className="border-t border-mang-brown/15 p-4 sm:p-6 space-y-4 bg-mang-tan/50 shrink-0 pb-[max(1rem,env(safe-area-inset-bottom))]">
             <div className="flex justify-between items-center">
               <span className="font-bold text-mang-brown">Subtotal</span>
               <span className="menu-title-3d text-2xl">
@@ -277,7 +292,7 @@ export default function CartDrawer() {
         )}
 
         {step === "success" && (
-          <div className="border-t border-mang-brown/15 p-6 bg-mang-tan/50">
+          <div className="border-t border-mang-brown/15 p-4 sm:p-6 bg-mang-tan/50 shrink-0 pb-[max(1rem,env(safe-area-inset-bottom))]">
             <Button variant="brown" fullWidth onClick={handleClose}>
               Done
             </Button>

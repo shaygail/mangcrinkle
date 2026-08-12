@@ -66,7 +66,8 @@ export const fallbackHomepage: HomepageContent = {
     "Flavour brings people together!",
   ],
   howToOrderTitle: "How To Order",
-  howToOrderSubtitle: "Three simple steps to your perfect crinkle order.",
+  howToOrderSubtitle:
+    "Order online in a few taps — browse, build your box, checkout, then pick up.",
   howToOrderButtonText: "Start Ordering",
   testimonialsTitle: "They Bite.\nThey Crave.\nThey Come Back.",
   ctaTitle: "Ready to Crave?",
@@ -108,22 +109,33 @@ export const fallbackOrderSteps: OrderStep[] = [
   {
     id: "1",
     stepNumber: "1",
-    title: "Pick A Box",
-    emoji: "📦",
-    description: "Choose a 3, 6, or 12 pack — or grab singles.",
+    title: "Browse the Menu",
+    emoji: "🛒",
+    description:
+      "Head to the shop and explore singles, 3/6/12 packs, lava crinkles, and drinks.",
   },
   {
     id: "2",
     stepNumber: "2",
-    title: "Choose A Flavour",
+    title: "Build Your Order",
     emoji: "🍪",
-    description: "Mix & match standard, premium, or signature crinkles.",
+    description:
+      "Open a pack to pick each crinkle flavour, or add singles and drinks straight to cart.",
   },
   {
     id: "3",
     stepNumber: "3",
-    title: "Add A Drink",
-    emoji: "🧋",
-    description: "Pair with a hot or iced drink on the side.",
+    title: "Review & Checkout",
+    emoji: "✅",
+    description:
+      "Check your cart, swap milk on drinks if you like, then enter your name and contact details.",
+  },
+  {
+    id: "4",
+    stepNumber: "4",
+    title: "Pick Up & Enjoy",
+    emoji: "📧",
+    description:
+      "We'll email you to confirm your order and arrange pickup — then dig in!",
   },
 ];

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Bebas_Neue, Open_Sans } from "next/font/google";
 import "./globals.css";
 import AnnouncementBar from "@/components/AnnouncementBar";
@@ -26,6 +26,11 @@ export const metadata: Metadata = {
     "Handcrafted Filipino-inspired crinkles, soft-centred and fudgy. Order crinkles, lava crinkles, and drinks online.",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -38,7 +43,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={`${bebasNeue.variable} ${openSans.variable}`}>
-      <body className="min-h-screen flex flex-col antialiased">
+      <body className="min-h-screen flex flex-col antialiased overflow-x-hidden">
         <ProductsProvider initialProducts={products}>
           <CartProvider>
             <AnnouncementBar text={homepage.announcementText} />
