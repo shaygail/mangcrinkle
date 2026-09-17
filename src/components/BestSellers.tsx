@@ -8,7 +8,11 @@ import { getProductPlaceholder } from "@/lib/images";
 import ProductImage from "@/components/ProductImage";
 import Button from "@/components/Button";
 
-export default function BestSellers() {
+interface BestSellersProps {
+  title?: string;
+}
+
+export default function BestSellers({ title = "Fan Favourites" }: BestSellersProps) {
   const [current, setCurrent] = useState(0);
   const { products } = useProducts();
   const { addItem } = useCart();
@@ -21,7 +25,7 @@ export default function BestSellers() {
     <section className="py-16 lg:py-24 bg-mang-cream">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="menu-title-3d text-4xl lg:text-5xl text-center mb-12 leading-tight">
-          Fan Favourites
+          {title}
         </h2>
 
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">

@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_shared_shop_sections",
+  "info": {
+    "displayName": "Shop Section",
+    "description": "Shop page section title and description"
+  },
+  "attributes": {
+    "sectionKey": {
+      "type": "enumeration",
+      "enum": [
+        "crinkles",
+        "packs",
+        "lava",
+        "hot-drinks",
+        "iced-drinks"
+      ],
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "subtitle": {
+      "type": "text",
+      "required": true
+    }
+  }
+}

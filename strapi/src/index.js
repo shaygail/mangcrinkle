@@ -8,6 +8,7 @@ const PUBLIC_READ_ACTIONS = [
   'api::testimonial.testimonial.findOne',
   'api::order-step.order-step.find',
   'api::order-step.order-step.findOne',
+  'api::shop-page.shop-page.find',
 ];
 
 async function enablePublicRead(strapi) {

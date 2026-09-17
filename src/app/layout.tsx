@@ -20,11 +20,13 @@ const openSans = Open_Sans({
   variable: "--font-body",
 });
 
-export const metadata: Metadata = {
-  title: "Mang Crinkle | Filipino-Inspired Crinkles",
-  description:
-    "Handcrafted Filipino-inspired crinkles, soft-centred and fudgy. Order crinkles, lava crinkles, and drinks online.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const homepage = await getHomepage();
+  return {
+    title: "Mang Crinkle | Filipino-Inspired Crinkles",
+    description: homepage.siteDescription,
+  };
+}
 
 export const viewport: Viewport = {
   width: "device-width",

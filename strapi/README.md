@@ -20,19 +20,31 @@ Public **find** / **findOne** permissions are enabled automatically on bootstrap
 
 | Type | API | Editable in Admin |
 |------|-----|-------------------|
-| **Product** | `/api/products` | Content Manager → Product |
-| **Homepage** (single) | `/api/homepage` | Content Manager → Homepage — hero, story, CTA copy + **images** |
+| **Product** | `/api/products` | Content Manager → Product — names, **descriptions**, prices, images |
+| **Homepage** (single) | `/api/homepage` | Content Manager → Homepage — hero, story, how-to-order, CTA, fan favourites titles, footer tagline, site meta description + **images** |
+| **Shop Page** (single) | `/api/shop-page` | Content Manager → Shop Page — shop header + each section title/description |
 | **Testimonial** | `/api/testimonials` | Content Manager → Testimonial |
-| **Order Step** | `/api/order-steps` | Content Manager → Order Step |
+| **Order Step** | `/api/order-steps` | Content Manager → Order Step — step titles + descriptions |
 
 After deploy, seed from repo root:
 
 ```bash
 npx tsx scripts/seed-strapi.ts      # products
-npx tsx scripts/seed-homepage.ts    # homepage copy, testimonials, order steps
+npx tsx scripts/seed-homepage.ts    # homepage, shop page, testimonials, order steps
 ```
 
 Upload **heroImage**, **storyImage**, and **ctaBackgroundImage** on the Homepage entry in Admin.
+
+### Where to edit page descriptions
+
+| Page / section | Strapi entry |
+|----------------|--------------|
+| Product cards (all pages) | **Product** → Description |
+| Homepage hero, story, CTA, how-to-order | **Homepage** |
+| Fan Favourites / Merch headings | **Homepage** → `bestSellersTitle`, `merchTitle`, … |
+| Shop header + Crinkles / Packs / Lava / Drinks blurbs | **Shop Page** |
+| How to Order step blurbs | **Order Step** |
+| Testimonials | **Testimonial** |
 
 ## Deploy on Railway (monorepo)
 

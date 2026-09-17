@@ -1,9 +1,12 @@
 import Link from "next/link";
-import { getProducts } from "@/lib/strapi";
+import { getHomepage, getProducts } from "@/lib/strapi";
 import ProductCard from "./ProductCard";
 
 export default async function Merch() {
-  const products = await getProducts();
+  const [products, homepage] = await Promise.all([
+    getProducts(),
+    getHomepage(),
+  ]);
   const featuredProducts = products
     .filter(
       (p) =>
@@ -16,13 +19,13 @@ export default async function Merch() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-12">
           <h2 className="menu-title-3d text-4xl lg:text-5xl">
-            Fan Favourite Crinkles
+            {homepage.merchTitle}
           </h2>
           <Link
             href="/shop"
             className="text-mang-brown font-bold uppercase tracking-wider hover:text-mang-orange transition-colors hidden sm:block"
           >
-            Shop All
+            {homepage.merchLinkText}
           </Link>
         </div>
 
@@ -37,7 +40,7 @@ export default async function Merch() {
             href="#"
             className="inline-flex items-center gap-2 text-mang-brown font-bold uppercase tracking-wider hover:text-mang-orange transition-colors"
           >
-            <span>→</span> Follow us on Instagram
+            <span>→</span> {homepage.merchInstagramText}
           </a>
         </div>
       </div>

@@ -7,6 +7,11 @@ import {
   HomepageTestimonial,
   OrderStep,
 } from "@/data/homepage";
+import {
+  fallbackShopPage,
+  ShopPageContent,
+  ShopSectionCopy,
+} from "@/data/shop-page";
 import { Product } from "@/types";
 
 type StrapiImage =
@@ -175,6 +180,22 @@ function mapHomepage(
     ctaBackgroundImage:
       resolveImageUrl(fields.ctaBackgroundImage as StrapiImage, strapiUrl) ??
       fallbackHomepage.ctaBackgroundImage,
+    bestSellersTitle: String(
+      fields.bestSellersTitle ?? fallbackHomepage.bestSellersTitle
+    ),
+    merchTitle: String(fields.merchTitle ?? fallbackHomepage.merchTitle),
+    merchLinkText: String(
+      fields.merchLinkText ?? fallbackHomepage.merchLinkText
+    ),
+    merchInstagramText: String(
+      fields.merchInstagramText ?? fallbackHomepage.merchInstagramText
+    ),
+    footerTagline: String(
+      fields.footerTagline ?? fallbackHomepage.footerTagline
+    ),
+    siteDescription: String(
+      fields.siteDescription ?? fallbackHomepage.siteDescription
+    ),
   };
 }
 
@@ -279,4 +300,48 @@ export async function getOrderSteps(): Promise<OrderStep[]> {
     .filter((s): s is OrderStep => s !== null);
 
   return steps.length > 0 ? steps : fallbackOrderSteps;
+}
+
+function mapShopSection(item: unknown): ShopSectionCopy | null {
+  if (!item || typeof item !== "object") return null;
+  const fields = item as Record<string, unknown>;
+  const sectionKey = String(fields.sectionKey ?? "");
+  const title = String(fields.title ?? "");
+  const subtitle = String(fields.subtitle ?? "");
+  if (!sectionKey || !title) return null;
+  return { sectionKey, title, subtitle };
+}
+
+function mapShopPage(entry: StrapiEntry | null | undefined): ShopPageContent | null {
+  if (!entry) return null;
+  const fields = getFields(entry);
+  if (!fields.description && !fields.title) return null;
+
+  const sectionsRaw = fields.sections;
+  const sections = Array.isArray(sectionsRaw)
+    ? sectionsRaw
+        .map(mapShopSection)
+        .filter((s): s is ShopSectionCopy => s !== null)
+    : [];
+
+  return {
+    title: String(fields.title ?? fallbackShopPage.title),
+    subtitle: String(fields.subtitle ?? fallbackShopPage.subtitle),
+    description: String(fields.description ?? fallbackShopPage.description),
+    sections: sections.length > 0 ? sections : fallbackShopPage.sections,
+  };
+}
+
+export async function getShopPage(): Promise<ShopPageContent> {
+  const { url } = getStrapiConfig();
+  if (!url) return fallbackShopPage;
+
+  const res = await strapiFetch("/api/shop-page?populate=*");
+  if (!res?.ok) {
+    console.error(`Strapi shop page fetch failed: ${res?.status ?? "no response"}`);
+    return fallbackShopPage;
+  }
+
+  const json = (await res.json()) as { data?: StrapiEntry };
+  return mapShopPage(json.data) ?? fallbackShopPage;
 }

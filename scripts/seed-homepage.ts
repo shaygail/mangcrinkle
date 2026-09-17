@@ -1,5 +1,5 @@
 /**
- * Seeds homepage content, testimonials, and order steps into Strapi.
+ * Seeds homepage content, shop page, testimonials, and order steps into Strapi.
  *
  * Usage: npx tsx scripts/seed-homepage.ts
  */
@@ -11,6 +11,7 @@ import {
   fallbackOrderSteps,
   fallbackTestimonials,
 } from "../src/data/homepage";
+import { fallbackShopPage } from "../src/data/shop-page";
 
 function loadEnvLocal() {
   const envPath = join(process.cwd(), ".env.local");
@@ -67,6 +68,12 @@ async function main() {
       ctaBody: fallbackHomepage.ctaBody,
       ctaButtonText: fallbackHomepage.ctaButtonText,
       ctaMarqueeText: fallbackHomepage.ctaMarqueeText,
+      bestSellersTitle: fallbackHomepage.bestSellersTitle,
+      merchTitle: fallbackHomepage.merchTitle,
+      merchLinkText: fallbackHomepage.merchLinkText,
+      merchInstagramText: fallbackHomepage.merchInstagramText,
+      footerTagline: fallbackHomepage.footerTagline,
+      siteDescription: fallbackHomepage.siteDescription,
     },
   };
 
@@ -82,6 +89,33 @@ async function main() {
     console.error(`Homepage seed failed: ${homepageRes.status} ${body}`);
   } else {
     console.log("✓ Homepage content seeded");
+  }
+
+  const shopPayload = {
+    data: {
+      title: fallbackShopPage.title,
+      subtitle: fallbackShopPage.subtitle,
+      description: fallbackShopPage.description,
+      sections: fallbackShopPage.sections.map((section) => ({
+        sectionKey: section.sectionKey,
+        title: section.title,
+        subtitle: section.subtitle,
+      })),
+    },
+  };
+
+  console.log("Seeding shop page single type...");
+  const shopRes = await fetch(`${strapiUrl}/api/shop-page`, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(shopPayload),
+  });
+
+  if (!shopRes.ok) {
+    const body = await shopRes.text();
+    console.error(`Shop page seed failed: ${shopRes.status} ${body}`);
+  } else {
+    console.log("✓ Shop page content seeded");
   }
 
   console.log(`Seeding ${fallbackTestimonials.length} testimonials...`);
@@ -130,8 +164,10 @@ async function main() {
     }
   }
 
-  console.log("\n--- Homepage seed complete ---");
-  console.log("Upload heroImage, storyImage, and ctaBackgroundImage in Strapi Admin.");
+  console.log("\n--- Homepage / shop seed complete ---");
+  console.log(
+    "Upload heroImage, storyImage, and ctaBackgroundImage in Strapi Admin."
+  );
 }
 
 main();

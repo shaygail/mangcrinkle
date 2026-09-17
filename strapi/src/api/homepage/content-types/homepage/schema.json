@@ -89,6 +89,24 @@
       "multiple": false,
       "required": false,
       "allowedTypes": ["images"]
+    },
+    "bestSellersTitle": {
+      "type": "string"
+    },
+    "merchTitle": {
+      "type": "string"
+    },
+    "merchLinkText": {
+      "type": "string"
+    },
+    "merchInstagramText": {
+      "type": "string"
+    },
+    "footerTagline": {
+      "type": "string"
+    },
+    "siteDescription": {
+      "type": "text"
     }
   }
 }

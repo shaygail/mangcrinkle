@@ -1,0 +1,33 @@
+{
+  "kind": "singleType",
+  "collectionName": "shop_pages",
+  "info": {
+    "singularName": "shop-page",
+    "pluralName": "shop-pages",
+    "displayName": "Shop Page",
+    "description": "Shop page header and section descriptions"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "default": "Mang Crinkle"
+    },
+    "subtitle": {
+      "type": "string",
+      "default": "made to crave"
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "sections": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.shop-section"
+    }
+  }
+}

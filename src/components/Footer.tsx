@@ -1,9 +1,12 @@
 import Link from "next/link";
+import { getHomepage } from "@/lib/strapi";
 
 const footerLinkClass =
   "block min-h-11 py-2 flex items-center hover:text-mang-orange transition-colors";
 
-export default function Footer() {
+export default async function Footer() {
+  const homepage = await getHomepage();
+
   return (
     <footer className="bg-mang-brown text-mang-cream">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -29,7 +32,10 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=iced-drinks" className={footerLinkClass}>
+                <Link
+                  href="/shop?category=iced-drinks"
+                  className={footerLinkClass}
+                >
                   Drinks
                 </Link>
               </li>
@@ -95,9 +101,11 @@ export default function Footer() {
             </ul>
           </div>
           <div className="col-span-2 md:col-span-1 text-center md:text-left">
-            <span className="menu-logo text-3xl leading-none block">Mang Crinkle</span>
+            <span className="menu-logo text-3xl leading-none block">
+              {homepage.heroTitle}
+            </span>
             <span className="menu-logo-sub text-base leading-none block mt-1">
-              made to crave
+              {homepage.footerTagline}
             </span>
           </div>
         </div>

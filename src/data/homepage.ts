@@ -23,6 +23,12 @@ export interface HomepageContent {
   ctaButtonText: string;
   ctaMarqueeText: string;
   ctaBackgroundImage: string;
+  bestSellersTitle: string;
+  merchTitle: string;
+  merchLinkText: string;
+  merchInstagramText: string;
+  footerTagline: string;
+  siteDescription: string;
 }
 
 export interface HomepageTestimonial {
@@ -76,6 +82,13 @@ export const fallbackHomepage: HomepageContent = {
   ctaButtonText: "Order Crinkles Now",
   ctaMarqueeText: "MADE TO CRAVE",
   ctaBackgroundImage: PLACEHOLDERS.hero,
+  bestSellersTitle: "Fan Favourites",
+  merchTitle: "Fan Favourite Crinkles",
+  merchLinkText: "Shop All",
+  merchInstagramText: "Follow us on Instagram",
+  footerTagline: "made to crave",
+  siteDescription:
+    "Handcrafted Filipino-inspired crinkles, soft-centred and fudgy. Order crinkles, lava crinkles, and drinks online.",
 };
 
 export const fallbackTestimonials: HomepageTestimonial[] = [
