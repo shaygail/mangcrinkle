@@ -64,32 +64,3 @@ export interface OrderSummary {
   subtotal: number;
   createdAt: string;
 }
-
-export interface Recipe {
-  id: string;
-  title: string;
-  image: string;
-  prep: string;
-  cook: string;
-  serves: string;
-  description: string;
-}
-
-export interface Testimonial {
-  id: string;
-  quote: string;
-  author: string;
-}
-
-export interface MenuLineItem {
-  name: string;
-  price: number;
-  productId?: string;
-}
-
-export interface MenuTier {
-  label: string;
-  priceLabel: string;
-  items: string[];
-  productIds?: string[];
-}

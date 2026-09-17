@@ -41,7 +41,10 @@ export default function PackCustomizerForm({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isComplete) return;
-    addItem(pack, quantity, { packSelections: selections });
+    addItem(pack, quantity, {
+      packSelections: selections,
+      openCart: onAdded ? false : true,
+    });
     onAdded?.(pack.name);
   };
 

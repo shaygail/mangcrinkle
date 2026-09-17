@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   shopFilters,
@@ -21,11 +20,14 @@ type ShopSection = (typeof shopSections)[number];
 interface ShopContentProps {
   content: ShopPageContent;
   sections: ShopSection[];
+  activeFilter?: ShopFilter;
 }
 
-export default function ShopContent({ content, sections }: ShopContentProps) {
-  const searchParams = useSearchParams();
-  const activeFilter = (searchParams.get("category") as ShopFilter) || "all";
+export default function ShopContent({
+  content,
+  sections,
+  activeFilter = "all",
+}: ShopContentProps) {
   const { products } = useProducts();
   const { openCart } = useCart();
   const [addedItem, setAddedItem] = useState<string | null>(null);
@@ -55,6 +57,7 @@ export default function ShopContent({ content, sections }: ShopContentProps) {
             <Link
               key={filter.id}
               href={filter.id === "all" ? "/shop" : `/shop?category=${filter.id}`}
+              scroll={false}
               className={`inline-flex items-center min-h-11 px-4 py-2.5 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider whitespace-nowrap border-2 transition-colors ${
                 activeFilter === filter.id
                   ? "bg-mang-brown text-mang-cream border-mang-brown"
@@ -92,9 +95,13 @@ export default function ShopContent({ content, sections }: ShopContentProps) {
                   onAdded={(name) => setAddedItem(name)}
                 />
               ) : (
-                <div className="grid grid-cols-1 min-[400px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
                   {sectionProducts.map((product) => (
-                    <ProductCard key={product.id} product={product} />
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      onAdded={(name) => setAddedItem(name)}
+                    />
                   ))}
                 </div>
               )}

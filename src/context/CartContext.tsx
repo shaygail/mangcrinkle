@@ -22,6 +22,9 @@ import { useProducts } from "@/context/ProductsContext";
 
 export interface AddItemOptions {
   packSelections?: string[];
+  milk?: MilkType;
+  /** Defaults to true. Set false when a confirmation dialog will offer "View cart". */
+  openCart?: boolean;
 }
 
 interface CartContextType {
@@ -77,7 +80,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addItem = useCallback(
     (product: Product, quantity = 1, options?: AddItemOptions) => {
-      const milk: MilkType | undefined = isDrink(product) ? "whole" : undefined;
+      const milk: MilkType | undefined = isDrink(product)
+        ? (options?.milk ?? "whole")
+        : undefined;
       const packSelections = isPack(product)
         ? options?.packSelections
         : undefined;
@@ -111,7 +116,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
           { lineId, product, quantity, milk, packSelections },
         ];
       });
-      setIsOpen(true);
+
+      // Only auto-open cart when caller did not provide a custom confirmation flow
+      if (options?.openCart !== false) {
+        setIsOpen(true);
+      }
     },
     [products]
   );

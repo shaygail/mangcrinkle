@@ -1,21 +1,25 @@
-import { Suspense } from "react";
 import { getShopPage } from "@/lib/strapi";
 import ShopContent from "@/components/shop/ShopContent";
 import { mergeShopSections } from "@/data/shop-page";
+import { ShopFilter } from "@/data/products";
 
-export default async function ShopPage() {
-  const shopPage = await getShopPage();
+type ShopPageProps = {
+  searchParams?: Promise<{ category?: string }> | { category?: string };
+};
+
+export default async function ShopPage({ searchParams }: ShopPageProps) {
+  const [shopPage, params] = await Promise.all([
+    getShopPage(),
+    Promise.resolve(searchParams ?? {}),
+  ]);
   const sections = mergeShopSections(shopPage);
+  const activeFilter = (params.category as ShopFilter) || "all";
 
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-[50vh] flex items-center justify-center bg-mang-cream">
-          <p className="text-mang-brown/60">Loading menu...</p>
-        </div>
-      }
-    >
-      <ShopContent content={shopPage} sections={sections} />
-    </Suspense>
+    <ShopContent
+      content={shopPage}
+      sections={sections}
+      activeFilter={activeFilter}
+    />
   );
 }

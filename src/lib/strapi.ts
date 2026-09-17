@@ -18,11 +18,18 @@ type StrapiImage =
   | string
   | {
       url?: string;
+      formats?: Record<string, { url?: string } | undefined>;
       data?: {
-        attributes?: { url?: string };
+        attributes?: {
+          url?: string;
+          formats?: Record<string, { url?: string } | undefined>;
+        };
         url?: string;
       } | null;
-      attributes?: { url?: string };
+      attributes?: {
+        url?: string;
+        formats?: Record<string, { url?: string } | undefined>;
+      };
     }
   | null
   | undefined;
@@ -56,7 +63,19 @@ export function resolveImageUrl(
     return image.startsWith("http") ? image : `${strapiUrl}${image}`;
   }
 
+  // Prefer larger generated formats when Strapi provides them
+  const nestedFormats =
+    (image as { formats?: Record<string, { url?: string }> }).formats ??
+    image.data?.attributes?.formats ??
+    image.attributes?.formats;
+  const preferredFormat =
+    nestedFormats?.large?.url ??
+    nestedFormats?.medium?.url ??
+    nestedFormats?.small?.url ??
+    nestedFormats?.thumbnail?.url;
+
   const url =
+    preferredFormat ??
     image.url ??
     image.data?.attributes?.url ??
     image.data?.url ??
@@ -78,9 +97,16 @@ async function strapiFetch(path: string): Promise<Response | null> {
       headers,
       next: { revalidate: REVALIDATE_SECONDS },
     });
-  } catch (error) {
-    console.error(`Strapi fetch error (${path}):`, error);
+  } catch {
+    // Offline / unreachable Strapi — callers use local fallbacks
     return null;
+  }
+}
+
+function logStrapiHttpError(label: string, res: Response | null) {
+  // Null means network failure (already silent). Only log real HTTP errors.
+  if (res && !res.ok) {
+    console.error(`Strapi ${label} fetch failed: ${res.status}`);
   }
 }
 
@@ -231,7 +257,7 @@ export async function getProducts(): Promise<Product[]> {
     "/api/products?populate=image&pagination[pageSize]=200"
   );
   if (!res?.ok) {
-    console.error(`Strapi products fetch failed: ${res?.status ?? "no response"}`);
+    logStrapiHttpError("products", res);
     return fallbackProducts;
   }
 
@@ -249,7 +275,7 @@ export async function getHomepage(): Promise<HomepageContent> {
 
   const res = await strapiFetch("/api/homepage?populate=*");
   if (!res?.ok) {
-    console.error(`Strapi homepage fetch failed: ${res?.status ?? "no response"}`);
+    logStrapiHttpError("homepage", res);
     return fallbackHomepage;
   }
 
@@ -266,9 +292,7 @@ export async function getTestimonials(): Promise<HomepageTestimonial[]> {
     "/api/testimonials?sort=sortOrder:asc&pagination[pageSize]=50"
   );
   if (!res?.ok) {
-    console.error(
-      `Strapi testimonials fetch failed: ${res?.status ?? "no response"}`
-    );
+    logStrapiHttpError("testimonials", res);
     return fallbackTestimonials;
   }
 
@@ -288,9 +312,7 @@ export async function getOrderSteps(): Promise<OrderStep[]> {
     "/api/order-steps?sort=sortOrder:asc&pagination[pageSize]=20"
   );
   if (!res?.ok) {
-    console.error(
-      `Strapi order steps fetch failed: ${res?.status ?? "no response"}`
-    );
+    logStrapiHttpError("order steps", res);
     return fallbackOrderSteps;
   }
 
@@ -338,7 +360,7 @@ export async function getShopPage(): Promise<ShopPageContent> {
 
   const res = await strapiFetch("/api/shop-page?populate=*");
   if (!res?.ok) {
-    console.error(`Strapi shop page fetch failed: ${res?.status ?? "no response"}`);
+    logStrapiHttpError("shop page", res);
     return fallbackShopPage;
   }
 

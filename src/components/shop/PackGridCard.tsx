@@ -18,49 +18,53 @@ export default function PackGridCard({
 }: PackGridCardProps) {
   return (
     <article
-      className={`group flex flex-col bg-mang-tan border-2 rounded-2xl overflow-hidden shadow-[3px_3px_0_rgba(74,44,26,0.2)] transition-colors ${
+      className={`group flex flex-row sm:flex-col items-stretch bg-mang-tan border-2 rounded-2xl overflow-hidden shadow-[3px_3px_0_rgba(74,44,26,0.2)] transition-colors ${
         isActive
           ? "border-mang-orange ring-2 ring-mang-orange/30"
           : "border-mang-brown"
       }`}
     >
-      <button
-        type="button"
-        onClick={onChoose}
-        className="relative aspect-square overflow-hidden bg-mang-cream w-full cursor-pointer"
-        aria-expanded={isActive}
-      >
+      <div className="relative w-[7.75rem] sm:w-full shrink-0 self-stretch sm:self-auto sm:aspect-[4/3] md:aspect-square overflow-hidden bg-mang-cream">
         <ProductImage
           src={pack.image}
           alt={pack.name}
           fallback={getProductPlaceholder(pack)}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-300"
-          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+          sizes="(max-width: 640px) 124px, (max-width: 1024px) 50vw, 25vw"
         />
         {pack.badge && (
-          <span className="absolute top-3 left-3 bg-mang-orange text-mang-brown text-xs font-bold px-3 py-1 rounded-full uppercase border border-mang-brown">
+          <span className="absolute top-2 left-2 sm:top-3 sm:left-3 z-[1] bg-mang-orange text-mang-brown text-[10px] sm:text-xs font-bold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full uppercase border border-mang-brown">
             {pack.badge}
           </span>
         )}
-      </button>
+      </div>
 
-      <div className="flex flex-col flex-1 p-4">
-        <h3 className="font-bold text-mang-brown text-sm lg:text-base leading-tight mb-1">
+      <div className="relative z-[1] flex flex-col flex-1 min-w-0 p-3 sm:p-4 bg-mang-tan">
+        <h3 className="font-bold text-mang-brown text-sm sm:text-base leading-snug mb-1 line-clamp-2">
           {pack.name}
         </h3>
-        <p className="text-mang-brown/70 text-xs leading-relaxed mb-3 flex-1">
+        <p className="text-mang-brown/70 text-xs leading-relaxed mb-2 sm:mb-3 flex-1 line-clamp-2 sm:line-clamp-none">
           {pack.description}
-          <span className="block mt-1 text-mang-brown/50">
+          <span className="hidden sm:block mt-1 text-mang-brown/50">
             Premium +$0.50 · Signature +$1.00 per crinkle
           </span>
         </p>
-        <p className="font-bold text-mang-brown text-lg mb-3">
-          from ${pack.price.toFixed(2)}
-        </p>
-        <Button variant="brown" pop fullWidth onClick={onChoose}>
-          {isActive ? "Hide Flavours" : "Choose Flavours"}
-        </Button>
+        <div className="mt-auto flex flex-col gap-2 sm:gap-3">
+          <p className="font-bold text-mang-brown text-lg">
+            from ${pack.price.toFixed(2)}
+          </p>
+          <Button
+            type="button"
+            variant="brown"
+            pop
+            fullWidth
+            className="min-h-11 text-xs sm:text-sm relative z-[1]"
+            onClick={onChoose}
+          >
+            Choose Flavours
+          </Button>
+        </div>
       </div>
     </article>
   );

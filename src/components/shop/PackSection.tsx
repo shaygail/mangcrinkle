@@ -14,8 +14,12 @@ export default function PackSection({ packs, onAdded }: PackSectionProps) {
   const [expandedPackId, setExpandedPackId] = useState<string | null>(null);
   const expandedPack = packs.find((p) => p.id === expandedPackId) ?? null;
 
-  const togglePack = (packId: string) => {
-    setExpandedPackId((current) => (current === packId ? null : packId));
+  const openPack = (packId: string) => {
+    setExpandedPackId(packId);
+  };
+
+  const closePack = () => {
+    setExpandedPackId(null);
   };
 
   const handleAdded = (name: string) => {
@@ -25,30 +29,23 @@ export default function PackSection({ packs, onAdded }: PackSectionProps) {
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
         {packs.map((pack) => (
           <PackGridCard
             key={pack.id}
             pack={pack}
             isActive={expandedPackId === pack.id}
-            onChoose={() => togglePack(pack.id)}
+            onChoose={() => openPack(pack.id)}
           />
         ))}
       </div>
 
       {expandedPack && (
-        <>
-          <div
-            className="lg:hidden fixed inset-0 bg-mang-brown/40 z-40"
-            onClick={() => setExpandedPackId(null)}
-            aria-hidden="true"
-          />
-          <PackExpandedPanel
-            pack={expandedPack}
-            onClose={() => setExpandedPackId(null)}
-            onAdded={handleAdded}
-          />
-        </>
+        <PackExpandedPanel
+          pack={expandedPack}
+          onClose={closePack}
+          onAdded={handleAdded}
+        />
       )}
     </>
   );

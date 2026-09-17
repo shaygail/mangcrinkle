@@ -3,19 +3,22 @@
 import { useState } from "react";
 import { getBestSellers } from "@/data/products";
 import { useProducts } from "@/context/ProductsContext";
-import { useCart } from "@/context/CartContext";
 import { getProductPlaceholder } from "@/lib/images";
+import { isDrink } from "@/lib/cart";
 import ProductImage from "@/components/ProductImage";
 import Button from "@/components/Button";
+import ProductAddModal from "@/components/ProductAddModal";
 
 interface BestSellersProps {
   title?: string;
 }
 
-export default function BestSellers({ title = "Fan Favourites" }: BestSellersProps) {
+export default function BestSellers({
+  title = "Fan Favourites",
+}: BestSellersProps) {
   const [current, setCurrent] = useState(0);
+  const [modalOpen, setModalOpen] = useState(false);
   const { products } = useProducts();
-  const { addItem } = useCart();
   const bestSellers = getBestSellers(products);
   const product = bestSellers[current];
 
@@ -51,10 +54,21 @@ export default function BestSellers({ title = "Fan Favourites" }: BestSellersPro
               ${product.price.toFixed(2)}
             </p>
             <div className="flex flex-col w-full sm:flex-row gap-3 sm:gap-5 justify-center lg:justify-start">
-              <Button variant="brown" pop fullWidth className="sm:w-auto" onClick={() => addItem(product)}>
-                Add to Cart
+              <Button
+                variant="brown"
+                pop
+                fullWidth
+                className="sm:w-auto"
+                onClick={() => setModalOpen(true)}
+              >
+                {isDrink(product) ? "Choose Options" : "Add to Cart"}
               </Button>
-              <Button href="/shop" variant="cream" fullWidth className="sm:w-auto">
+              <Button
+                href="/shop"
+                variant="cream"
+                fullWidth
+                className="sm:w-auto"
+              >
                 View Menu
               </Button>
             </div>
@@ -69,8 +83,18 @@ export default function BestSellers({ title = "Fan Favourites" }: BestSellersPro
                 className="min-h-11 min-w-11 p-2.5 border-2 border-mang-brown/25 rounded-full hover:border-mang-brown hover:text-mang-orange text-mang-brown transition-colors flex items-center justify-center"
                 aria-label="Previous slide"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
                 </svg>
               </button>
               <div className="flex gap-2">
@@ -90,20 +114,35 @@ export default function BestSellers({ title = "Fan Favourites" }: BestSellersPro
                 ))}
               </div>
               <button
-                onClick={() =>
-                  setCurrent((c) => (c + 1) % bestSellers.length)
-                }
+                onClick={() => setCurrent((c) => (c + 1) % bestSellers.length)}
                 className="min-h-11 min-w-11 p-2.5 border-2 border-mang-brown/25 rounded-full hover:border-mang-brown hover:text-mang-orange text-mang-brown transition-colors flex items-center justify-center"
                 aria-label="Next slide"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </button>
             </div>
           </div>
         </div>
       </div>
+
+      {modalOpen && (
+        <ProductAddModal
+          product={product}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
     </section>
   );
 }
