@@ -50,14 +50,14 @@ export interface OrderStep {
  */
 export const fallbackHomepage: HomepageContent = {
   announcementText:
-    "🍪 Handcrafted Filipino-inspired crinkles — order online for pickup",
+    "🍪 HANDCRAFTED FILIPINO-INSPIRED CRINKLES - ORDER ONLINE FOR PICKUP",
   heroTitle: "Mang Crinkle",
   heroSubtitle: "made to crave",
   heroDescription:
     "Handcrafted Filipino-inspired crinkles, soft-centred, and fudgy.",
-  heroButtonText: "Order Now",
+  heroButtonText: "Order Crinkles Now",
   heroButtonLink: "/shop",
-  heroImage: PLACEHOLDERS.hero,
+  heroImage: "/images/figma/hero-crinkles.jpg",
   tagline:
     "From the first bite to the last crumb, every crinkle is baked soft-centred, fudgy, and made to crave.",
   storyTitle: "The Story Behind Mang Crinkle",
@@ -75,13 +75,13 @@ export const fallbackHomepage: HomepageContent = {
   howToOrderSubtitle:
     "Order online in a few taps — browse, build your box, checkout, then pick up.",
   howToOrderButtonText: "Start Ordering",
-  testimonialsTitle: "They Bite.\nThey Crave.\nThey Come Back.",
-  ctaTitle: "Ready to Crave?",
+  testimonialsTitle: "What Crinkle Fans Say",
+  ctaTitle: "Bake Someone Happy",
   ctaBody:
-    "Pick your box, choose your flavours, add a drink — your perfect order is just a few clicks away.",
-  ctaButtonText: "Order Crinkles Now",
+    "Perfect for gatherings, gifts, or a personal weekend indulgence. Every crinkle is freshly baked with loving care.",
+  ctaButtonText: "Order Fresh Now",
   ctaMarqueeText: "MADE TO CRAVE",
-  ctaBackgroundImage: PLACEHOLDERS.hero,
+  ctaBackgroundImage: "/images/figma/hero-crinkles.jpg",
   bestSellersTitle: "Fan Favourites",
   merchTitle: "Fan Favourite Crinkles",
   merchLinkText: "Shop All",
@@ -95,13 +95,13 @@ export const fallbackTestimonials: HomepageTestimonial[] = [
   {
     id: "1",
     quote:
-      "The ube crinkles are incredible — soft in the middle and the flavour is so unique. I keep coming back for more!",
-    author: "Maria L.",
+      "The signature ube crinkles are absolutely legendary - pillowy soft on the outside with an incredibly rich, fudge-like centre. Best dessert in the city!",
+    author: "Amara L.",
   },
   {
     id: "2",
     quote:
-      "Best crinkles I've had outside the Philippines. The lava ube is dangerously good.",
+      "Best crinkles I've had outside the Philippines. The lava chocolate is dangerously good.",
     author: "James T.",
   },
   {
@@ -110,45 +110,28 @@ export const fallbackTestimonials: HomepageTestimonial[] = [
       "Ordered a 6-pack for a party and they were gone in minutes. Already planning my next order.",
     author: "Priya S.",
   },
-  {
-    id: "4",
-    quote:
-      "The iced ube marble matcha paired with a classic chocolate crinkle — chef's kiss.",
-    author: "Andre K.",
-  },
 ];
 
 export const fallbackOrderSteps: OrderStep[] = [
   {
     id: "1",
     stepNumber: "1",
-    title: "Browse the Menu",
+    title: "Pick A Box",
     emoji: "🛒",
-    description:
-      "Head to the shop and explore singles, 3/6/12 packs, lava crinkles, and drinks.",
+    description: "Choose a 3, 6, or 12 pack - or grab singles.",
   },
   {
     id: "2",
     stepNumber: "2",
-    title: "Build Your Order",
+    title: "Choose A Flavour",
     emoji: "🍪",
-    description:
-      "Open a pack to pick each crinkle flavour, or add singles and drinks straight to cart.",
+    description: "Mix & match standard, premium, or signature crinkles.",
   },
   {
     id: "3",
     stepNumber: "3",
-    title: "Review & Checkout",
-    emoji: "✅",
-    description:
-      "Check your cart, swap milk on drinks if you like, then enter your name and contact details.",
-  },
-  {
-    id: "4",
-    stepNumber: "4",
-    title: "Pick Up & Enjoy",
-    emoji: "📧",
-    description:
-      "We'll email you to confirm your order and arrange pickup — then dig in!",
+    title: "Add A Drink",
+    emoji: "🥤",
+    description: "Pair with a hot or iced drink on the side.",
   },
 ];

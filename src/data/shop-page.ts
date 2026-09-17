@@ -17,10 +17,10 @@ export interface ShopPageContent {
  * Offline / error fallback shop page copy. Live data is fetched from Strapi.
  */
 export const fallbackShopPage: ShopPageContent = {
-  title: "Mang Crinkle",
-  subtitle: "made to crave",
+  title: "The Crinkle Shop",
+  subtitle: "Filipino Sweet Magic",
   description:
-    "Pick your crinkles, packs, drinks & extras — add each item to your cart individually.",
+    "Experience award-winning premium cookies. Handcrafted fresh daily, featuring a pillow-soft exterior, unbelievably fudgy soft centres, and snowy sweet powdered sugar.",
   sections: structuralShopSections.map((section) => ({
     sectionKey: section.id,
     title: section.title,

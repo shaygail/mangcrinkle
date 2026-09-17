@@ -2,32 +2,70 @@
 
 import { FormEvent, useState } from "react";
 import { useCart } from "@/context/CartContext";
-import { isDrink, isPack } from "@/lib/cart";
+import { getItemUnitPrice, isDrink, isPack } from "@/lib/cart";
+import { useProducts } from "@/context/ProductsContext";
 import { OrderItemPayload } from "@/types";
 import Button from "@/components/Button";
 
+export type CheckoutSuccessMeta = {
+  lines: { name: string; qty: number; total: number }[];
+  subtotal: number;
+  pickup: string;
+  payment: string;
+};
+
 interface CheckoutFormProps {
   onBack: () => void;
-  onSuccess: (orderId: string) => void;
+  onSuccess: (orderId: string, meta: CheckoutSuccessMeta) => void;
+  pickupSummary: string;
 }
 
-export default function CheckoutForm({ onBack, onSuccess }: CheckoutFormProps) {
+type PaymentMethod = "gcash" | "card" | "pickup";
+
+export default function CheckoutForm({
+  onBack,
+  onSuccess,
+  pickupSummary,
+}: CheckoutFormProps) {
+  const { products } = useProducts();
   const { items, subtotal, clearCart } = useCart();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [notes, setNotes] = useState("");
   const [website, setWebsite] = useState("");
+  const [payment, setPayment] = useState<PaymentMethod>("pickup");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  const paymentLabel =
+    payment === "gcash"
+      ? "Preferred: GCash / Mobile Wallet (pay at pickup)"
+      : payment === "card"
+        ? "Preferred: Card (pay at pickup)"
+        : "Pay at pickup";
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
     setSubmitting(true);
 
+    const scheduleNote = `Pickup: ${pickupSummary} · ${paymentLabel}`;
+    const combinedNotes = [scheduleNote, notes.trim()].filter(Boolean).join("\n");
+
+    const lines = items.map((item) => ({
+      name: item.product.name,
+      qty: item.quantity,
+      total: getItemUnitPrice(products, item) * item.quantity,
+    }));
+
     const payload = {
-      customer: { name, email, phone, notes: notes || undefined },
+      customer: {
+        name,
+        email,
+        phone,
+        notes: combinedNotes || undefined,
+      },
       website,
       items: items.map(
         (item): OrderItemPayload => ({
@@ -60,7 +98,12 @@ export default function CheckoutForm({ onBack, onSuccess }: CheckoutFormProps) {
       }
 
       clearCart();
-      onSuccess(data.orderId);
+      onSuccess(data.orderId, {
+        lines,
+        subtotal,
+        pickup: pickupSummary,
+        payment: paymentLabel,
+      });
     } catch {
       setError("Could not reach the server. Please check your connection.");
     } finally {
@@ -68,14 +111,13 @@ export default function CheckoutForm({ onBack, onSuccess }: CheckoutFormProps) {
     }
   }
 
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <p className="text-sm text-mang-brown/70 mb-4">
-          Enter your details and we&apos;ll confirm pickup by email.
-        </p>
-      </div>
+  const fieldClass =
+    "w-full min-h-11 bg-white border-[1.5px] border-mang-brown rounded-lg px-4 py-3 text-sm text-mang-brown focus:outline-none focus:ring-2 focus:ring-mang-orange/40";
+  const labelClass =
+    "block text-[12px] font-extrabold uppercase tracking-wide text-mang-brown-mid mb-1.5";
 
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="hidden" aria-hidden="true">
         <label htmlFor="website">Website</label>
         <input
@@ -89,97 +131,202 @@ export default function CheckoutForm({ onBack, onSuccess }: CheckoutFormProps) {
         />
       </div>
 
-      <div>
-        <label
-          htmlFor="checkout-name"
-          className="block text-xs font-bold uppercase tracking-wider text-mang-brown/60 mb-1"
-        >
-          Name
-        </label>
-        <input
-          id="checkout-name"
-          type="text"
-          required
-          autoComplete="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full min-h-11 bg-mang-cream border border-mang-brown/25 rounded-xl px-3 py-3 text-base text-mang-brown focus:outline-none focus:border-mang-orange"
-        />
-      </div>
+      <section className="space-y-3">
+        <h3 className="menu-title-3d text-xl">1. Contact Information</h3>
+        <div className="bg-mang-cream border-2 border-mang-brown rounded-2xl p-4 sm:p-5 space-y-4 shadow-[3px_3px_0_rgba(61,36,23,0.12)]">
+          <div>
+            <label htmlFor="checkout-name" className={labelClass}>
+              Full Name *
+            </label>
+            <input
+              id="checkout-name"
+              type="text"
+              required
+              autoComplete="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className={fieldClass}
+            />
+          </div>
+          <div>
+            <label htmlFor="checkout-email" className={labelClass}>
+              Email Address *
+            </label>
+            <input
+              id="checkout-email"
+              type="email"
+              required
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className={fieldClass}
+            />
+          </div>
+          <div>
+            <div className="flex items-center justify-between gap-2 mb-1.5">
+              <label htmlFor="checkout-phone" className={labelClass + " mb-0"}>
+                Mobile Number *
+              </label>
+              {phone.trim().length >= 8 && (
+                <span className="text-[10px] font-bold text-mang-brown">
+                  ✓ Valid for SMS notifications
+                </span>
+              )}
+            </div>
+            <input
+              id="checkout-phone"
+              type="tel"
+              required
+              autoComplete="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className={fieldClass}
+            />
+          </div>
+          <div>
+            <label htmlFor="checkout-notes" className={labelClass}>
+              Extra Notes{" "}
+              <span className="font-normal normal-case">(optional)</span>
+            </label>
+            <textarea
+              id="checkout-notes"
+              rows={2}
+              maxLength={500}
+              placeholder="Dietary notes, etc."
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              className={fieldClass + " resize-none"}
+            />
+          </div>
+        </div>
+      </section>
 
-      <div>
-        <label
-          htmlFor="checkout-email"
-          className="block text-xs font-bold uppercase tracking-wider text-mang-brown/60 mb-1"
-        >
-          Email
-        </label>
-        <input
-          id="checkout-email"
-          type="email"
-          required
-          autoComplete="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full min-h-11 bg-mang-cream border border-mang-brown/25 rounded-xl px-3 py-3 text-base text-mang-brown focus:outline-none focus:border-mang-orange"
-        />
-      </div>
+      <section className="space-y-3">
+        <h3 className="menu-title-3d text-xl">2. Pickup Schedule</h3>
+        <div className="bg-mang-cream border-2 border-mang-brown rounded-2xl p-4 shadow-[3px_3px_0_rgba(61,36,23,0.12)] space-y-1">
+          <p className="font-bold text-sm text-mang-brown">
+            📍 Manila Town Kitchen (HQ)
+          </p>
+          <p className="text-sm text-mang-brown-mid">Date: {pickupSummary}</p>
+        </div>
+      </section>
 
-      <div>
-        <label
-          htmlFor="checkout-phone"
-          className="block text-xs font-bold uppercase tracking-wider text-mang-brown/60 mb-1"
-        >
-          Phone
-        </label>
-        <input
-          id="checkout-phone"
-          type="tel"
-          required
-          autoComplete="tel"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          className="w-full min-h-11 bg-mang-cream border border-mang-brown/25 rounded-xl px-3 py-3 text-base text-mang-brown focus:outline-none focus:border-mang-orange"
-        />
-      </div>
-
-      <div>
-        <label
-          htmlFor="checkout-notes"
-          className="block text-xs font-bold uppercase tracking-wider text-mang-brown/60 mb-1"
-        >
-          Pickup notes <span className="font-normal normal-case">(optional)</span>
-        </label>
-        <textarea
-          id="checkout-notes"
-          rows={3}
-          maxLength={500}
-          placeholder="Preferred pickup time, dietary notes, etc."
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          className="w-full min-h-11 bg-mang-cream border border-mang-brown/25 rounded-xl px-3 py-3 text-base text-mang-brown focus:outline-none focus:border-mang-orange resize-none"
-        />
-      </div>
-
-      <div className="flex justify-between items-center pt-2 border-t border-mang-brown/10">
-        <span className="font-bold text-mang-brown">Subtotal</span>
-        <span className="menu-price text-xl">${subtotal.toFixed(2)}</span>
-      </div>
-
-      {error && (
-        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl px-3 py-2">
-          {error}
+      <section className="space-y-3">
+        <h3 className="menu-title-3d text-xl">3. Payment Preference</h3>
+        <p className="text-xs text-mang-brown-mid -mt-1">
+          Orders are confirmed by email — payment is collected at pickup.
         </p>
-      )}
+        <div className="space-y-2">
+          {(
+            [
+              {
+                id: "pickup" as const,
+                title: "Pay at Pickup",
+                desc: "Cash or card when you collect your box",
+                icon: "🍪",
+              },
+              {
+                id: "gcash" as const,
+                title: "GCash / Mobile Wallet",
+                desc: "Prefer to settle via mobile wallet at pickup",
+                icon: "📱",
+              },
+              {
+                id: "card" as const,
+                title: "Credit or Debit Card",
+                desc: "Visa, Mastercard, and JCB at pickup",
+                icon: "💳",
+              },
+            ] as const
+          ).map((opt) => {
+            const selected = payment === opt.id;
+            return (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => setPayment(opt.id)}
+                className={`w-full flex items-center justify-between gap-3 p-4 rounded-xl text-left transition-colors ${
+                  selected
+                    ? "bg-mang-cream border-[3px] border-mang-brown shadow-[3px_3px_0_rgba(61,36,23,0.12)]"
+                    : "bg-mang-cream-light border-[1.5px] border-mang-brown"
+                }`}
+              >
+                <span className="flex items-center gap-3 min-w-0">
+                  <span
+                    className={`flex size-5 shrink-0 items-center justify-center rounded-full border-2 ${
+                      selected
+                        ? "border-mang-brown bg-mang-brown"
+                        : "border-mang-brown"
+                    }`}
+                    aria-hidden
+                  >
+                    {selected && (
+                      <span className="size-1.5 rounded-full bg-mang-cream" />
+                    )}
+                  </span>
+                  <span>
+                    <span className="block font-bold text-sm text-mang-brown">
+                      {opt.title}
+                    </span>
+                    <span className="block text-xs text-mang-brown-mid">
+                      {opt.desc}
+                    </span>
+                  </span>
+                </span>
+                <span className="text-xl shrink-0" aria-hidden>
+                  {opt.icon}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
 
-      <Button
-        type="submit"
-        variant="brown"
-        fullWidth
-        disabled={submitting}
-      >
-        {submitting ? "Sending order…" : "Place Order"}
-      </Button>
+      <section className="bg-mang-cream border-2 border-mang-brown rounded-2xl p-5 space-y-3 shadow-[3px_3px_0_rgba(61,36,23,0.12)]">
+        <h3 className="menu-title-3d text-xl">4. Order Summary</h3>
+        <ul className="space-y-1.5 text-sm text-mang-brown">
+          {items.map((item) => (
+            <li
+              key={item.lineId}
+              className="flex justify-between gap-3"
+            >
+              <span>
+                {item.product.name} (Qty: {item.quantity})
+              </span>
+              <span className="font-bold shrink-0">
+                $
+                {(
+                  getItemUnitPrice(products, item) * item.quantity
+                ).toFixed(2)}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <div className="border-t border-dashed border-mang-brown/30 pt-3 flex justify-between items-center">
+          <span className="menu-title-3d text-lg">Total Charged</span>
+          <span className="font-extrabold text-xl text-mang-brown">
+            ${subtotal.toFixed(2)}
+          </span>
+        </div>
+
+        {error && (
+          <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl px-3 py-2">
+            {error}
+          </p>
+        )}
+
+        <Button
+          type="submit"
+          variant="yellow"
+          pop
+          fullWidth
+          disabled={submitting}
+        >
+          {submitting
+            ? "Sending order…"
+            : `🔒 Place Order • $${subtotal.toFixed(2)}`}
+        </Button>
+      </section>
 
       <button
         type="button"
@@ -187,7 +334,7 @@ export default function CheckoutForm({ onBack, onSuccess }: CheckoutFormProps) {
         disabled={submitting}
         className="w-full min-h-11 text-center text-sm text-mang-brown/60 hover:text-mang-brown underline disabled:opacity-50 py-3"
       >
-        Back to cart
+        Back to box
       </button>
     </form>
   );

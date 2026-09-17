@@ -6,7 +6,7 @@ export const PLACEHOLDERS = {
   drinkIced: "/images/placeholders/drink-iced.svg",
   lava: "/images/placeholders/lava.svg",
   pack: "/images/placeholders/pack.svg",
-  hero: "/images/placeholders/hero.svg",
+  hero: "/images/figma/hero-crinkles.jpg",
 } as const;
 
 export function getProductPlaceholder(product: Product): string {

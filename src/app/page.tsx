@@ -1,10 +1,8 @@
-import Hero, { Tagline } from "@/components/Hero";
+import Hero, { BrandHighlights } from "@/components/Hero";
 import BestSellers from "@/components/BestSellers";
-import Story from "@/components/Story";
 import Recipes from "@/components/Recipes";
 import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
-import Merch from "@/components/Merch";
 import {
   getHomepage,
   getOrderSteps,
@@ -21,13 +19,11 @@ export default async function HomePage() {
   return (
     <>
       <Hero content={homepage} />
-      <Tagline content={homepage} />
+      <BrandHighlights />
       <BestSellers title={homepage.bestSellersTitle} />
-      <Story content={homepage} />
       <Recipes content={homepage} steps={orderSteps} />
       <Testimonials content={homepage} testimonials={testimonials} />
       <CTA content={homepage} />
-      <Merch />
     </>
   );
 }

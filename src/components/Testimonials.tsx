@@ -13,73 +13,46 @@ export default function Testimonials({
   testimonials,
 }: TestimonialsProps) {
   const [current, setCurrent] = useState(0);
-  const titleLines = content.testimonialsTitle.split("\n");
 
   if (testimonials.length === 0) return null;
 
+  const item = testimonials[current];
+
   return (
-    <section className="py-16 lg:py-24 bg-mang-tan">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="menu-title-3d text-4xl lg:text-5xl text-center mb-4 leading-tight">
-          {titleLines.map((line, i) => (
-            <span key={i}>
-              {line}
-              {i < titleLines.length - 1 && <br />}
-            </span>
-          ))}
-        </h2>
+    <section className="py-10 sm:py-14 lg:py-16 bg-mang-cream-light">
+      <div className="max-w-2xl mx-auto px-6 text-center">
+        <p className="text-4xl text-mang-brown mb-4 leading-none" aria-hidden>
+          &ldquo;
+        </p>
+        <blockquote className="text-base sm:text-lg italic text-mang-brown leading-relaxed mb-4">
+          {item.quote}
+        </blockquote>
+        <cite className="text-[12px] font-bold uppercase tracking-[0.1em] text-mang-brown-mid not-italic">
+          — {item.author}
+        </cite>
 
-        <div className="max-w-2xl mx-auto mt-12 text-center">
-          <blockquote className="text-lg lg:text-xl italic text-mang-brown-mid mb-6 leading-relaxed font-serif">
-            &ldquo;{testimonials[current].quote}&rdquo;
-          </blockquote>
-          <cite className="font-bold text-mang-brown not-italic">
-            {testimonials[current].author}
-          </cite>
-
-          <div className="flex items-center justify-center gap-4 mt-8">
-            <button
-              onClick={() =>
-                setCurrent(
-                  (c) => (c - 1 + testimonials.length) % testimonials.length
-                )
-              }
-              className="min-h-11 min-w-11 p-2.5 border-2 border-mang-brown/25 rounded-full hover:border-mang-brown text-mang-brown transition-colors flex items-center justify-center"
-              aria-label="Previous testimonial"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <div className="flex gap-2">
-              {testimonials.map((_, i) => (
-                <button
-                  key={testimonials[i].id}
-                  onClick={() => setCurrent(i)}
-                  className="min-h-11 min-w-11 flex items-center justify-center"
-                  aria-label={`Go to testimonial ${i + 1}`}
-                >
-                  <span
-                    className={`w-2.5 h-2.5 rounded-full transition-colors ${
-                      i === current ? "bg-mang-brown" : "bg-mang-tan-dark"
-                    }`}
-                  />
-                </button>
-              ))}
-            </div>
-            <button
-              onClick={() =>
-                setCurrent((c) => (c + 1) % testimonials.length)
-              }
-              className="min-h-11 min-w-11 p-2.5 border-2 border-mang-brown/25 rounded-full hover:border-mang-brown text-mang-brown transition-colors flex items-center justify-center"
-              aria-label="Next testimonial"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+        {testimonials.length > 1 && (
+          <div className="flex items-center justify-center gap-3 mt-8">
+            {testimonials.map((t, i) => (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setCurrent(i)}
+                className="min-h-11 min-w-11 flex items-center justify-center"
+                aria-label={`Go to testimonial ${i + 1}`}
+                aria-current={i === current}
+              >
+                <span
+                  className={`w-2 h-2 rounded-full transition-colors ${
+                    i === current ? "bg-mang-brown" : "bg-mang-tan-dark"
+                  }`}
+                />
+              </button>
+            ))}
           </div>
-        </div>
+        )}
+        {/* Keep CMS title available to screen readers if set */}
+        <span className="sr-only">{content.testimonialsTitle}</span>
       </div>
     </section>
   );

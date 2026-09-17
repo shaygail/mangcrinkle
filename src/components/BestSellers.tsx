@@ -1,148 +1,79 @@
 "use client";
 
-import { useState } from "react";
 import { getBestSellers } from "@/data/products";
 import { useProducts } from "@/context/ProductsContext";
-import { getProductPlaceholder } from "@/lib/images";
-import { isDrink } from "@/lib/cart";
-import ProductImage from "@/components/ProductImage";
+import ProductCard from "@/components/ProductCard";
 import Button from "@/components/Button";
-import ProductAddModal from "@/components/ProductAddModal";
+import AddedToCartDialog from "@/components/AddedToCartDialog";
+import { useCart } from "@/context/CartContext";
+import { useState } from "react";
 
 interface BestSellersProps {
   title?: string;
+  eyebrow?: string;
+  subtitle?: string;
 }
 
 export default function BestSellers({
   title = "Fan Favourites",
+  eyebrow = "Craving Starts Here",
+  subtitle = "Freshly baked, fudgy, and ready to order — browse our most-loved crinkles, packs, and drinks.",
 }: BestSellersProps) {
-  const [current, setCurrent] = useState(0);
-  const [modalOpen, setModalOpen] = useState(false);
   const { products } = useProducts();
+  const { openCart } = useCart();
+  const [addedItem, setAddedItem] = useState<string | null>(null);
   const bestSellers = getBestSellers(products);
-  const product = bestSellers[current];
 
-  if (!product) return null;
+  if (bestSellers.length === 0) return null;
 
   return (
-    <section className="py-16 lg:py-24 bg-mang-cream">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="menu-title-3d text-4xl lg:text-5xl text-center mb-12 leading-tight">
-          {title}
-        </h2>
+    <section className="py-10 sm:py-14 lg:py-[72px] bg-mang-cream-light">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-20">
+        <div className="text-center mb-6 sm:mb-8 lg:mb-10">
+          <p className="text-[12px] font-extrabold uppercase tracking-[0.12em] text-mang-brown-mid mb-1.5">
+            {eyebrow}
+          </p>
+          <h2 className="menu-title-3d text-4xl lg:text-5xl mb-2 leading-tight">
+            {title}
+          </h2>
+          <p className="hidden sm:block text-mang-brown-mid text-base italic max-w-2xl mx-auto">
+            {subtitle}
+          </p>
+        </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          <div className="relative aspect-square max-w-lg mx-auto w-full">
-            <ProductImage
-              src={product.image}
-              alt={product.name}
-              fallback={getProductPlaceholder(product)}
-              fill
-              className="object-cover rounded-2xl border-2 border-mang-brown shadow-[4px_4px_0_rgba(61,36,24,0.15)]"
-              sizes="(max-width: 1024px) 100vw, 50vw"
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
+          {bestSellers.slice(0, 6).map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              compact
+              onAdded={(name) => setAddedItem(name)}
             />
-          </div>
+          ))}
+        </div>
 
-          <div className="text-center lg:text-left">
-            <h3 className="menu-product-title-3d text-3xl lg:text-4xl mb-4">
-              {product.name}
-            </h3>
-            <p className="menu-body-text text-base lg:text-lg mb-3 max-w-md mx-auto lg:mx-0">
-              {product.description}
-            </p>
-            <p className="menu-price text-3xl lg:text-4xl mb-6">
-              ${product.price.toFixed(2)}
-            </p>
-            <div className="flex flex-col w-full sm:flex-row gap-3 sm:gap-5 justify-center lg:justify-start">
-              <Button
-                variant="brown"
-                pop
-                fullWidth
-                className="sm:w-auto"
-                onClick={() => setModalOpen(true)}
-              >
-                {isDrink(product) ? "Choose Options" : "Add to Cart"}
-              </Button>
-              <Button
-                href="/shop"
-                variant="cream"
-                fullWidth
-                className="sm:w-auto"
-              >
-                View Menu
-              </Button>
-            </div>
-
-            <div className="flex items-center gap-2 sm:gap-4 mt-8 justify-center lg:justify-start">
-              <button
-                onClick={() =>
-                  setCurrent(
-                    (c) => (c - 1 + bestSellers.length) % bestSellers.length
-                  )
-                }
-                className="min-h-11 min-w-11 p-2.5 border-2 border-mang-brown/25 rounded-full hover:border-mang-brown hover:text-mang-orange text-mang-brown transition-colors flex items-center justify-center"
-                aria-label="Previous slide"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
-              </button>
-              <div className="flex gap-2">
-                {bestSellers.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setCurrent(i)}
-                    className="min-h-11 min-w-11 flex items-center justify-center"
-                    aria-label={`Go to slide ${i + 1}`}
-                  >
-                    <span
-                      className={`w-2.5 h-2.5 rounded-full transition-colors ${
-                        i === current ? "bg-mang-brown" : "bg-mang-tan-dark"
-                      }`}
-                    />
-                  </button>
-                ))}
-              </div>
-              <button
-                onClick={() => setCurrent((c) => (c + 1) % bestSellers.length)}
-                className="min-h-11 min-w-11 p-2.5 border-2 border-mang-brown/25 rounded-full hover:border-mang-brown hover:text-mang-orange text-mang-brown transition-colors flex items-center justify-center"
-                aria-label="Next slide"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
+        <div className="flex justify-center">
+          <Button
+            href="/shop"
+            variant="outline-dark"
+            pop
+            fullWidth
+            className="sm:w-auto sm:min-w-[280px]"
+          >
+            Explore the Full Shop →
+          </Button>
         </div>
       </div>
 
-      {modalOpen && (
-        <ProductAddModal
-          product={product}
-          onClose={() => setModalOpen(false)}
-        />
-      )}
+      <AddedToCartDialog
+        open={addedItem !== null}
+        itemName={addedItem ?? ""}
+        onClose={() => setAddedItem(null)}
+        onViewCart={() => {
+          setAddedItem(null);
+          openCart();
+        }}
+      />
     </section>
   );
 }

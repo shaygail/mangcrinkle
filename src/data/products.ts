@@ -398,11 +398,12 @@ export function getProductsForSection(
 }
 
 const BEST_SELLER_IDS = [
+  "classic-chocolate",
   "ube",
-  "ube-matcha",
-  "lava-ube",
+  "coconut-pandan",
   "lava-choco",
   "iced-ube-marble-matcha",
+  "pack-6",
 ] as const;
 
 export function getBestSellers(products: Product[]): Product[] {

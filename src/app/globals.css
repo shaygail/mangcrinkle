@@ -33,7 +33,7 @@ html {
 }
 
 body {
-  background: var(--color-mang-cream);
+  background: var(--color-mang-cream-light);
   color: var(--color-mang-brown);
   font-family: var(--font-body);
 }
