@@ -4,7 +4,6 @@ import "./globals.css";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import CartDrawer from "@/components/CartDrawer";
 import { CartProvider } from "@/context/CartContext";
 import { ProductsProvider } from "@/context/ProductsContext";
 import { getHomepage, getProducts } from "@/lib/strapi";
@@ -52,7 +51,6 @@ export default async function RootLayout({
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />
-            <CartDrawer />
           </CartProvider>
         </ProductsProvider>
       </body>

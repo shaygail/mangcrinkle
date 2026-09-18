@@ -8,6 +8,7 @@ import {
   useCallback,
   ReactNode,
 } from "react";
+import { useRouter } from "next/navigation";
 import { Product, CartItem, MilkType } from "@/types";
 import {
   getCartLineId,
@@ -29,9 +30,7 @@ export interface AddItemOptions {
 
 interface CartContextType {
   items: CartItem[];
-  isOpen: boolean;
   openCart: () => void;
-  closeCart: () => void;
   addItem: (product: Product, quantity?: number, options?: AddItemOptions) => void;
   removeItem: (lineId: string) => void;
   updateQuantity: (lineId: string, quantity: number) => void;
@@ -47,9 +46,9 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 const CART_STORAGE_KEY = "mang-crinkle-cart";
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const router = useRouter();
   const { products } = useProducts();
   const [items, setItems] = useState<CartItem[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
@@ -75,8 +74,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items, isHydrated]);
 
-  const openCart = useCallback(() => setIsOpen(true), []);
-  const closeCart = useCallback(() => setIsOpen(false), []);
+  const openCart = useCallback(() => {
+    router.push("/cart");
+  }, [router]);
 
   const addItem = useCallback(
     (product: Product, quantity = 1, options?: AddItemOptions) => {
@@ -117,12 +117,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
         ];
       });
 
-      // Only auto-open cart when caller did not provide a custom confirmation flow
       if (options?.openCart !== false) {
-        setIsOpen(true);
+        router.push("/cart");
       }
     },
-    [products]
+    [products, router]
   );
 
   const removeItem = useCallback((lineId: string) => {
@@ -218,9 +217,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     <CartContext.Provider
       value={{
         items,
-        isOpen,
         openCart,
-        closeCart,
         addItem,
         removeItem,
         updateQuantity,

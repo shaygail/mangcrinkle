@@ -20,7 +20,7 @@ export const fallbackShopPage: ShopPageContent = {
   title: "The Crinkle Shop",
   subtitle: "Filipino Sweet Magic",
   description:
-    "Experience award-winning premium cookies. Handcrafted fresh daily, featuring a pillow-soft exterior, unbelievably fudgy soft centres, and snowy sweet powdered sugar.",
+    "Baked fresh. Fudgy, pillow-soft cookies dusted with snowy sweetness.",
   sections: structuralShopSections.map((section) => ({
     sectionKey: section.id,
     title: section.title,

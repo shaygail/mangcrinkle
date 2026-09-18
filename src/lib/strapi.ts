@@ -347,9 +347,9 @@ function mapShopPage(entry: StrapiEntry | null | undefined): ShopPageContent | n
     : [];
 
   return {
-    title: String(fields.title ?? fallbackShopPage.title),
-    subtitle: String(fields.subtitle ?? fallbackShopPage.subtitle),
-    description: String(fields.description ?? fallbackShopPage.description),
+    title: String(fields.title || fallbackShopPage.title),
+    subtitle: String(fields.subtitle || fallbackShopPage.subtitle),
+    description: String(fields.description || fallbackShopPage.description),
     sections: sections.length > 0 ? sections : fallbackShopPage.sections,
   };
 }

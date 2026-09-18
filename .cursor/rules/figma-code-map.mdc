@@ -1,0 +1,80 @@
+---
+description: Figma ↔ code mapping for Mang Crinkle storefront — reuse existing components and tokens when implementing from Figma
+alwaysApply: true
+---
+
+# Mang Crinkle — Figma to code
+
+Figma file: [`sYXsKO9gMyZ60JupTNPi4G`](https://www.figma.com/design/sYXsKO9gMyZ60JupTNPi4G/Mang-Crinkle) (Mang Crinkle).
+
+When implementing from a Figma URL or selection:
+
+1. Call `get_design_context` on the **node** (always need `node-id`).
+2. **Reuse** the mapped components below — do not invent parallel buttons, cards, or headers.
+3. Use **`mang-*` tokens** from `src/app/globals.css` (cream, brown, orange, tan). Map Figma CSS vars (`--color/cream`, `--color/brown`, etc.) to these.
+4. Prefer editing the mapped file over creating a new one.
+
+## Screen frames → routes / entry components
+
+| Figma frame | Node ID | Route / entry |
+|---|---|---|
+| Homepage Desktop · Storefront | `26:5` | `/` → `src/app/page.tsx` |
+| homepage-mobile-refined | `32:28` | `/` (mobile) |
+| shop-mobile-refined | `32:167` | `/shop` → `ShopContent` |
+| shop-desktop | `36:223` | `/shop` (desktop sections) |
+| product-detail-mobile-ube-crinkle | `32:296` | `/shop/[productId]` → `ProductDetailClient` |
+| product-detail-desktop-ube-crinkle | `36:375` | same (desktop) |
+| cart-mobile-filled | `33:28` | `/cart` → `CartPageClient` |
+| cart-mobile-empty | `34:260` | `/cart` (empty state) |
+| cart-desktop-filled | `36:484` | `/cart` (desktop) |
+| cart-desktop-empty | `36:864` | `/cart` (empty desktop) |
+| checkout-mobile | `34:28` | `/checkout` → `CheckoutPageClient` |
+| checkout-desktop | `36:628` | `/checkout` (desktop) |
+| order-confirmation-mobile | `34:159` | `/order/confirmation` → `ConfirmationPageClient` |
+| order-confirmation-desktop | `36:750` | same (desktop) |
+
+## Shared UI → components
+
+| Figma name (typical) | Use in code |
+|---|---|
+| Announcement Bar | `src/components/AnnouncementBar.tsx` |
+| Main Header / Brand Logo / Cart Trigger (`BOX (n)`) | `src/components/Header.tsx` (Box → `/cart`) |
+| Hero Section / Hero Media / Order CTA | `src/components/Hero.tsx` (+ `BrandHighlights`) |
+| Product Item Card (grid / compact) | `src/components/ProductCard.tsx` (`compact` for homepage 2×2) |
+| Product Item Card (shop mobile full-width) | `ProductCard` with `shopMobile` |
+| Add to Box / yellow pill CTA | `src/components/Button.tsx` `variant="yellow"` `pop` |
+| Brown primary CTA (Order Crinkles Now) | `Button` `variant="brown"` `pop` |
+| Outline shop CTA (Explore Full Shop) | `Button` `variant="outline-dark"` `pop` |
+| Fan Favourites section | `src/components/BestSellers.tsx` |
+| How To Order / steps | `src/components/Recipes.tsx` |
+| Testimonial quote | `src/components/Testimonials.tsx` |
+| Editorial / Bake Someone Happy banner | `src/components/CTA.tsx` |
+| Footer | `src/components/Footer.tsx` |
+| Shop page shell + filters | `src/components/shop/ShopContent.tsx` |
+| Pack grid / flavour picker | `shop/PackSection`, `PackGridCard`, `PackFlavourPicker`, `PackCustomizerForm` |
+| Product detail (pack radios + sticky CTA) | `src/components/ProductDetailClient.tsx` |
+| Drink / options modal | `src/components/ProductAddModal.tsx` |
+| Checkout fields + payment preference | `src/components/CheckoutForm.tsx` |
+| Cart / checkout / confirmation pages | `src/components/cart/*PageClient.tsx` |
+| Product images | `src/components/ProductImage.tsx` |
+
+## Tokens
+
+| Figma | Tailwind / CSS |
+|---|---|
+| cream / cream-light | `bg-mang-cream` / `bg-mang-cream-light` |
+| tan | `bg-mang-tan` / `border-mang-tan` |
+| brown / brown-mid | `text-mang-brown` / `text-mang-brown-mid` |
+| orange / orange-bright | `bg-mang-orange` / `bg-mang-orange-bright` |
+| Bebas Neue headings | `menu-logo`, `menu-title-3d`, `menu-product-title` |
+| Open Sans body | default body / `font-bold` etc. |
+
+## Assets
+
+Downloaded Figma media lives under `public/images/figma/` (e.g. `hero-crinkles.jpg`, `signature-ube.jpg`). Prefer these (or Strapi URLs) over temporary MCP asset URLs.
+
+## Do not
+
+- Recreate a slide-over cart drawer — cart is full-page `/cart`.
+- Paste Figma MCP reference React verbatim — adapt to App Router + existing components.
+- Add new purple/glow/generic AI themes — stay on mang palette.

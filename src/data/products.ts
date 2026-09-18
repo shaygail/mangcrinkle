@@ -20,7 +20,8 @@ export const fallbackProducts: Product[] = [
   {
     id: "classic-chocolate",
     name: "Classic Chocolate",
-    description: "Standard crinkle — soft-centred and fudgy.",
+    description:
+      "Our signature dark cocoa fudgy cookie dusted in sweet snowy powdered sugar.",
     price: 4.5,
     image: cookieImg,
     category: "crinkle-standard",
@@ -47,8 +48,9 @@ export const fallbackProducts: Product[] = [
   // Premium – $5.00 each
   {
     id: "ube",
-    name: "Ube",
-    description: "Premium crinkle — Filipino-inspired ube flavour.",
+    name: "Signature Ube",
+    description:
+      "Vibrant sweet purple yam cookie with a rich, pillow-soft, melt-in-your-mouth center.",
     price: 5.0,
     image: cookieImg,
     category: "crinkle-premium",
@@ -58,7 +60,8 @@ export const fallbackProducts: Product[] = [
   {
     id: "coconut-pandan",
     name: "Coconut Pandan",
-    description: "Premium crinkle — coconut pandan flavour.",
+    description:
+      "Infused with aromatic pandan leaf and rolled in sweet shredded coconut flakes.",
     price: 5.0,
     image: cookieImg,
     category: "crinkle-premium",
@@ -107,17 +110,19 @@ export const fallbackProducts: Product[] = [
   },
   {
     id: "pack-6",
-    name: "6 Pack Crinkles",
-    description: "Mix & match any flavours. Premium +$0.50, Signature +$1.00 per crinkle.",
-    price: 25.0,
+    name: "Mang's 6-Pack Assorted",
+    description:
+      "Choose your own combination of standard, premium, and signature flavours.",
+    price: 27.0,
     image: packImg,
     category: "crinkle-pack",
+    badge: "Best Value",
   },
   {
     id: "pack-12",
-    name: "12 Pack Crinkles",
-    description: "Mix & match any flavours. Premium +$0.50, Signature +$1.00 per crinkle.",
-    price: 48.0,
+    name: "Craver's 12-Pack Party Box",
+    description: "Ultimate crinkle feast for the squad.",
+    price: 50.0,
     image: packImg,
     category: "crinkle-pack",
   },
@@ -132,11 +137,13 @@ export const fallbackProducts: Product[] = [
   },
   {
     id: "lava-choco",
-    name: "Lava Chocolate Crinkle — Each",
-    description: "Rich, gooey chocolate crinkle with a melty centre.",
+    name: "Lava Chocolate",
+    description:
+      "Decadent dark chocolate crinkle with a warm, flowing chocolate fudge center.",
     price: 6.5,
     image: lavaChocoImg,
     category: "lava",
+    badge: "Gooey Lava Core",
   },
   {
     id: "lava-3",
@@ -251,6 +258,16 @@ export const fallbackProducts: Product[] = [
     category: "iced-drink",
     tier: "Premium",
     badge: "Premium",
+  },
+  {
+    id: "iced-calamansi",
+    name: "Iced Calamansi Drink",
+    description:
+      "Refreshing and tart Filipino citrus juice iced to perfection, perfect with cookies.",
+    price: 4.5,
+    image: icedImg,
+    category: "iced-drink",
+    tier: "Standard",
   },
   // Iced drinks – 530 ml (standard)
   {
@@ -407,7 +424,7 @@ const BEST_SELLER_IDS = [
 ] as const;
 
 export function getBestSellers(products: Product[]): Product[] {
-  return products.filter((p) =>
-    (BEST_SELLER_IDS as readonly string[]).includes(p.id)
+  return BEST_SELLER_IDS.map((id) => products.find((p) => p.id === id)).filter(
+    (p): p is Product => Boolean(p)
   );
 }

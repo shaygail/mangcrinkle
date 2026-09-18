@@ -12,10 +12,10 @@ export default function Recipes({ content, steps }: RecipesProps) {
   return (
     <section
       id="order"
-      className="py-10 sm:py-14 lg:py-[72px] bg-mang-cream border-y border-mang-tan"
+      className="py-11 sm:py-14 lg:py-[72px] bg-mang-cream border-y border-mang-tan"
     >
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-20">
-        <div className="text-center mb-8 lg:mb-10">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-20">
+        <div className="text-center mb-7 lg:mb-10">
           <p className="text-[12px] font-bold uppercase tracking-[0.15em] text-mang-brown-mid mb-1.5">
             Seamless Pickup
           </p>
@@ -27,15 +27,15 @@ export default function Recipes({ content, steps }: RecipesProps) {
           </p>
         </div>
 
-        {/* Mobile: numbered list */}
-        <ol className="flex flex-col gap-4 sm:hidden mb-8">
+        {/* Mobile: numbered list (Figma 32:28) */}
+        <ol className="flex flex-col gap-4 sm:hidden">
           {displaySteps.map((item) => (
             <li key={item.id} className="flex gap-4 items-center">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-mang-brown text-mang-cream font-extrabold text-lg">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-mang-brown text-mang-cream font-extrabold text-lg">
                 {item.stepNumber}
               </span>
-              <div>
-                <h3 className="font-bold text-mang-brown text-base mb-0.5">
+              <div className="min-w-0">
+                <h3 className="font-bold text-mang-brown text-base mb-1">
                   {item.title}
                 </h3>
                 <p className="text-mang-brown-mid text-sm leading-5">

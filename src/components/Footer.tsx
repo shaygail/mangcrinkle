@@ -36,15 +36,15 @@ export default async function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/shop?category=crinkles"
+                    href="/shop/ube"
                     className={footerLinkClass}
                   >
-                    Signature Ube
+                    Ube Special
                   </Link>
                 </li>
                 <li>
                   <Link href="/shop?category=packs" className={footerLinkClass}>
-                    Packs &amp; Bundles
+                    Box Packs
                   </Link>
                 </li>
               </ul>
@@ -61,7 +61,7 @@ export default async function Footer() {
                 </li>
                 <li>
                   <Link href="/#order" className={footerLinkClass}>
-                    How to Order
+                    Pickup Locations
                   </Link>
                 </li>
                 <li>
@@ -86,7 +86,7 @@ export default async function Footer() {
                     Facebook
                   </a>
                 </li>
-                <li>
+                <li className="hidden lg:list-item">
                   <a href="#" className={footerLinkClass}>
                     TikTok
                   </a>

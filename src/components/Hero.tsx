@@ -12,29 +12,35 @@ const HIGHLIGHTS = [
   "Gooey Lava Core",
 ] as const;
 
+const MOBILE_HERO_COPY =
+  "Handcrafted Filipino-inspired cookies, baked with a premium soft, fudgy center and dusted with snowy sweet crinkle magic.";
+
 export default function Hero({ content }: HeroProps) {
   return (
-    <section className="bg-mang-cream">
-      <div className="max-w-5xl mx-auto px-5 sm:px-8 lg:px-10 py-10 sm:py-14 lg:py-[72px] flex flex-col gap-6 sm:gap-8 items-center">
-        {/* Title stack */}
-        <div className="text-center w-full max-w-3xl">
-          <p className="hidden sm:block text-[12px] font-bold uppercase tracking-[0.15em] text-mang-brown-mid mb-2">
+    <section className="bg-mang-cream border-b border-mang-tan">
+      <div className="max-w-5xl mx-auto px-6 sm:px-8 lg:px-10 py-10 sm:py-14 lg:py-[72px] flex flex-col gap-6 sm:gap-8 items-center">
+        {/* Title stack — mobile matches Figma 32:28 */}
+        <div className="text-center w-full max-w-3xl flex flex-col items-center gap-2">
+          <p className="lg:hidden text-[12px] font-bold uppercase tracking-[0.15em] text-mang-brown-mid">
             Filipino Artisanal Treats
           </p>
-          <h1 className="menu-logo text-[52px] sm:text-6xl lg:text-[96px] leading-none mb-2">
+          <h1 className="menu-logo text-[52px] sm:text-6xl lg:text-[96px] leading-[0.95] lg:leading-none">
             {content.heroTitle}
           </h1>
-          <p className="menu-logo-sub text-[22px] sm:text-3xl lg:text-4xl mb-3 sm:mb-4">
+          <p className="menu-logo-sub text-[22px] sm:text-3xl lg:text-4xl tracking-wide">
             {content.heroSubtitle}
           </p>
-          <p className="text-mang-brown-mid text-sm sm:text-lg italic max-w-xl mx-auto leading-relaxed">
+          <p className="lg:hidden text-mang-brown-mid text-sm italic max-w-[310px] mx-auto leading-5 mt-1">
+            {MOBILE_HERO_COPY}
+          </p>
+          <p className="hidden lg:block text-mang-brown-mid text-lg italic max-w-xl mx-auto leading-relaxed mt-2">
             {content.heroDescription}
           </p>
         </div>
 
-        {/* Media + copy: stacked mobile, split desktop */}
-        <div className="w-full flex flex-col lg:flex-row gap-6 lg:gap-6 items-center lg:items-stretch max-w-[960px]">
-          <div className="relative w-full max-w-[342px] sm:max-w-md lg:max-w-none lg:w-[560px] shrink-0 aspect-[560/360] rounded-[20px] overflow-hidden border-2 border-mang-brown shadow-[4px_4px_0_rgba(61,36,24,0.17)]">
+        {/* Media: stacked mobile, split desktop (26:5) */}
+        <div className="w-full flex flex-col lg:flex-row gap-6 items-center lg:items-stretch max-w-[960px]">
+          <div className="relative w-full max-w-[342px] sm:max-w-md lg:max-w-none lg:w-[560px] shrink-0 h-[210px] sm:h-auto sm:aspect-[560/360] lg:h-[360px] lg:aspect-auto rounded-[20px] overflow-hidden border-2 border-mang-brown shadow-[4px_4px_0_rgba(61,36,24,0.17)]">
             <ProductImage
               src={content.heroImage}
               alt={content.heroTitle}
@@ -84,7 +90,7 @@ export default function Hero({ content }: HeroProps) {
         </div>
 
         {/* Mobile CTA under image */}
-        <div className="lg:hidden">
+        <div className="lg:hidden w-full flex justify-center">
           <Button href={content.heroButtonLink} variant="brown" pop size="lg">
             🍪 {content.heroButtonText}
           </Button>
@@ -102,8 +108,8 @@ export function BrandHighlights() {
   ] as const;
 
   return (
-    <section className="bg-mang-tan border-y border-mang-brown px-5 sm:px-8 lg:px-20 py-4">
-      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-x-8 sm:gap-y-2 sm:justify-center">
+    <section className="bg-mang-tan border border-mang-brown px-5 sm:px-8 lg:px-20 py-4">
+      <div className="max-w-7xl mx-auto flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-x-8 sm:gap-y-2 sm:justify-center">
         {items.map((item) => (
           <div key={item.label} className="flex items-center gap-2">
             <span className="text-lg leading-none" aria-hidden>

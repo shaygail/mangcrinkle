@@ -26,11 +26,15 @@ export default function BestSellers({
 
   if (bestSellers.length === 0) return null;
 
+  // Mobile Figma (32:28) shows 4 in a 2×2; desktop shows up to 6
+  const mobileFour = bestSellers.slice(0, 4);
+  const desktopSix = bestSellers.slice(0, 6);
+
   return (
     <section className="py-10 sm:py-14 lg:py-[72px] bg-mang-cream-light">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-20">
         <div className="text-center mb-6 sm:mb-8 lg:mb-10">
-          <p className="text-[12px] font-extrabold uppercase tracking-[0.12em] text-mang-brown-mid mb-1.5">
+          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-mang-brown-mid mb-1.5">
             {eyebrow}
           </p>
           <h2 className="menu-title-3d text-4xl lg:text-5xl mb-2 leading-tight">
@@ -41,8 +45,21 @@ export default function BestSellers({
           </p>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
-          {bestSellers.slice(0, 6).map((product) => (
+        {/* Mobile 2×2 */}
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:hidden mb-6">
+          {mobileFour.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              compact
+              onAdded={(name) => setAddedItem(name)}
+            />
+          ))}
+        </div>
+
+        {/* Desktop / tablet grid */}
+        <div className="hidden lg:grid lg:grid-cols-3 gap-6 mb-8">
+          {desktopSix.map((product) => (
             <ProductCard
               key={product.id}
               product={product}

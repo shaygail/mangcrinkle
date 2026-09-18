@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
   shopFilters,
   getProductsForSection,
+  getProductsForFilter,
   ShopFilter,
   shopSections,
+  fallbackProducts,
 } from "@/data/products";
 import { ShopPageContent } from "@/data/shop-page";
 import ProductCard from "@/components/ProductCard";
@@ -23,6 +25,24 @@ interface ShopContentProps {
   activeFilter?: ShopFilter;
 }
 
+const MOBILE_DESCRIPTION =
+  "Baked fresh. Fudgy, pillow-soft cookies dusted with snowy sweetness.";
+const MOBILE_TITLE = "The Crinkle Shop";
+const MOBILE_SUBTITLE = "Filipino Sweet Magic";
+
+/** Filters shown on mobile to match Figma 32:167 */
+const PRIMARY_FILTERS: ShopFilter[] = ["all", "crinkles", "packs", "lava"];
+
+/** Curated All feed order from Figma shop-mobile-refined */
+const MOBILE_ALL_FEED = [
+  "classic-chocolate",
+  "ube",
+  "coconut-pandan",
+  "lava-choco",
+  "pack-6",
+  "iced-calamansi",
+] as const;
+
 export default function ShopContent({
   content,
   sections,
@@ -37,33 +57,81 @@ export default function ShopContent({
       ? sections
       : sections.filter((s) => s.filter === activeFilter);
 
+  const flatProducts = useMemo(() => {
+    if (activeFilter === "all") {
+      // Prefer design-synced fallback copy for the curated mobile All feed
+      // so CMS naming/badges don't drift from Figma 32:167.
+      return MOBILE_ALL_FEED.map((id) => {
+        return (
+          fallbackProducts.find((p) => p.id === id) ??
+          products.find((p) => p.id === id)
+        );
+      }).filter((p): p is NonNullable<typeof p> => Boolean(p));
+    }
+    return getProductsForFilter(products, activeFilter);
+  }, [products, activeFilter]);
+
+  const mobileFilters = shopFilters.filter((f) =>
+    PRIMARY_FILTERS.includes(f.id)
+  );
+  const desktopFilters = [
+    ...shopFilters.filter((f) => PRIMARY_FILTERS.includes(f.id)),
+    ...shopFilters.filter((f) => !PRIMARY_FILTERS.includes(f.id)),
+  ];
+
   return (
     <div className="bg-mang-cream-light min-h-screen">
-      <section className="bg-mang-cream border-b border-mang-tan py-10 sm:py-12 lg:py-14 px-5 text-center">
-        <p className="text-[12px] sm:text-[13px] font-extrabold uppercase tracking-[0.15em] text-mang-brown-mid mb-2">
-          {content.subtitle}
+      {/* Shop header — Figma 32:177 */}
+      <section className="bg-mang-cream border-y border-mang-tan pt-8 pb-4 sm:pt-10 lg:py-14 px-5 text-center">
+        <p className="text-[12px] font-extrabold uppercase tracking-[0.12em] text-mang-brown-mid mb-2">
+          <span className="lg:hidden">{MOBILE_SUBTITLE}</span>
+          <span className="hidden lg:inline">{content.subtitle}</span>
         </p>
-        <h1 className="menu-logo text-4xl sm:text-5xl lg:text-[64px] leading-none mb-3">
-          {content.title}
+        <h1 className="menu-logo text-[42px] sm:text-5xl lg:text-[64px] leading-none mb-2">
+          <span className="lg:hidden">{MOBILE_TITLE}</span>
+          <span className="hidden lg:inline">{content.title}</span>
         </h1>
-        <p className="text-mang-brown-mid text-sm sm:text-base italic max-w-2xl mx-auto leading-relaxed">
+        <p className="lg:hidden text-mang-brown-mid text-[13px] italic max-w-md mx-auto leading-relaxed">
+          {MOBILE_DESCRIPTION}
+        </p>
+        <p className="hidden lg:block text-mang-brown-mid text-base italic max-w-2xl mx-auto leading-relaxed">
           {content.description}
         </p>
       </section>
 
-      <section className="sticky top-14 sm:top-16 lg:top-[73px] z-30 bg-mang-cream-light/95 backdrop-blur-sm border-b border-mang-tan py-4 px-5">
-        <div className="max-w-7xl mx-auto flex gap-2 sm:gap-3 items-center overflow-x-auto">
-          <span className="hidden sm:inline text-[13px] font-extrabold uppercase tracking-wide text-mang-brown-mid shrink-0">
-            Filter by:
-          </span>
-          {shopFilters.map((filter) => (
+      {/* Category filters */}
+      <section className="sticky top-14 sm:top-16 lg:top-[73px] z-30 bg-mang-cream-light/95 backdrop-blur-sm border-b border-mang-tan py-3.5 px-4">
+        <div className="lg:hidden flex gap-2 items-center overflow-x-auto scrollbar-none">
+          {mobileFilters.map((filter) => (
             <Link
               key={filter.id}
               href={
                 filter.id === "all" ? "/shop" : `/shop?category=${filter.id}`
               }
               scroll={false}
-              className={`inline-flex items-center min-h-11 px-4 py-2.5 rounded-full text-[11px] sm:text-xs font-extrabold uppercase tracking-wider whitespace-nowrap border transition-colors ${
+              className={`inline-flex items-center min-h-11 px-3.5 py-2.5 rounded-full text-[12px] uppercase tracking-wide whitespace-nowrap transition-colors ${
+                activeFilter === filter.id
+                  ? "bg-mang-cream border-2 border-mang-brown text-mang-brown font-extrabold"
+                  : "bg-white border border-gray-200 text-mang-brown-mid font-bold"
+              }`}
+            >
+              {filter.id === "lava" ? "Lava" : filter.label}
+            </Link>
+          ))}
+        </div>
+
+        <div className="hidden lg:flex max-w-7xl mx-auto gap-2 items-center overflow-x-auto">
+          <span className="text-[13px] font-extrabold uppercase tracking-wide text-mang-brown-mid shrink-0 mr-1">
+            Filter by:
+          </span>
+          {desktopFilters.map((filter) => (
+            <Link
+              key={filter.id}
+              href={
+                filter.id === "all" ? "/shop" : `/shop?category=${filter.id}`
+              }
+              scroll={false}
+              className={`inline-flex items-center min-h-11 px-4 py-2.5 rounded-full text-[12px] font-extrabold uppercase tracking-wide whitespace-nowrap transition-colors ${
                 activeFilter === filter.id
                   ? "bg-mang-cream border-2 border-mang-brown text-mang-brown"
                   : "bg-white border border-gray-200 text-mang-brown-mid hover:border-mang-brown/40"
@@ -75,7 +143,25 @@ export default function ShopContent({
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-20 py-10 lg:py-14 space-y-14 lg:space-y-20">
+      {/* Mobile: full-width stacked cards (Figma 32:190) */}
+      <div className="lg:hidden px-4 pt-2 pb-8 space-y-6">
+        {flatProducts.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            shopMobile
+            onAdded={(name) => setAddedItem(name)}
+          />
+        ))}
+        {flatProducts.length === 0 && (
+          <p className="text-center text-sm text-mang-brown-mid py-10">
+            No products in this category yet.
+          </p>
+        )}
+      </div>
+
+      {/* Desktop: sectioned grids */}
+      <div className="hidden lg:block max-w-7xl mx-auto px-5 sm:px-8 lg:px-20 py-10 lg:py-14 space-y-14 lg:space-y-20">
         {visibleSections.map((section) => {
           const sectionProducts = getProductsForSection(
             products,
@@ -114,6 +200,23 @@ export default function ShopContent({
           );
         })}
       </div>
+
+      {/* How to order — Figma 34:478 */}
+      <section className="bg-mang-cream border-y border-mang-tan px-6 py-8 text-center">
+        <p className="text-[12px] font-extrabold uppercase tracking-[0.15em] text-mang-brown-mid mb-1.5">
+          Simple Steps
+        </p>
+        <h2 className="menu-title-3d text-[36px] leading-none mb-1.5">How To Order</h2>
+        <p className="text-[13px] italic text-mang-brown-mid">
+          Fresh crinkles, your way — ready in minutes.
+        </p>
+        <Link
+          href="/#order"
+          className="hidden lg:inline-flex mt-5 min-h-11 items-center text-sm font-bold text-mang-brown underline underline-offset-4"
+        >
+          See pickup steps →
+        </Link>
+      </section>
 
       <AddedToCartDialog
         open={addedItem !== null}
