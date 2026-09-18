@@ -11,6 +11,11 @@ export interface ShopPageContent {
   subtitle: string;
   description: string;
   sections: ShopSectionCopy[];
+  howToOrderEyebrow: string;
+  howToOrderTitle: string;
+  howToOrderBody: string;
+  howToOrderLinkText: string;
+  howToOrderLinkHref: string;
 }
 
 /**
@@ -26,6 +31,11 @@ export const fallbackShopPage: ShopPageContent = {
     title: section.title,
     subtitle: section.subtitle,
   })),
+  howToOrderEyebrow: "Simple Steps",
+  howToOrderTitle: "How To Order",
+  howToOrderBody: "Fresh crinkles, your way — ready in minutes.",
+  howToOrderLinkText: "See pickup steps →",
+  howToOrderLinkHref: "/#order",
 };
 
 /** Merge CMS section copy onto structural shop sections (categories / filters stay in code). */

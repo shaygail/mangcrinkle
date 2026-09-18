@@ -24,6 +24,23 @@
     "heroDescription": {
       "type": "text"
     },
+    "heroEyebrow": {
+      "type": "string"
+    },
+    "heroPanelEyebrow": {
+      "type": "string"
+    },
+    "heroPanelTitle": {
+      "type": "text"
+    },
+    "heroPanelBody": {
+      "type": "text"
+    },
+    "heroHighlights": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.highlight-pill"
+    },
     "heroButtonText": {
       "type": "string"
     },
@@ -107,6 +124,24 @@
     },
     "siteDescription": {
       "type": "text"
+    },
+    "footerMenuLinks": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.nav-link"
+    },
+    "footerExploreLinks": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.nav-link"
+    },
+    "footerSocialLinks": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.nav-link"
+    },
+    "footerCopyright": {
+      "type": "string"
     }
   }
 }

@@ -6,9 +6,9 @@ import {
   shopFilters,
   getProductsForSection,
   getProductsForFilter,
+  getFeaturedShopProducts,
   ShopFilter,
   shopSections,
-  fallbackProducts,
 } from "@/data/products";
 import { ShopPageContent } from "@/data/shop-page";
 import ProductCard from "@/components/ProductCard";
@@ -25,23 +25,8 @@ interface ShopContentProps {
   activeFilter?: ShopFilter;
 }
 
-const MOBILE_DESCRIPTION =
-  "Baked fresh. Fudgy, pillow-soft cookies dusted with snowy sweetness.";
-const MOBILE_TITLE = "The Crinkle Shop";
-const MOBILE_SUBTITLE = "Filipino Sweet Magic";
-
 /** Filters shown on mobile to match Figma 32:167 */
 const PRIMARY_FILTERS: ShopFilter[] = ["all", "crinkles", "packs", "lava"];
-
-/** Curated All feed order from Figma shop-mobile-refined */
-const MOBILE_ALL_FEED = [
-  "classic-chocolate",
-  "ube",
-  "coconut-pandan",
-  "lava-choco",
-  "pack-6",
-  "iced-calamansi",
-] as const;
 
 export default function ShopContent({
   content,
@@ -59,14 +44,7 @@ export default function ShopContent({
 
   const flatProducts = useMemo(() => {
     if (activeFilter === "all") {
-      // Prefer design-synced fallback copy for the curated mobile All feed
-      // so CMS naming/badges don't drift from Figma 32:167.
-      return MOBILE_ALL_FEED.map((id) => {
-        return (
-          fallbackProducts.find((p) => p.id === id) ??
-          products.find((p) => p.id === id)
-        );
-      }).filter((p): p is NonNullable<typeof p> => Boolean(p));
+      return getFeaturedShopProducts(products);
     }
     return getProductsForFilter(products, activeFilter);
   }, [products, activeFilter]);
@@ -84,17 +62,12 @@ export default function ShopContent({
       {/* Shop header — Figma 32:177 */}
       <section className="bg-mang-cream border-y border-mang-tan pt-8 pb-4 sm:pt-10 lg:py-14 px-5 text-center">
         <p className="text-[12px] font-extrabold uppercase tracking-[0.12em] text-mang-brown-mid mb-2">
-          <span className="lg:hidden">{MOBILE_SUBTITLE}</span>
-          <span className="hidden lg:inline">{content.subtitle}</span>
+          {content.subtitle}
         </p>
         <h1 className="menu-logo text-[42px] sm:text-5xl lg:text-[64px] leading-none mb-2">
-          <span className="lg:hidden">{MOBILE_TITLE}</span>
-          <span className="hidden lg:inline">{content.title}</span>
+          {content.title}
         </h1>
-        <p className="lg:hidden text-mang-brown-mid text-[13px] italic max-w-md mx-auto leading-relaxed">
-          {MOBILE_DESCRIPTION}
-        </p>
-        <p className="hidden lg:block text-mang-brown-mid text-base italic max-w-2xl mx-auto leading-relaxed">
+        <p className="text-mang-brown-mid text-[13px] lg:text-base italic max-w-md lg:max-w-2xl mx-auto leading-relaxed">
           {content.description}
         </p>
       </section>
@@ -204,17 +177,19 @@ export default function ShopContent({
       {/* How to order — Figma 34:478 */}
       <section className="bg-mang-cream border-y border-mang-tan px-6 py-8 text-center">
         <p className="text-[12px] font-extrabold uppercase tracking-[0.15em] text-mang-brown-mid mb-1.5">
-          Simple Steps
+          {content.howToOrderEyebrow}
         </p>
-        <h2 className="menu-title-3d text-[36px] leading-none mb-1.5">How To Order</h2>
+        <h2 className="menu-title-3d text-[36px] leading-none mb-1.5">
+          {content.howToOrderTitle}
+        </h2>
         <p className="text-[13px] italic text-mang-brown-mid">
-          Fresh crinkles, your way — ready in minutes.
+          {content.howToOrderBody}
         </p>
         <Link
-          href="/#order"
+          href={content.howToOrderLinkHref}
           className="hidden lg:inline-flex mt-5 min-h-11 items-center text-sm font-bold text-mang-brown underline underline-offset-4"
         >
-          See pickup steps →
+          {content.howToOrderLinkText}
         </Link>
       </section>
 

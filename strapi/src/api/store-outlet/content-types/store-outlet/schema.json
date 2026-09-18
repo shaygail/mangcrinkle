@@ -1,0 +1,40 @@
+{
+  "kind": "singleType",
+  "collectionName": "store_outlets",
+  "info": {
+    "singularName": "store-outlet",
+    "pluralName": "store-outlets",
+    "displayName": "Store Outlet",
+    "description": "Pickup location details and available time windows"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "default": "Manila Town Kitchen (HQ)"
+    },
+    "cartLabel": {
+      "type": "string",
+      "default": "Mang Crinkle HQ – Manila Town Kitchen"
+    },
+    "hours": {
+      "type": "string",
+      "default": "Open 10:00 AM – 8:00 PM Daily"
+    },
+    "address": {
+      "type": "text"
+    },
+    "pickupNote": {
+      "type": "text",
+      "default": "Arrive during this window for fresh & warm cookies."
+    },
+    "pickupWindows": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.pickup-window"
+    }
+  }
+}

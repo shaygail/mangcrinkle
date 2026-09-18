@@ -32,6 +32,10 @@ When implementing from a Figma URL or selection:
 | checkout-desktop | `36:628` | `/checkout` (desktop) |
 | order-confirmation-mobile | `34:159` | `/order/confirmation` → `ConfirmationPageClient` |
 | order-confirmation-desktop | `36:750` | same (desktop) |
+| assorted-6-pack-builder-mobile | `73:32` | `/shop/build/pack-6` → `BoxBuilderClient` |
+| cravers-12-pack-builder-mobile | `73:316` | `/shop/build/pack-12` → `BoxBuilderClient` |
+| assorted-6-pack-builder-desktop | `73:168` | same (desktop) |
+| cravers-12-pack-builder-desktop | `73:472` | same (desktop) |
 
 ## Shared UI → components
 
@@ -52,6 +56,7 @@ When implementing from a Figma URL or selection:
 | Footer | `src/components/Footer.tsx` |
 | Shop page shell + filters | `src/components/shop/ShopContent.tsx` |
 | Pack grid / flavour picker | `shop/PackSection`, `PackGridCard`, `PackFlavourPicker`, `PackCustomizerForm` |
+| Box Builder (6 / 12 pack) | `shop/BoxBuilderClient` → `/shop/build/[packId]` |
 | Product detail (pack radios + sticky CTA) | `src/components/ProductDetailClient.tsx` |
 | Drink / options modal | `src/components/ProductAddModal.tsx` |
 | Checkout fields + payment preference | `src/components/CheckoutForm.tsx` |

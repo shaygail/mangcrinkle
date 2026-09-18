@@ -1,10 +1,20 @@
 import { PLACEHOLDERS } from "@/lib/images";
 
+export interface NavLink {
+  label: string;
+  href: string;
+}
+
 export interface HomepageContent {
   announcementText: string;
   heroTitle: string;
   heroSubtitle: string;
   heroDescription: string;
+  heroEyebrow: string;
+  heroPanelEyebrow: string;
+  heroPanelTitle: string;
+  heroPanelBody: string;
+  heroHighlights: string[];
   heroButtonText: string;
   heroButtonLink: string;
   heroImage: string;
@@ -29,6 +39,10 @@ export interface HomepageContent {
   merchInstagramText: string;
   footerTagline: string;
   siteDescription: string;
+  footerMenuLinks: NavLink[];
+  footerExploreLinks: NavLink[];
+  footerSocialLinks: NavLink[];
+  footerCopyright: string;
 }
 
 export interface HomepageTestimonial {
@@ -55,6 +69,17 @@ export const fallbackHomepage: HomepageContent = {
   heroSubtitle: "made to crave",
   heroDescription:
     "Handcrafted Filipino-inspired crinkles, soft-centred, and fudgy.",
+  heroEyebrow: "Filipino Artisanal Treats",
+  heroPanelEyebrow: "Filipino Sweet Magic",
+  heroPanelTitle:
+    "Freshly baked daily with premium soft, fudgy centers and snowy sweet crinkle magic.",
+  heroPanelBody:
+    "From classic chocolate to signature ube and gooey lava crinkles, every bite is made to crave.",
+  heroHighlights: [
+    "Soft-Centred",
+    "Ube & Classic Chocolate",
+    "Gooey Lava Core",
+  ],
   heroButtonText: "Order Crinkles Now",
   heroButtonLink: "/shop",
   heroImage: "/images/figma/hero-crinkles.jpg",
@@ -89,6 +114,22 @@ export const fallbackHomepage: HomepageContent = {
   footerTagline: "made to crave",
   siteDescription:
     "Handcrafted Filipino-inspired crinkles, soft-centred and fudgy. Order crinkles, lava crinkles, and drinks online.",
+  footerMenuLinks: [
+    { label: "Shop All", href: "/shop" },
+    { label: "Ube Special", href: "/shop/ube" },
+    { label: "Box Packs", href: "/shop?category=packs" },
+  ],
+  footerExploreLinks: [
+    { label: "Our Story", href: "/" },
+    { label: "Pickup Locations", href: "/#order" },
+    { label: "FAQ", href: "/shop" },
+  ],
+  footerSocialLinks: [
+    { label: "Instagram", href: "#" },
+    { label: "Facebook", href: "#" },
+    { label: "TikTok", href: "#" },
+  ],
+  footerCopyright: "© 2026 Mang Crinkle. All rights reserved.",
 };
 
 export const fallbackTestimonials: HomepageTestimonial[] = [

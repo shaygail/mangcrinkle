@@ -12,6 +12,8 @@ import {
   fallbackTestimonials,
 } from "../src/data/homepage";
 import { fallbackShopPage } from "../src/data/shop-page";
+import { fallbackStorefrontCopy } from "../src/data/storefront-copy";
+import { fallbackStoreOutlet } from "../src/data/store-outlet";
 
 function loadEnvLocal() {
   const envPath = join(process.cwd(), ".env.local");
@@ -51,6 +53,13 @@ async function main() {
       heroTitle: fallbackHomepage.heroTitle,
       heroSubtitle: fallbackHomepage.heroSubtitle,
       heroDescription: fallbackHomepage.heroDescription,
+      heroEyebrow: fallbackHomepage.heroEyebrow,
+      heroPanelEyebrow: fallbackHomepage.heroPanelEyebrow,
+      heroPanelTitle: fallbackHomepage.heroPanelTitle,
+      heroPanelBody: fallbackHomepage.heroPanelBody,
+      heroHighlights: fallbackHomepage.heroHighlights.map((label) => ({
+        label,
+      })),
       heroButtonText: fallbackHomepage.heroButtonText,
       heroButtonLink: fallbackHomepage.heroButtonLink,
       tagline: fallbackHomepage.tagline,
@@ -74,6 +83,10 @@ async function main() {
       merchInstagramText: fallbackHomepage.merchInstagramText,
       footerTagline: fallbackHomepage.footerTagline,
       siteDescription: fallbackHomepage.siteDescription,
+      footerMenuLinks: fallbackHomepage.footerMenuLinks,
+      footerExploreLinks: fallbackHomepage.footerExploreLinks,
+      footerSocialLinks: fallbackHomepage.footerSocialLinks,
+      footerCopyright: fallbackHomepage.footerCopyright,
     },
   };
 
@@ -101,6 +114,11 @@ async function main() {
         title: section.title,
         subtitle: section.subtitle,
       })),
+      howToOrderEyebrow: fallbackShopPage.howToOrderEyebrow,
+      howToOrderTitle: fallbackShopPage.howToOrderTitle,
+      howToOrderBody: fallbackShopPage.howToOrderBody,
+      howToOrderLinkText: fallbackShopPage.howToOrderLinkText,
+      howToOrderLinkHref: fallbackShopPage.howToOrderLinkHref,
     },
   };
 
@@ -116,6 +134,45 @@ async function main() {
     console.error(`Shop page seed failed: ${shopRes.status} ${body}`);
   } else {
     console.log("✓ Shop page content seeded");
+  }
+
+  console.log("Seeding storefront copy single type...");
+  const storefrontRes = await fetch(`${strapiUrl}/api/storefront-copy`, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({ data: { ...fallbackStorefrontCopy } }),
+  });
+  if (!storefrontRes.ok) {
+    const body = await storefrontRes.text();
+    console.error(
+      `Storefront copy seed failed: ${storefrontRes.status} ${body}`
+    );
+  } else {
+    console.log("✓ Storefront copy seeded");
+  }
+
+  console.log("Seeding store outlet single type...");
+  const outletRes = await fetch(`${strapiUrl}/api/store-outlet`, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({
+      data: {
+        name: fallbackStoreOutlet.name,
+        cartLabel: fallbackStoreOutlet.cartLabel,
+        hours: fallbackStoreOutlet.hours,
+        address: fallbackStoreOutlet.address,
+        pickupNote: fallbackStoreOutlet.pickupNote,
+        pickupWindows: fallbackStoreOutlet.pickupWindows.map((label) => ({
+          label,
+        })),
+      },
+    }),
+  });
+  if (!outletRes.ok) {
+    const body = await outletRes.text();
+    console.error(`Store outlet seed failed: ${outletRes.status} ${body}`);
+  } else {
+    console.log("✓ Store outlet seeded");
   }
 
   console.log(`Seeding ${fallbackTestimonials.length} testimonials...`);

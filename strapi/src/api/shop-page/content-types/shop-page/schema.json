@@ -14,11 +14,11 @@
     "title": {
       "type": "string",
       "required": true,
-      "default": "Mang Crinkle"
+      "default": "The Crinkle Shop"
     },
     "subtitle": {
       "type": "string",
-      "default": "made to crave"
+      "default": "Filipino Sweet Magic"
     },
     "description": {
       "type": "text",
@@ -28,6 +28,26 @@
       "type": "component",
       "repeatable": true,
       "component": "shared.shop-section"
+    },
+    "howToOrderEyebrow": {
+      "type": "string",
+      "default": "Simple Steps"
+    },
+    "howToOrderTitle": {
+      "type": "string",
+      "default": "How To Order"
+    },
+    "howToOrderBody": {
+      "type": "text",
+      "default": "Fresh crinkles, your way — ready in minutes."
+    },
+    "howToOrderLinkText": {
+      "type": "string",
+      "default": "See pickup steps →"
+    },
+    "howToOrderLinkHref": {
+      "type": "string",
+      "default": "/#order"
     }
   }
 }

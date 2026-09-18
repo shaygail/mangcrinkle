@@ -8,7 +8,6 @@ import { useProducts } from "@/context/ProductsContext";
 import { getBestSellers } from "@/data/products";
 import { getProductPlaceholder } from "@/lib/images";
 import {
-  PICKUP_TIMES,
   buildPickupSummary,
   formatPickupDate,
   loadPickupSession,
@@ -26,8 +25,16 @@ import ProductImage from "@/components/ProductImage";
 import ProductCard from "@/components/ProductCard";
 import Button from "@/components/Button";
 import { PackFlavourPicker } from "@/components/shop/PackFlavourPicker";
+import type { StorefrontCopy } from "@/data/storefront-copy";
+import type { StoreOutlet } from "@/data/store-outlet";
 
-export default function CartPageClient() {
+export default function CartPageClient({
+  copy,
+  outlet,
+}: {
+  copy: StorefrontCopy;
+  outlet: StoreOutlet;
+}) {
   const router = useRouter();
   const { products } = useProducts();
   const {
@@ -40,9 +47,14 @@ export default function CartPageClient() {
     itemCount,
   } = useCart();
 
+  const pickupWindows = outlet.pickupWindows;
   const [expandedPackLine, setExpandedPackLine] = useState<string | null>(null);
   const [pickupDay, setPickupDay] = useState(0);
-  const [pickupTime, setPickupTime] = useState<string>(PICKUP_TIMES[4]);
+  const [pickupTime, setPickupTime] = useState<string>(
+    pickupWindows[Math.min(4, Math.max(0, pickupWindows.length - 1))] ??
+      pickupWindows[0] ??
+      ""
+  );
   const [promo, setPromo] = useState("");
   const [promoApplied, setPromoApplied] = useState(false);
   const [ready, setReady] = useState(false);
@@ -53,13 +65,13 @@ export default function CartPageClient() {
   );
 
   useEffect(() => {
-    const session = loadPickupSession();
+    const session = loadPickupSession(pickupWindows);
     setPickupDay(session.dayOffset);
     setPickupTime(session.time);
     setPromo(session.promo);
     setPromoApplied(session.promo.trim().toUpperCase() === "CRINKLELOVE20");
     setReady(true);
-  }, []);
+  }, [pickupWindows]);
 
   useEffect(() => {
     if (!ready) return;
@@ -95,15 +107,13 @@ export default function CartPageClient() {
               🍪✨
             </div>
             <h1 className="menu-title-3d text-4xl sm:text-[42px] mb-3">
-              Your Box is Empty!
+              {copy.cartEmptyTitle}
             </h1>
             <p className="text-sm italic text-mang-brown-mid max-w-md mx-auto mb-8">
-              There is currently no handcrafted sweet cookie magic inside your
-              box. Create a custom bundle of fudgy crinkles for same-day pickup
-              now!
+              {copy.cartEmptyBody}
             </p>
             <Button href="/shop" variant="yellow" pop className="min-w-[280px]">
-              🍪 Start Building Your Box
+              {copy.cartEmptyCta}
             </Button>
           </div>
 
@@ -132,7 +142,7 @@ export default function CartPageClient() {
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-20 pt-8 lg:pt-10 pb-16 lg:pb-20">
         <div className="mb-6 lg:mb-8">
           <h1 className="menu-title-3d text-4xl lg:text-[42px] leading-none">
-            Your Sweet Box
+            {copy.cartTitle}
           </h1>
           <p className="text-sm italic text-mang-brown-mid mt-1">
             Review your sweet assorted crinkles &amp; configure pickup windows
@@ -335,11 +345,14 @@ export default function CartPageClient() {
                   Store Outlet
                 </p>
                 <p className="font-bold text-sm text-mang-brown">
-                  Mang Crinkle HQ – Manila Town Kitchen
+                  {outlet.cartLabel}
                 </p>
-                <p className="text-xs text-mang-brown-mid">
-                  Open 10:00 AM – 8:00 PM Daily
-                </p>
+                <p className="text-xs text-mang-brown-mid">{outlet.hours}</p>
+                {outlet.address ? (
+                  <p className="text-xs text-mang-brown-mid mt-1">
+                    {outlet.address}
+                  </p>
+                ) : null}
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-2.5">
                 <select
@@ -358,7 +371,7 @@ export default function CartPageClient() {
                   onChange={(e) => setPickupTime(e.target.value)}
                   className="min-h-11 rounded-lg border-[1.5px] border-mang-brown bg-white px-3 text-sm font-bold text-mang-brown"
                 >
-                  {PICKUP_TIMES.map((t) => (
+                  {pickupWindows.map((t) => (
                     <option key={t} value={t}>
                       {t}
                     </option>
@@ -388,7 +401,7 @@ export default function CartPageClient() {
                 </span>
               </div>
               <Button variant="yellow" pop fullWidth onClick={goCheckout}>
-                🔒 Proceed to Secure Checkout
+                {copy.cartCheckoutCta}
               </Button>
               <Link
                 href="/shop"

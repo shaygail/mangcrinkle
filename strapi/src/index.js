@@ -9,6 +9,8 @@ const PUBLIC_READ_ACTIONS = [
   'api::order-step.order-step.find',
   'api::order-step.order-step.findOne',
   'api::shop-page.shop-page.find',
+  'api::storefront-copy.storefront-copy.find',
+  'api::store-outlet.store-outlet.find',
 ];
 
 async function enablePublicRead(strapi) {

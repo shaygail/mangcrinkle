@@ -15,6 +15,15 @@ export interface Product {
   tier?: string;
   badge?: string;
   note?: string;
+  /** Show in mobile shop “All” curated feed */
+  featuredOnShop?: boolean;
+  shopSortOrder?: number;
+  /** Available as a flavour in the Box Builder */
+  showInBoxBuilder?: boolean;
+  boxBuilderSortOrder?: number;
+  /** Pack builder page title override */
+  builderTitle?: string;
+  builderSubtitle?: string;
 }
 
 export type MilkType = "whole" | "oat" | "soy" | "coconut" | "almond";

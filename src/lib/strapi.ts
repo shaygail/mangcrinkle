@@ -12,7 +12,16 @@ import {
   ShopPageContent,
   ShopSectionCopy,
 } from "@/data/shop-page";
+import {
+  fallbackStorefrontCopy,
+  StorefrontCopy,
+} from "@/data/storefront-copy";
+import {
+  fallbackStoreOutlet,
+  StoreOutlet,
+} from "@/data/store-outlet";
 import { Product } from "@/types";
+import type { NavLink } from "@/data/homepage";
 
 type StrapiImage =
   | string
@@ -104,8 +113,9 @@ async function strapiFetch(path: string): Promise<Response | null> {
 }
 
 function logStrapiHttpError(label: string, res: Response | null) {
-  // Null means network failure (already silent). Only log real HTTP errors.
-  if (res && !res.ok) {
+  // Null = network failure (already silent). 404 = content type not
+  // deployed yet / empty single type — fall back without alarming.
+  if (res && !res.ok && res.status !== 404) {
     console.error(`Strapi ${label} fetch failed: ${res.status}`);
   }
 }
@@ -127,7 +137,57 @@ function mapStrapiProduct(entry: StrapiEntry, strapiUrl: string): Product | null
     ...(fields.tier ? { tier: String(fields.tier) } : {}),
     ...(fields.badge ? { badge: String(fields.badge) } : {}),
     ...(fields.note ? { note: String(fields.note) } : {}),
+    ...(typeof fields.featuredOnShop === "boolean"
+      ? { featuredOnShop: fields.featuredOnShop }
+      : {}),
+    ...(fields.shopSortOrder != null
+      ? { shopSortOrder: Number(fields.shopSortOrder) }
+      : {}),
+    ...(typeof fields.showInBoxBuilder === "boolean"
+      ? { showInBoxBuilder: fields.showInBoxBuilder }
+      : {}),
+    ...(fields.boxBuilderSortOrder != null
+      ? { boxBuilderSortOrder: Number(fields.boxBuilderSortOrder) }
+      : {}),
+    ...(fields.builderTitle
+      ? { builderTitle: String(fields.builderTitle) }
+      : {}),
+    ...(fields.builderSubtitle
+      ? { builderSubtitle: String(fields.builderSubtitle) }
+      : {}),
   };
+}
+
+function mapNavLinks(
+  raw: unknown,
+  fallback: NavLink[]
+): NavLink[] {
+  if (!Array.isArray(raw)) return fallback;
+  const links = raw
+    .map((item) => {
+      if (!item || typeof item !== "object") return null;
+      const fields = item as Record<string, unknown>;
+      const label = String(fields.label ?? "").trim();
+      const href = String(fields.href ?? "").trim();
+      if (!label || !href) return null;
+      return { label, href };
+    })
+    .filter((link): link is NavLink => link !== null);
+  return links.length > 0 ? links : fallback;
+}
+
+function mapHighlightLabels(raw: unknown, fallback: string[]): string[] {
+  if (!Array.isArray(raw)) return fallback;
+  const labels = raw
+    .map((item) => {
+      if (typeof item === "string") return item.trim();
+      if (item && typeof item === "object" && "label" in item) {
+        return String((item as { label?: string }).label ?? "").trim();
+      }
+      return "";
+    })
+    .filter(Boolean);
+  return labels.length > 0 ? labels : fallback;
 }
 
 function mapHomepage(
@@ -160,6 +220,20 @@ function mapHomepage(
     heroSubtitle: String(fields.heroSubtitle ?? fallbackHomepage.heroSubtitle),
     heroDescription: String(
       fields.heroDescription ?? fallbackHomepage.heroDescription
+    ),
+    heroEyebrow: String(fields.heroEyebrow || fallbackHomepage.heroEyebrow),
+    heroPanelEyebrow: String(
+      fields.heroPanelEyebrow || fallbackHomepage.heroPanelEyebrow
+    ),
+    heroPanelTitle: String(
+      fields.heroPanelTitle || fallbackHomepage.heroPanelTitle
+    ),
+    heroPanelBody: String(
+      fields.heroPanelBody || fallbackHomepage.heroPanelBody
+    ),
+    heroHighlights: mapHighlightLabels(
+      fields.heroHighlights,
+      fallbackHomepage.heroHighlights
     ),
     heroButtonText: String(
       fields.heroButtonText ?? fallbackHomepage.heroButtonText
@@ -221,6 +295,21 @@ function mapHomepage(
     ),
     siteDescription: String(
       fields.siteDescription ?? fallbackHomepage.siteDescription
+    ),
+    footerMenuLinks: mapNavLinks(
+      fields.footerMenuLinks,
+      fallbackHomepage.footerMenuLinks
+    ),
+    footerExploreLinks: mapNavLinks(
+      fields.footerExploreLinks,
+      fallbackHomepage.footerExploreLinks
+    ),
+    footerSocialLinks: mapNavLinks(
+      fields.footerSocialLinks,
+      fallbackHomepage.footerSocialLinks
+    ),
+    footerCopyright: String(
+      fields.footerCopyright || fallbackHomepage.footerCopyright
     ),
   };
 }
@@ -351,6 +440,21 @@ function mapShopPage(entry: StrapiEntry | null | undefined): ShopPageContent | n
     subtitle: String(fields.subtitle || fallbackShopPage.subtitle),
     description: String(fields.description || fallbackShopPage.description),
     sections: sections.length > 0 ? sections : fallbackShopPage.sections,
+    howToOrderEyebrow: String(
+      fields.howToOrderEyebrow || fallbackShopPage.howToOrderEyebrow
+    ),
+    howToOrderTitle: String(
+      fields.howToOrderTitle || fallbackShopPage.howToOrderTitle
+    ),
+    howToOrderBody: String(
+      fields.howToOrderBody || fallbackShopPage.howToOrderBody
+    ),
+    howToOrderLinkText: String(
+      fields.howToOrderLinkText || fallbackShopPage.howToOrderLinkText
+    ),
+    howToOrderLinkHref: String(
+      fields.howToOrderLinkHref || fallbackShopPage.howToOrderLinkHref
+    ),
   };
 }
 
@@ -366,4 +470,100 @@ export async function getShopPage(): Promise<ShopPageContent> {
 
   const json = (await res.json()) as { data?: StrapiEntry };
   return mapShopPage(json.data) ?? fallbackShopPage;
+}
+
+function mapStorefrontCopy(
+  entry: StrapiEntry | null | undefined
+): StorefrontCopy | null {
+  if (!entry) return null;
+  const fields = getFields(entry);
+  return {
+    cartTitle: String(fields.cartTitle || fallbackStorefrontCopy.cartTitle),
+    cartEmptyTitle: String(
+      fields.cartEmptyTitle || fallbackStorefrontCopy.cartEmptyTitle
+    ),
+    cartEmptyBody: String(
+      fields.cartEmptyBody || fallbackStorefrontCopy.cartEmptyBody
+    ),
+    cartEmptyCta: String(
+      fields.cartEmptyCta || fallbackStorefrontCopy.cartEmptyCta
+    ),
+    cartCheckoutCta: String(
+      fields.cartCheckoutCta || fallbackStorefrontCopy.cartCheckoutCta
+    ),
+    checkoutTitle: String(
+      fields.checkoutTitle || fallbackStorefrontCopy.checkoutTitle
+    ),
+    checkoutSubmitCta: String(
+      fields.checkoutSubmitCta || fallbackStorefrontCopy.checkoutSubmitCta
+    ),
+    confirmationTitle: String(
+      fields.confirmationTitle || fallbackStorefrontCopy.confirmationTitle
+    ),
+    confirmationBody: String(
+      fields.confirmationBody || fallbackStorefrontCopy.confirmationBody
+    ),
+    confirmationCta: String(
+      fields.confirmationCta || fallbackStorefrontCopy.confirmationCta
+    ),
+  };
+}
+
+export async function getStorefrontCopy(): Promise<StorefrontCopy> {
+  const { url } = getStrapiConfig();
+  if (!url) return fallbackStorefrontCopy;
+
+  const res = await strapiFetch("/api/storefront-copy");
+  if (!res?.ok) {
+    logStrapiHttpError("storefront copy", res);
+    return fallbackStorefrontCopy;
+  }
+
+  const json = (await res.json()) as { data?: StrapiEntry };
+  return mapStorefrontCopy(json.data) ?? fallbackStorefrontCopy;
+}
+
+function mapStoreOutlet(
+  entry: StrapiEntry | null | undefined
+): StoreOutlet | null {
+  if (!entry) return null;
+  const fields = getFields(entry);
+  const windowsRaw = fields.pickupWindows;
+  const pickupWindows = Array.isArray(windowsRaw)
+    ? windowsRaw
+        .map((item) => {
+          if (!item || typeof item !== "object") return "";
+          return String((item as { label?: string }).label ?? "").trim();
+        })
+        .filter(Boolean)
+    : [];
+
+  const name = String(fields.name || "").trim();
+  if (!name && pickupWindows.length === 0) return null;
+
+  return {
+    name: name || fallbackStoreOutlet.name,
+    cartLabel: String(fields.cartLabel || name || fallbackStoreOutlet.cartLabel),
+    hours: String(fields.hours || fallbackStoreOutlet.hours),
+    address: String(fields.address ?? fallbackStoreOutlet.address),
+    pickupNote: String(fields.pickupNote || fallbackStoreOutlet.pickupNote),
+    pickupWindows:
+      pickupWindows.length > 0
+        ? pickupWindows
+        : fallbackStoreOutlet.pickupWindows,
+  };
+}
+
+export async function getStoreOutlet(): Promise<StoreOutlet> {
+  const { url } = getStrapiConfig();
+  if (!url) return fallbackStoreOutlet;
+
+  const res = await strapiFetch("/api/store-outlet?populate=*");
+  if (!res?.ok) {
+    logStrapiHttpError("store outlet", res);
+    return fallbackStoreOutlet;
+  }
+
+  const json = (await res.json()) as { data?: StrapiEntry };
+  return mapStoreOutlet(json.data) ?? fallbackStoreOutlet;
 }

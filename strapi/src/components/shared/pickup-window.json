@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_shared_pickup_windows",
+  "info": {
+    "displayName": "Pickup Window",
+    "description": "A selectable pickup time window label"
+  },
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

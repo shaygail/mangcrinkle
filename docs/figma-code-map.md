@@ -18,6 +18,8 @@ Canonical agent rule: [`.cursor/rules/figma-code-map.mdc`](../.cursor/rules/figm
 | Cart (empty) | [34:260](https://www.figma.com/design/sYXsKO9gMyZ60JupTNPi4G/Mang-Crinkle?node-id=34-260) | `/cart` |
 | Checkout | [34:28](https://www.figma.com/design/sYXsKO9gMyZ60JupTNPi4G/Mang-Crinkle?node-id=34-28) | `/checkout` |
 | Order confirmation | [34:159](https://www.figma.com/design/sYXsKO9gMyZ60JupTNPi4G/Mang-Crinkle?node-id=34-159) | `/order/confirmation` |
+| Box builder (6-pack) | [73:32](https://www.figma.com/design/sYXsKO9gMyZ60JupTNPi4G/Mang-Crinkle?node-id=73-32) | `/shop/build/pack-6` |
+| Box builder (12-pack) | [73:316](https://www.figma.com/design/sYXsKO9gMyZ60JupTNPi4G/Mang-Crinkle?node-id=73-316) | `/shop/build/pack-12` |
 
 ## Shared components
 

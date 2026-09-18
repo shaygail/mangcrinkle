@@ -1,14 +1,8 @@
 import type { CheckoutSuccessMeta } from "@/components/CheckoutForm";
+import { DEFAULT_PICKUP_WINDOWS } from "@/data/store-outlet";
 
-export const PICKUP_TIMES = [
-  "10:00 - 10:30 AM",
-  "11:00 - 11:30 AM",
-  "12:00 - 12:30 PM",
-  "1:30 - 2:00 PM",
-  "3:30 - 4:00 PM",
-  "5:00 - 5:30 PM",
-  "6:30 - 7:00 PM",
-] as const;
+/** @deprecated Prefer Store Outlet CMS pickupWindows; kept as offline default */
+export const PICKUP_TIMES = DEFAULT_PICKUP_WINDOWS;
 
 export type PickupSession = {
   dayOffset: number;
@@ -44,11 +38,19 @@ export function buildPickupSummary(dayOffset: number, time: string) {
   return `${formatPickupDate(dayOffset)} @ ${time}`;
 }
 
-export function defaultPickupSession(): PickupSession {
+function defaultTime(windows: string[]) {
+  if (windows.length === 0) return DEFAULT_PICKUP_WINDOWS[4];
+  return windows[Math.min(4, windows.length - 1)] ?? windows[0];
+}
+
+export function defaultPickupSession(
+  windows: string[] = [...DEFAULT_PICKUP_WINDOWS]
+): PickupSession {
+  const time = defaultTime(windows);
   return {
     dayOffset: 0,
-    time: PICKUP_TIMES[4],
-    summary: buildPickupSummary(0, PICKUP_TIMES[4]),
+    time,
+    summary: buildPickupSummary(0, time),
     promo: "",
   };
 }
@@ -61,13 +63,21 @@ export function savePickupSession(session: PickupSession) {
   }
 }
 
-export function loadPickupSession(): PickupSession {
+export function loadPickupSession(
+  windows: string[] = [...DEFAULT_PICKUP_WINDOWS]
+): PickupSession {
+  const defaults = defaultPickupSession(windows);
   try {
     const raw = sessionStorage.getItem(PICKUP_KEY);
-    if (!raw) return defaultPickupSession();
-    return { ...defaultPickupSession(), ...(JSON.parse(raw) as PickupSession) };
+    if (!raw) return defaults;
+    const parsed = { ...defaults, ...(JSON.parse(raw) as PickupSession) };
+    if (windows.length > 0 && !windows.includes(parsed.time)) {
+      parsed.time = defaults.time;
+      parsed.summary = buildPickupSummary(parsed.dayOffset, parsed.time);
+    }
+    return parsed;
   } catch {
-    return defaultPickupSession();
+    return defaults;
   }
 }
 

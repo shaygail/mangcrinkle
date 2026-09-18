@@ -1,23 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
 import { useProducts } from "@/context/ProductsContext";
 import { useCart } from "@/context/CartContext";
 import { getProductById } from "@/data/products";
 import { getProductPlaceholder } from "@/lib/images";
-import {
-  createEmptyPackSelections,
-  getPackSize,
-  isDrink,
-  isPack,
-  isPackSelectionsComplete,
-} from "@/lib/cart";
+import { isDrink, isPack } from "@/lib/cart";
 import ProductImage from "@/components/ProductImage";
 import Button from "@/components/Button";
 import ProductAddModal from "@/components/ProductAddModal";
-import { PackFlavourPicker } from "@/components/shop/PackFlavourPicker";
 
 interface ProductDetailClientProps {
   productId: string;
@@ -41,25 +34,12 @@ export default function ProductDetailClient({
     pack6 ? "pack-6" : "single"
   );
   const [modalOpen, setModalOpen] = useState(false);
-  const [packSelections, setPackSelections] = useState<string[]>([]);
 
   const selected = useMemo(() => {
     if (packChoice === "pack-6" && pack6) return pack6;
     if (packChoice === "pack-12" && pack12) return pack12;
     return product;
   }, [packChoice, pack6, pack12, product]);
-
-  useEffect(() => {
-    if (!selected || !isPack(selected)) {
-      setPackSelections([]);
-      return;
-    }
-    const size = getPackSize(selected);
-    // Pre-fill every slot with the current flavour (Figma mobile has no mixer)
-    setPackSelections(
-      Array.from({ length: size }, () => (product ? product.id : ""))
-    );
-  }, [selected, product]);
 
   if (!product) {
     notFound();
@@ -71,21 +51,12 @@ export default function ProductDetailClient({
   const selectingPack = showPackOptions && packChoice !== "single";
   const unitPrice = selected?.price ?? product.price;
   const lineTotal = unitPrice * quantity;
-  const packComplete =
-    !selectingPack ||
-    !selected ||
-    !isPack(selected) ||
-    isPackSelectionsComplete(
-      products,
-      packSelections,
-      getPackSize(selected)
-    );
 
   const handleAdd = () => {
     if (!selected) return;
 
     if (packProduct) {
-      router.push("/shop?category=packs");
+      router.push(`/shop/build/${product.id}`);
       return;
     }
 
@@ -95,11 +66,7 @@ export default function ProductDetailClient({
     }
 
     if (selectingPack && isPack(selected)) {
-      if (!packComplete) return;
-      addItem(selected, quantity, {
-        packSelections,
-        openCart: true,
-      });
+      router.push(`/shop/build/${selected.id}`);
       return;
     }
 
@@ -137,13 +104,12 @@ export default function ProductDetailClient({
 
   const ctaLabel = (() => {
     if (drink) return "Choose Options";
-    if (packProduct) return "Choose Flavours";
-    if (selectingPack && !packComplete) return "Choose Flavours First";
+    if (packProduct) return "Build Your Box";
+    if (selectingPack) return "Build Your Box";
     return `Add to Box • $${lineTotal.toFixed(2)}`;
   })();
 
-  const canAdd =
-    !drink && !packProduct && (!selectingPack || packComplete);
+  const canAdd = !drink && !packProduct && !selectingPack;
 
   const quantityStepper = (
     <div className="inline-flex items-center gap-4 rounded-full border-2 border-mang-brown bg-mang-cream-light px-3.5 py-2 font-extrabold shrink-0">
@@ -297,22 +263,15 @@ export default function ProductDetailClient({
                   )}
                 </div>
 
-                {/* Desktop only: flavour mixer */}
                 {selectingPack && selected && isPack(selected) && (
                   <div className="hidden lg:block mt-2 p-4 bg-mang-tan/50 rounded-xl border border-mang-brown/20">
-                    <p className="text-[11px] font-extrabold uppercase tracking-wide text-mang-brown-mid mb-3">
-                      Mix your flavours
+                    <p className="text-[13px] text-mang-brown-mid">
+                      Mix and match flavours in the box builder after you tap{" "}
+                      <span className="font-bold text-mang-brown">
+                        Build Your Box
+                      </span>
+                      .
                     </p>
-                    <PackFlavourPicker
-                      pack={selected}
-                      selections={
-                        packSelections.length
-                          ? packSelections
-                          : createEmptyPackSelections(selected)
-                      }
-                      onChange={setPackSelections}
-                      namePrefix={`pdp-${product.id}`}
-                    />
                   </div>
                 )}
               </div>
@@ -374,7 +333,7 @@ export default function ProductDetailClient({
                 fullWidth
                 className="flex-1"
                 onClick={handleAdd}
-                disabled={!canAdd && !drink && !packProduct}
+                disabled={!canAdd && !drink && !packProduct && !selectingPack}
               >
                 🍪 {ctaLabel}
               </Button>
@@ -394,7 +353,7 @@ export default function ProductDetailClient({
             fullWidth
             className="!text-[13px] min-w-0 flex-1"
             onClick={handleAdd}
-            disabled={!canAdd && !drink && !packProduct}
+            disabled={!canAdd && !drink && !packProduct && !selectingPack}
           >
             + {ctaLabel}
           </Button>

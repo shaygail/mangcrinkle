@@ -6,23 +6,13 @@ interface HeroProps {
   content: HomepageContent;
 }
 
-const HIGHLIGHTS = [
-  "Soft-Centred",
-  "Ube & Classic Chocolate",
-  "Gooey Lava Core",
-] as const;
-
-const MOBILE_HERO_COPY =
-  "Handcrafted Filipino-inspired cookies, baked with a premium soft, fudgy center and dusted with snowy sweet crinkle magic.";
-
 export default function Hero({ content }: HeroProps) {
   return (
     <section className="bg-mang-cream border-b border-mang-tan">
       <div className="max-w-5xl mx-auto px-6 sm:px-8 lg:px-10 py-10 sm:py-14 lg:py-[72px] flex flex-col gap-6 sm:gap-8 items-center">
-        {/* Title stack — mobile matches Figma 32:28 */}
         <div className="text-center w-full max-w-3xl flex flex-col items-center gap-2">
           <p className="lg:hidden text-[12px] font-bold uppercase tracking-[0.15em] text-mang-brown-mid">
-            Filipino Artisanal Treats
+            {content.heroEyebrow}
           </p>
           <h1 className="menu-logo text-[52px] sm:text-6xl lg:text-[96px] leading-[0.95] lg:leading-none">
             {content.heroTitle}
@@ -31,14 +21,13 @@ export default function Hero({ content }: HeroProps) {
             {content.heroSubtitle}
           </p>
           <p className="lg:hidden text-mang-brown-mid text-sm italic max-w-[310px] mx-auto leading-5 mt-1">
-            {MOBILE_HERO_COPY}
+            {content.heroDescription}
           </p>
           <p className="hidden lg:block text-mang-brown-mid text-lg italic max-w-xl mx-auto leading-relaxed mt-2">
             {content.heroDescription}
           </p>
         </div>
 
-        {/* Media: stacked mobile, split desktop (26:5) */}
         <div className="w-full flex flex-col lg:flex-row gap-6 items-center lg:items-stretch max-w-[960px]">
           <div className="relative w-full max-w-[342px] sm:max-w-md lg:max-w-none lg:w-[560px] shrink-0 h-[210px] sm:h-auto sm:aspect-[560/360] lg:h-[360px] lg:aspect-auto rounded-[20px] overflow-hidden border-2 border-mang-brown shadow-[4px_4px_0_rgba(61,36,24,0.17)]">
             <ProductImage
@@ -55,20 +44,18 @@ export default function Hero({ content }: HeroProps) {
           <div className="hidden lg:flex flex-1 flex-col gap-5 min-w-0 justify-between">
             <div className="flex flex-col gap-3">
               <p className="text-[12px] font-extrabold uppercase tracking-[0.12em] text-mang-brown-mid">
-                Filipino Sweet Magic
+                {content.heroPanelEyebrow}
               </p>
               <p className="text-2xl font-bold text-mang-brown leading-8">
-                Freshly baked daily with premium soft, fudgy centers and snowy
-                sweet crinkle magic.
+                {content.heroPanelTitle}
               </p>
               <p className="text-sm italic text-mang-brown-mid leading-5">
-                From classic chocolate to signature ube and gooey lava crinkles,
-                every bite is made to crave.
+                {content.heroPanelBody}
               </p>
             </div>
 
             <div className="flex flex-wrap gap-3">
-              {HIGHLIGHTS.map((label) => (
+              {content.heroHighlights.map((label) => (
                 <span
                   key={label}
                   className="inline-flex items-center px-3 py-2 rounded-full border-[1.5px] border-mang-brown bg-mang-tan text-[12px] font-bold text-mang-brown"
@@ -89,7 +76,6 @@ export default function Hero({ content }: HeroProps) {
           </div>
         </div>
 
-        {/* Mobile CTA under image */}
         <div className="lg:hidden w-full flex justify-center">
           <Button href={content.heroButtonLink} variant="brown" pop size="lg">
             🍪 {content.heroButtonText}
@@ -100,12 +86,23 @@ export default function Hero({ content }: HeroProps) {
   );
 }
 
-export function BrandHighlights() {
-  const items = [
-    { emoji: "✨", label: "Soft-Centred" },
-    { emoji: "💜", label: "Ube & Classic Chocolate" },
-    { emoji: "🔥", label: "Gooey Lava Core" },
-  ] as const;
+export function BrandHighlights({
+  highlights,
+}: {
+  highlights?: string[];
+}) {
+  const items = (highlights?.length
+    ? highlights
+    : ["Soft-Centred", "Ube & Classic Chocolate", "Gooey Lava Core"]
+  ).map((label) => {
+    const emoji =
+      label.toLowerCase().includes("ube")
+        ? "💜"
+        : label.toLowerCase().includes("lava")
+          ? "🔥"
+          : "✨";
+    return { emoji, label };
+  });
 
   return (
     <section className="bg-mang-tan border border-mang-brown px-5 sm:px-8 lg:px-20 py-4">

@@ -18,6 +18,8 @@ interface CheckoutFormProps {
   onBack: () => void;
   onSuccess: (orderId: string, meta: CheckoutSuccessMeta) => void;
   pickupSummary: string;
+  submitLabel?: string;
+  outletName?: string;
 }
 
 type PaymentMethod = "gcash" | "card" | "pickup";
@@ -26,6 +28,8 @@ export default function CheckoutForm({
   onBack,
   onSuccess,
   pickupSummary,
+  submitLabel = "Place Order",
+  outletName = "Manila Town Kitchen (HQ)",
 }: CheckoutFormProps) {
   const { products } = useProducts();
   const { items, subtotal, clearCart } = useCart();
@@ -205,7 +209,7 @@ export default function CheckoutForm({
         <h3 className="menu-title-3d text-xl">2. Pickup Schedule</h3>
         <div className="bg-mang-cream border-2 border-mang-brown rounded-2xl p-4 shadow-[3px_3px_0_rgba(61,36,23,0.12)] space-y-1">
           <p className="font-bold text-sm text-mang-brown">
-            📍 Manila Town Kitchen (HQ)
+            📍 {outletName}
           </p>
           <p className="text-sm text-mang-brown-mid">Date: {pickupSummary}</p>
         </div>
@@ -324,7 +328,7 @@ export default function CheckoutForm({
         >
           {submitting
             ? "Sending order…"
-            : `🔒 Place Order • $${subtotal.toFixed(2)}`}
+            : `🔒 ${submitLabel} • $${subtotal.toFixed(2)}`}
         </Button>
       </section>
 

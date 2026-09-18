@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_shared_nav_links",
+  "info": {
+    "displayName": "Nav Link",
+    "description": "Label + URL for footer or nav links"
+  },
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "href": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

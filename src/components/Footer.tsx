@@ -29,24 +29,13 @@ export default async function Footer() {
                 Menu
               </h3>
               <ul className="space-y-1">
-                <li>
-                  <Link href="/shop" className={footerLinkClass}>
-                    Shop All
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/shop/ube"
-                    className={footerLinkClass}
-                  >
-                    Ube Special
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/shop?category=packs" className={footerLinkClass}>
-                    Box Packs
-                  </Link>
-                </li>
+                {homepage.footerMenuLinks.map((link) => (
+                  <li key={`${link.label}-${link.href}`}>
+                    <Link href={link.href} className={footerLinkClass}>
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
             <div>
@@ -54,21 +43,13 @@ export default async function Footer() {
                 Explore
               </h3>
               <ul className="space-y-1">
-                <li>
-                  <Link href="/" className={footerLinkClass}>
-                    Our Story
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/#order" className={footerLinkClass}>
-                    Pickup Locations
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/shop" className={footerLinkClass}>
-                    FAQ
-                  </Link>
-                </li>
+                {homepage.footerExploreLinks.map((link) => (
+                  <li key={`${link.label}-${link.href}`}>
+                    <Link href={link.href} className={footerLinkClass}>
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
             <div>
@@ -76,28 +57,23 @@ export default async function Footer() {
                 Socials
               </h3>
               <ul className="space-y-1">
-                <li>
-                  <a href="#" className={footerLinkClass}>
-                    Instagram
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className={footerLinkClass}>
-                    Facebook
-                  </a>
-                </li>
-                <li className="hidden lg:list-item">
-                  <a href="#" className={footerLinkClass}>
-                    TikTok
-                  </a>
-                </li>
+                {homepage.footerSocialLinks.map((link, index) => (
+                  <li
+                    key={`${link.label}-${link.href}`}
+                    className={index > 1 ? "hidden lg:list-item" : undefined}
+                  >
+                    <a href={link.href} className={footerLinkClass}>
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
         </div>
 
         <div className="mt-10 pt-6 border-t border-mang-tan flex flex-col items-center gap-3 text-[12px] text-mang-brown-mid/80">
-          <p>© 2026 Mang Crinkle. All rights reserved.</p>
+          <p>{homepage.footerCopyright}</p>
           <div className="flex gap-4">
             <a href="#" className="hover:text-mang-brown transition-colors">
               Privacy Policy

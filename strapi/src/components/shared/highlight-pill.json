@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_shared_highlight_pills",
+  "info": {
+    "displayName": "Highlight Pill",
+    "description": "Short highlight label for the hero panel"
+  },
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

@@ -8,8 +8,16 @@ import {
   loadOrderConfirm,
   type OrderConfirmSession,
 } from "@/lib/order-session";
+import type { StorefrontCopy } from "@/data/storefront-copy";
+import type { StoreOutlet } from "@/data/store-outlet";
 
-export default function ConfirmationPageClient() {
+export default function ConfirmationPageClient({
+  copy,
+  outlet,
+}: {
+  copy: StorefrontCopy;
+  outlet: StoreOutlet;
+}) {
   const router = useRouter();
   const [order, setOrder] = useState<OrderConfirmSession | null>(null);
   const [ready, setReady] = useState(false);
@@ -40,12 +48,10 @@ export default function ConfirmationPageClient() {
             🍪
           </div>
           <h1 className="menu-title-3d text-4xl sm:text-[42px] mb-3">
-            Order is Confirmed!
+            {copy.confirmationTitle}
           </h1>
           <p className="text-sm italic text-mang-brown-mid max-w-md mx-auto">
-            Your fresh batch of soft-centred crinkle magic is officially locked
-            in. Swing by during your window for the perfect warm cookie
-            experience.
+            {copy.confirmationBody}
           </p>
         </div>
 
@@ -66,11 +72,12 @@ export default function ConfirmationPageClient() {
                   Pickup Location
                 </p>
                 <p className="font-bold text-mang-brown text-sm">
-                  Manila Town Kitchen (HQ)
+                  {outlet.name}
                 </p>
-                <p className="text-xs text-mang-brown-mid">
-                  Open 10:00 AM – 8:00 PM Daily
-                </p>
+                <p className="text-xs text-mang-brown-mid">{outlet.hours}</p>
+                {outlet.address ? (
+                  <p className="text-xs text-mang-brown-mid">{outlet.address}</p>
+                ) : null}
               </div>
             </div>
             <div className="flex gap-3">
@@ -85,7 +92,7 @@ export default function ConfirmationPageClient() {
                   {order.pickup}
                 </p>
                 <p className="text-xs italic text-mang-brown-mid">
-                  Arrive during this window for fresh &amp; warm cookies.
+                  {outlet.pickupNote}
                 </p>
               </div>
             </div>
@@ -124,7 +131,7 @@ export default function ConfirmationPageClient() {
 
         <div className="space-y-3 pt-2">
           <Button href="/shop" variant="yellow" pop fullWidth>
-            ← Back to Crinkle Shop
+            {copy.confirmationCta}
           </Button>
           <Link
             href="/shop"

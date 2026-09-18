@@ -1,0 +1,55 @@
+{
+  "kind": "singleType",
+  "collectionName": "storefront_copies",
+  "info": {
+    "singularName": "storefront-copy",
+    "pluralName": "storefront-copies",
+    "displayName": "Storefront Copy",
+    "description": "Editable cart, checkout, and confirmation page copy"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "cartTitle": {
+      "type": "string",
+      "default": "Your Box"
+    },
+    "cartEmptyTitle": {
+      "type": "string",
+      "default": "Your box is empty"
+    },
+    "cartEmptyBody": {
+      "type": "text",
+      "default": "Add some crinkles to get started."
+    },
+    "cartEmptyCta": {
+      "type": "string",
+      "default": "Browse the Shop"
+    },
+    "cartCheckoutCta": {
+      "type": "string",
+      "default": "Checkout"
+    },
+    "checkoutTitle": {
+      "type": "string",
+      "default": "Checkout"
+    },
+    "checkoutSubmitCta": {
+      "type": "string",
+      "default": "Place Order"
+    },
+    "confirmationTitle": {
+      "type": "string",
+      "default": "Order Confirmed"
+    },
+    "confirmationBody": {
+      "type": "text",
+      "default": "Thanks for your order — we'll see you at pickup."
+    },
+    "confirmationCta": {
+      "type": "string",
+      "default": "Back to Shop"
+    }
+  }
+}

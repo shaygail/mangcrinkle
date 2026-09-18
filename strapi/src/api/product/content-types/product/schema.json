@@ -54,6 +54,28 @@
       "multiple": false,
       "required": false,
       "allowedTypes": ["images"]
+    },
+    "featuredOnShop": {
+      "type": "boolean",
+      "default": false
+    },
+    "shopSortOrder": {
+      "type": "integer",
+      "default": 0
+    },
+    "showInBoxBuilder": {
+      "type": "boolean",
+      "default": false
+    },
+    "boxBuilderSortOrder": {
+      "type": "integer",
+      "default": 0
+    },
+    "builderTitle": {
+      "type": "string"
+    },
+    "builderSubtitle": {
+      "type": "text"
     }
   }
 }

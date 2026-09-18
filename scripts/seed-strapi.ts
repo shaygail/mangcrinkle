@@ -77,6 +77,24 @@ async function main() {
         ...(product.tier ? { tier: product.tier } : {}),
         ...(product.badge ? { badge: product.badge } : {}),
         ...(product.note ? { note: product.note } : {}),
+        ...(product.featuredOnShop != null
+          ? { featuredOnShop: product.featuredOnShop }
+          : {}),
+        ...(product.shopSortOrder != null
+          ? { shopSortOrder: product.shopSortOrder }
+          : {}),
+        ...(product.showInBoxBuilder != null
+          ? { showInBoxBuilder: product.showInBoxBuilder }
+          : {}),
+        ...(product.boxBuilderSortOrder != null
+          ? { boxBuilderSortOrder: product.boxBuilderSortOrder }
+          : {}),
+        ...(product.builderTitle
+          ? { builderTitle: product.builderTitle }
+          : {}),
+        ...(product.builderSubtitle
+          ? { builderSubtitle: product.builderSubtitle }
+          : {}),
       },
     };
 

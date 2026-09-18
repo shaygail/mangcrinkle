@@ -26,6 +26,10 @@ export const fallbackProducts: Product[] = [
     image: cookieImg,
     category: "crinkle-standard",
     tier: "Standard",
+    featuredOnShop: true,
+    shopSortOrder: 1,
+    showInBoxBuilder: true,
+    boxBuilderSortOrder: 1,
   },
   {
     id: "red-velvet",
@@ -56,6 +60,10 @@ export const fallbackProducts: Product[] = [
     category: "crinkle-premium",
     tier: "Premium",
     badge: "Premium",
+    featuredOnShop: true,
+    shopSortOrder: 2,
+    showInBoxBuilder: true,
+    boxBuilderSortOrder: 2,
   },
   {
     id: "coconut-pandan",
@@ -67,6 +75,10 @@ export const fallbackProducts: Product[] = [
     category: "crinkle-premium",
     tier: "Premium",
     badge: "Premium",
+    featuredOnShop: true,
+    shopSortOrder: 3,
+    showInBoxBuilder: true,
+    boxBuilderSortOrder: 3,
   },
   {
     id: "chocolate-butternut",
@@ -117,6 +129,10 @@ export const fallbackProducts: Product[] = [
     image: packImg,
     category: "crinkle-pack",
     badge: "Best Value",
+    featuredOnShop: true,
+    shopSortOrder: 5,
+    builderTitle: "Assorted 6-Pack Box",
+    builderSubtitle: "Choose 6 of your favorite freshly baked flavors.",
   },
   {
     id: "pack-12",
@@ -125,6 +141,9 @@ export const fallbackProducts: Product[] = [
     price: 50.0,
     image: packImg,
     category: "crinkle-pack",
+    builderTitle: "Craver's 12-Pack Box",
+    builderSubtitle:
+      "Load up 12 delicious crinkles. Mix and match anyway you want!",
   },
   // Lava crinkles
   {
@@ -144,6 +163,10 @@ export const fallbackProducts: Product[] = [
     image: lavaChocoImg,
     category: "lava",
     badge: "Gooey Lava Core",
+    featuredOnShop: true,
+    shopSortOrder: 4,
+    showInBoxBuilder: true,
+    boxBuilderSortOrder: 4,
   },
   {
     id: "lava-3",
@@ -268,6 +291,8 @@ export const fallbackProducts: Product[] = [
     image: icedImg,
     category: "iced-drink",
     tier: "Standard",
+    featuredOnShop: true,
+    shopSortOrder: 6,
   },
   // Iced drinks – 530 ml (standard)
   {
@@ -333,6 +358,54 @@ export function getCrinkleFlavours(products: Product[]): Product[] {
       p.category === "crinkle-premium" ||
       p.category === "crinkle-signature"
   );
+}
+
+/** Curated flavours for the Box Builder — driven by CMS flags when set. */
+const DEFAULT_BOX_BUILDER_FLAVOUR_IDS = [
+  "classic-chocolate",
+  "ube",
+  "coconut-pandan",
+  "lava-choco",
+] as const;
+
+export function getBoxBuilderFlavours(products: Product[]): Product[] {
+  const flagged = products
+    .filter((p) => p.showInBoxBuilder)
+    .sort(
+      (a, b) => (a.boxBuilderSortOrder ?? 0) - (b.boxBuilderSortOrder ?? 0)
+    );
+
+  if (flagged.length > 0) return flagged;
+
+  return DEFAULT_BOX_BUILDER_FLAVOUR_IDS.map(
+    (id) =>
+      products.find((p) => p.id === id) ??
+      fallbackProducts.find((p) => p.id === id)
+  ).filter((p): p is Product => Boolean(p));
+}
+
+/** Mobile shop “All” curated feed — driven by CMS featured flags when set. */
+const DEFAULT_SHOP_FEATURED_IDS = [
+  "classic-chocolate",
+  "ube",
+  "coconut-pandan",
+  "lava-choco",
+  "pack-6",
+  "iced-calamansi",
+] as const;
+
+export function getFeaturedShopProducts(products: Product[]): Product[] {
+  const flagged = products
+    .filter((p) => p.featuredOnShop)
+    .sort((a, b) => (a.shopSortOrder ?? 0) - (b.shopSortOrder ?? 0));
+
+  if (flagged.length > 0) return flagged;
+
+  return DEFAULT_SHOP_FEATURED_IDS.map(
+    (id) =>
+      products.find((p) => p.id === id) ??
+      fallbackProducts.find((p) => p.id === id)
+  ).filter((p): p is Product => Boolean(p));
 }
 
 export function getProductById(

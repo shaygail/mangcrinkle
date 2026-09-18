@@ -20,9 +20,11 @@ Public **find** / **findOne** permissions are enabled automatically on bootstrap
 
 | Type | API | Editable in Admin |
 |------|-----|-------------------|
-| **Product** | `/api/products` | Content Manager → Product — names, **descriptions**, prices, images |
-| **Homepage** (single) | `/api/homepage` | Content Manager → Homepage — hero, story, how-to-order, CTA, fan favourites titles, footer tagline, site meta description + **images** |
-| **Shop Page** (single) | `/api/shop-page` | Content Manager → Shop Page — shop header + each section title/description |
+| **Product** | `/api/products` | Content Manager → Product — names, **descriptions**, prices, images, shop featured flags, box-builder flags, pack builder titles |
+| **Homepage** (single) | `/api/homepage` | Content Manager → Homepage — hero, story, how-to-order, CTA, fan favourites titles, footer tagline/links, site meta description + **images** |
+| **Shop Page** (single) | `/api/shop-page` | Content Manager → Shop Page — shop header + section blurbs + how-to-order teaser |
+| **Storefront Copy** (single) | `/api/storefront-copy` | Content Manager → Storefront Copy — cart / checkout / confirmation titles & CTAs |
+| **Store Outlet** (single) | `/api/store-outlet` | Content Manager → Store Outlet — pickup name, hours, address, time windows |
 | **Testimonial** | `/api/testimonials` | Content Manager → Testimonial |
 | **Order Step** | `/api/order-steps` | Content Manager → Order Step — step titles + descriptions |
 

@@ -22,7 +22,9 @@ export default function ProductCard({
   shopMobile = false,
 }: ProductCardProps) {
   const pack = isPack(product);
-  const productHref = `/shop/${product.id}`;
+  const productHref = pack
+    ? `/shop/build/${product.id}`
+    : `/shop/${product.id}`;
 
   const ctaLabel = pack
     ? shopMobile
