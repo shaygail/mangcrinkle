@@ -6,7 +6,6 @@ import PackGridCard from "./PackGridCard";
 
 interface PackSectionProps {
   packs: Product[];
-  onAdded?: (name: string) => void;
 }
 
 export default function PackSection({ packs }: PackSectionProps) {

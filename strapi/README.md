@@ -37,6 +37,8 @@ npx tsx scripts/seed-homepage.ts    # homepage, shop page, testimonials, order s
 
 Upload **heroImage**, **storyImage**, and **ctaBackgroundImage** on the Homepage entry in Admin.
 
+**Editor guide (step-by-step for non-developers):** see [`docs/cms-editor-guide.md`](../docs/cms-editor-guide.md).
+
 ### Where to edit page descriptions
 
 | Page / section | Strapi entry |

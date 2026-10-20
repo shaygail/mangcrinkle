@@ -5,6 +5,7 @@ import {
   fallbackTestimonials,
   HomepageContent,
   HomepageTestimonial,
+  NavLink,
   OrderStep,
 } from "@/data/homepage";
 import {
@@ -21,7 +22,6 @@ import {
   StoreOutlet,
 } from "@/data/store-outlet";
 import { Product } from "@/types";
-import type { NavLink } from "@/data/homepage";
 
 type StrapiImage =
   | string

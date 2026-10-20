@@ -1,12 +1,14 @@
 import ProductImage from "@/components/ProductImage";
 import Button from "@/components/Button";
 import { HomepageContent } from "@/data/homepage";
+import { sanitizeHref } from "@/lib/urls";
 
 interface HeroProps {
   content: HomepageContent;
 }
 
 export default function Hero({ content }: HeroProps) {
+  const ctaHref = sanitizeHref(content.heroButtonLink, "/shop");
   return (
     <section className="bg-mang-cream border-b border-mang-tan">
       <div className="max-w-5xl mx-auto px-6 sm:px-8 lg:px-10 py-10 sm:py-14 lg:py-[72px] flex flex-col gap-6 sm:gap-8 items-center">
@@ -66,7 +68,7 @@ export default function Hero({ content }: HeroProps) {
             </div>
 
             <Button
-              href={content.heroButtonLink}
+              href={ctaHref}
               variant="brown"
               pop
               className="self-start"
@@ -77,7 +79,7 @@ export default function Hero({ content }: HeroProps) {
         </div>
 
         <div className="lg:hidden w-full flex justify-center">
-          <Button href={content.heroButtonLink} variant="brown" pop size="lg">
+          <Button href={ctaHref} variant="brown" pop size="lg">
             🍪 {content.heroButtonText}
           </Button>
         </div>

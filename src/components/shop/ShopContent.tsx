@@ -16,6 +16,7 @@ import PackSection from "@/components/shop/PackSection";
 import AddedToCartDialog from "@/components/AddedToCartDialog";
 import { useCart } from "@/context/CartContext";
 import { useProducts } from "@/context/ProductsContext";
+import { sanitizeHref } from "@/lib/urls";
 
 type ShopSection = (typeof shopSections)[number];
 
@@ -154,10 +155,7 @@ export default function ShopContent({
               </div>
 
               {section.id === "packs" ? (
-                <PackSection
-                  packs={sectionProducts}
-                  onAdded={(name) => setAddedItem(name)}
-                />
+                <PackSection packs={sectionProducts} />
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
                   {sectionProducts.map((product) => (
@@ -186,7 +184,7 @@ export default function ShopContent({
           {content.howToOrderBody}
         </p>
         <Link
-          href={content.howToOrderLinkHref}
+          href={sanitizeHref(content.howToOrderLinkHref, "/#order")}
           className="hidden lg:inline-flex mt-5 min-h-11 items-center text-sm font-bold text-mang-brown underline underline-offset-4"
         >
           {content.howToOrderLinkText}

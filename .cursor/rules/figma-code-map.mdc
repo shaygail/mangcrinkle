@@ -55,7 +55,7 @@ When implementing from a Figma URL or selection:
 | Editorial / Bake Someone Happy banner | `src/components/CTA.tsx` |
 | Footer | `src/components/Footer.tsx` |
 | Shop page shell + filters | `src/components/shop/ShopContent.tsx` |
-| Pack grid / flavour picker | `shop/PackSection`, `PackGridCard`, `PackFlavourPicker`, `PackCustomizerForm` |
+| Pack grid / flavour picker | `shop/PackSection`, `PackGridCard`, `PackFlavourPicker` |
 | Box Builder (6 / 12 pack) | `shop/BoxBuilderClient` → `/shop/build/[packId]` |
 | Product detail (pack radios + sticky CTA) | `src/components/ProductDetailClient.tsx` |
 | Drink / options modal | `src/components/ProductAddModal.tsx` |

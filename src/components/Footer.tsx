@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getHomepage } from "@/lib/strapi";
+import { sanitizeHref } from "@/lib/urls";
 
 const footerLinkClass =
   "block min-h-11 py-1.5 flex items-center text-sm text-mang-brown-mid hover:text-mang-brown transition-colors";
@@ -29,13 +30,16 @@ export default async function Footer() {
                 Menu
               </h3>
               <ul className="space-y-1">
-                {homepage.footerMenuLinks.map((link) => (
-                  <li key={`${link.label}-${link.href}`}>
-                    <Link href={link.href} className={footerLinkClass}>
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
+                {homepage.footerMenuLinks.map((link) => {
+                  const href = sanitizeHref(link.href);
+                  return (
+                    <li key={`${link.label}-${href}`}>
+                      <Link href={href} className={footerLinkClass}>
+                        {link.label}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
             <div>
@@ -43,13 +47,16 @@ export default async function Footer() {
                 Explore
               </h3>
               <ul className="space-y-1">
-                {homepage.footerExploreLinks.map((link) => (
-                  <li key={`${link.label}-${link.href}`}>
-                    <Link href={link.href} className={footerLinkClass}>
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
+                {homepage.footerExploreLinks.map((link) => {
+                  const href = sanitizeHref(link.href);
+                  return (
+                    <li key={`${link.label}-${href}`}>
+                      <Link href={href} className={footerLinkClass}>
+                        {link.label}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
             <div>
@@ -57,16 +64,19 @@ export default async function Footer() {
                 Socials
               </h3>
               <ul className="space-y-1">
-                {homepage.footerSocialLinks.map((link, index) => (
-                  <li
-                    key={`${link.label}-${link.href}`}
-                    className={index > 1 ? "hidden lg:list-item" : undefined}
-                  >
-                    <a href={link.href} className={footerLinkClass}>
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
+                {homepage.footerSocialLinks.map((link, index) => {
+                  const href = sanitizeHref(link.href, "#");
+                  return (
+                    <li
+                      key={`${link.label}-${href}`}
+                      className={index > 1 ? "hidden lg:list-item" : undefined}
+                    >
+                      <a href={href} className={footerLinkClass}>
+                        {link.label}
+                      </a>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           </div>
