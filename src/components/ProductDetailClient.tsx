@@ -7,7 +7,7 @@ import { useProducts } from "@/context/ProductsContext";
 import { useCart } from "@/context/CartContext";
 import { getProductById } from "@/data/products";
 import { getProductPlaceholder } from "@/lib/images";
-import { isDrink, isPack } from "@/lib/cart";
+import { isConfigurablePack, isDrink, isPack } from "@/lib/cart";
 import ProductImage from "@/components/ProductImage";
 import Button from "@/components/Button";
 import ProductAddModal from "@/components/ProductAddModal";
@@ -46,17 +46,24 @@ export default function ProductDetailClient({
   }
 
   const drink = isDrink(product);
-  const packProduct = isPack(product);
+  const packProduct = isConfigurablePack(product);
+  const fixedPack = isPack(product) && !packProduct;
   const showPackOptions = !drink && !packProduct;
   const selectingPack = showPackOptions && packChoice !== "single";
   const unitPrice = selected?.price ?? product.price;
   const lineTotal = unitPrice * quantity;
 
   const handleAdd = () => {
+    if (product.available === false) return;
     if (!selected) return;
 
     if (packProduct) {
       router.push(`/shop/build/${product.id}`);
+      return;
+    }
+
+    if (fixedPack) {
+      addItem(product, quantity, { openCart: true });
       return;
     }
 
@@ -102,7 +109,10 @@ export default function ProductDetailClient({
     ? "Experience sweet purple yam magic. Our signature vibrant Ube crinkle is carefully handcrafted, soft-centred, incredibly rich, and dusted beautifully in snowy sweet sugar."
     : product.description;
 
+  const soldOut = product.available === false;
+
   const ctaLabel = (() => {
+    if (soldOut) return "Sold out";
     if (drink) return "Choose Options";
     if (packProduct) return "Build Your Box";
     if (selectingPack) return "Build Your Box";
@@ -333,7 +343,7 @@ export default function ProductDetailClient({
                 fullWidth
                 className="flex-1"
                 onClick={handleAdd}
-                disabled={!canAdd && !drink && !packProduct && !selectingPack}
+                disabled={soldOut || (!canAdd && !drink && !packProduct && !selectingPack)}
               >
                 🍪 {ctaLabel}
               </Button>
@@ -353,7 +363,7 @@ export default function ProductDetailClient({
             fullWidth
             className="!text-[13px] min-w-0 flex-1"
             onClick={handleAdd}
-            disabled={!canAdd && !drink && !packProduct && !selectingPack}
+            disabled={soldOut || (!canAdd && !drink && !packProduct && !selectingPack)}
           >
             + {ctaLabel}
           </Button>

@@ -7,7 +7,7 @@ import {
   getHomepage,
   getOrderSteps,
   getTestimonials,
-} from "@/lib/strapi";
+} from "@/lib/content/public";
 
 export default async function HomePage() {
   const [homepage, testimonials, orderSteps] = await Promise.all([

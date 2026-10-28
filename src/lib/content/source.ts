@@ -1,14 +1,15 @@
 /**
- * Temporary cutover flag. Default remains Strapi until native CMS is verified.
- * Set CONTENT_SOURCE=native only on preview/staging after migration checks pass.
+ * Where the storefront reads content from.
+ * `local` (default) uses the built-in catalogue in this app — no Strapi required.
+ * Set CONTENT_SOURCE=strapi to keep reading the old CMS.
  */
-export type ContentSource = "strapi" | "native";
+export type ContentSource = "strapi" | "local";
 
 export function getContentSource(): ContentSource {
-  const raw = (process.env.CONTENT_SOURCE ?? "strapi").toLowerCase().trim();
-  return raw === "native" ? "native" : "strapi";
+  const raw = (process.env.CONTENT_SOURCE ?? "local").toLowerCase().trim();
+  return raw === "strapi" ? "strapi" : "local";
 }
 
-export function isNativeContentEnabled(): boolean {
-  return getContentSource() === "native";
+export function isLocalContent(): boolean {
+  return getContentSource() === "local";
 }

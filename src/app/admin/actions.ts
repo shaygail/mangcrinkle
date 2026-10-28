@@ -1,12 +1,8 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import {
-  createSession,
-  destroySession,
-  parseLoginForm,
-  verifyAdminCredentials,
-} from "@/lib/cms/auth";
+import { createSessionClient, isSupabaseConfigured } from "@/lib/supabase/clients";
+import { parseLoginForm } from "@/lib/cms/auth";
 
 export type LoginState = {
   error?: string;
@@ -20,27 +16,36 @@ export async function loginAction(
   if (!parsed.success) {
     return { error: "Please enter a valid email and password." };
   }
+  if (!isSupabaseConfigured()) {
+    return { error: "Supabase is not configured yet." };
+  }
 
-  try {
-    const session = await verifyAdminCredentials(
-      parsed.data.email,
-      parsed.data.password
-    );
-    if (!session) {
-      return { error: "Those details don’t match. Please try again." };
-    }
-    await createSession(session);
-  } catch {
-    return {
-      error:
-        "Sign-in isn’t configured yet. Add CMS auth environment variables first.",
-    };
+  const supabase = await createSessionClient();
+  const signedIn = await supabase.auth.signInWithPassword({
+    email: parsed.data.email,
+    password: parsed.data.password,
+  });
+  if (signedIn.error || !signedIn.data.user) {
+    return { error: "Those details don’t match. Please try again." };
+  }
+
+  const admin = await supabase
+    .from("cms_admins")
+    .select("user_id")
+    .eq("user_id", signedIn.data.user.id)
+    .maybeSingle();
+  if (!admin.data) {
+    await supabase.auth.signOut();
+    return { error: "This account is not a Mang Crinkle administrator." };
   }
 
   redirect("/admin");
 }
 
 export async function logoutAction(): Promise<void> {
-  await destroySession();
+  if (isSupabaseConfigured()) {
+    const supabase = await createSessionClient();
+    await supabase.auth.signOut();
+  }
   redirect("/admin/login");
 }

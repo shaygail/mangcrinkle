@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Product } from "@/types";
-import { isDrink, isPack } from "@/lib/cart";
+import { isConfigurablePack, isDrink } from "@/lib/cart";
 import { getProductPlaceholder } from "@/lib/images";
 import ProductImage from "@/components/ProductImage";
 import Button from "@/components/Button";
@@ -21,12 +21,13 @@ export default function ProductCard({
   compact = false,
   shopMobile = false,
 }: ProductCardProps) {
-  const pack = isPack(product);
-  const productHref = pack
+  const configurablePack = isConfigurablePack(product);
+  const soldOut = product.available === false;
+  const productHref = configurablePack
     ? `/shop/build/${product.id}`
     : `/shop/${product.id}`;
 
-  const ctaLabel = pack
+  const ctaLabel = configurablePack
     ? shopMobile
       ? "+ Add to Box"
       : "Choose Flavours"
@@ -131,7 +132,7 @@ export default function ProductCard({
                     : "font-bold text-mang-brown text-base sm:text-lg"
                 }`}
               >
-                {pack ? "from " : ""}${product.price.toFixed(2)}
+                {configurablePack ? "from " : ""}${product.price.toFixed(2)}
               </p>
             </div>
 
@@ -143,6 +144,11 @@ export default function ProductCard({
           </>
         )}
 
+        {soldOut ? (
+          <span className="mt-auto inline-flex min-h-11 items-center justify-center border border-mang-brown/30 bg-mang-tan px-4 text-[12px] font-extrabold uppercase tracking-[0.14em] text-mang-brown-mid">
+            Sold out
+          </span>
+        ) : (
         <Button
           href={productHref}
           variant="yellow"
@@ -154,6 +160,7 @@ export default function ProductCard({
         >
           {ctaLabel}
         </Button>
+        )}
       </div>
     </article>
   );

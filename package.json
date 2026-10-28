@@ -11,9 +11,13 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "cms:hash-password": "tsx scripts/hash-cms-password.ts"
+    "cms:hash-password": "tsx scripts/hash-cms-password.ts",
+    "cms:seed": "tsx scripts/seed-supabase.ts",
+    "test": "node --import tsx --test src/lib/supabase/menu.test.ts"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.118.0",
     "bcryptjs": "^3.0.3",
     "drizzle-orm": "^0.45.4",
     "jose": "^6.2.13",

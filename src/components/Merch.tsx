@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getHomepage, getProducts } from "@/lib/strapi";
+import { getHomepage, getProducts } from "@/lib/content/public";
 import ProductCard from "./ProductCard";
 
 export default async function Merch() {

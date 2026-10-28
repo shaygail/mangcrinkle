@@ -1,10 +1,9 @@
-import AdminPlaceholder from "@/components/admin/AdminPlaceholder";
+import ProductManager from "@/components/admin/ProductManager";
+import { getAdminProducts } from "@/lib/supabase/catalog";
 
-export default function AdminProductsPage() {
-  return (
-    <AdminPlaceholder
-      title="Products & Packs"
-      body="Next milestone: product list, editor, live preview, save draft, and publish — matching your CMS screenshots."
-    />
-  );
+export const dynamic = "force-dynamic";
+
+export default async function AdminProductsPage() {
+  const products = await getAdminProducts();
+  return <ProductManager products={products} />;
 }

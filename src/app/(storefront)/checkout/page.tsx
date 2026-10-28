@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import CheckoutPageClient from "@/components/cart/CheckoutPageClient";
-import { getStorefrontCopy, getStoreOutlet } from "@/lib/strapi";
+import { getStorefrontCopy, getStoreOutlet } from "@/lib/content/public";
 
 export const metadata: Metadata = {
   title: "Checkout | Mang Crinkle",

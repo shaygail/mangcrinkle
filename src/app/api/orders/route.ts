@@ -5,7 +5,7 @@ import {
   generateOrderId,
   validateOrderRequest,
 } from "@/lib/order";
-import { getProducts } from "@/lib/strapi";
+import { getProducts } from "@/lib/content/public";
 
 export async function POST(request: Request) {
   if (!isEmailConfigured()) {

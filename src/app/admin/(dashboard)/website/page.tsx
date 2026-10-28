@@ -1,10 +1,52 @@
-import AdminPlaceholder from "@/components/admin/AdminPlaceholder";
+import WebsiteEditor from "@/components/admin/WebsiteEditor";
+import { fallbackHomepage, fallbackOrderSteps, fallbackTestimonials } from "@/data/homepage";
+import { fallbackShopPage } from "@/data/shop-page";
+import { fallbackStorefrontCopy } from "@/data/storefront-copy";
+import { fallbackStoreOutlet } from "@/data/store-outlet";
+import { getDraftWebsite } from "@/lib/supabase/catalog";
+import type { HomepageContent, HomepageTestimonial, OrderStep } from "@/data/homepage";
+import type { ShopPageContent } from "@/data/shop-page";
+import type { StoreOutlet } from "@/data/store-outlet";
+import type { StorefrontCopy } from "@/data/storefront-copy";
 
-export default function AdminWebsitePage() {
+export const dynamic = "force-dynamic";
+
+export default async function AdminWebsitePage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ saved?: string; published?: string }>;
+}) {
+  const query = (await Promise.resolve(searchParams ?? {})) as {
+    saved?: string;
+    published?: string;
+  };
+  const [homepageRow, shopRow, outletRow, copyRow, quotesRow, stepsRow] = await Promise.all([
+    getDraftWebsite("homepage"),
+    getDraftWebsite("shop_page"),
+    getDraftWebsite("store_outlet"),
+    getDraftWebsite("storefront_copy"),
+    getDraftWebsite("testimonials"),
+    getDraftWebsite("order_steps"),
+  ]);
+
+  const notice = query.published
+    ? "Homepage published."
+    : query.saved
+      ? "Draft saved. The website stays the same until you publish."
+      : undefined;
+
   return (
-    <AdminPlaceholder
-      title="Website"
-      body="Homepage hero, announcement, featured products, brand story, FAQ, and pickup details will be editable here."
+    <WebsiteEditor
+      notice={notice}
+      revision={homepageRow?.revision ?? 0}
+      homepage={(homepageRow?.draft_payload as HomepageContent | undefined) ?? fallbackHomepage}
+      shopPage={(shopRow?.draft_payload as ShopPageContent | undefined) ?? fallbackShopPage}
+      outlet={(outletRow?.draft_payload as StoreOutlet | undefined) ?? fallbackStoreOutlet}
+      copy={(copyRow?.draft_payload as StorefrontCopy | undefined) ?? fallbackStorefrontCopy}
+      testimonials={
+        (quotesRow?.draft_payload as HomepageTestimonial[] | undefined) ?? fallbackTestimonials
+      }
+      orderSteps={(stepsRow?.draft_payload as OrderStep[] | undefined) ?? fallbackOrderSteps}
     />
   );
 }

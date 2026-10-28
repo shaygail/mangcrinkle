@@ -80,6 +80,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addItem = useCallback(
     (product: Product, quantity = 1, options?: AddItemOptions) => {
+      if (product.available === false) return;
+
       const milk: MilkType | undefined = isDrink(product)
         ? (options?.milk ?? "whole")
         : undefined;

@@ -24,6 +24,33 @@ export interface Product {
   /** Pack builder page title override */
   builderTitle?: string;
   builderSubtitle?: string;
+  /** False when the owner has marked this item sold out. */
+  available?: boolean;
+  /** Supabase product row. Present in the admin. */
+  dbId?: string;
+  revision?: number;
+  status?: "draft" | "published" | "archived";
+  hasUnpublishedChanges?: boolean;
+  packSize?: number;
+  /** Mixed-flavour box builder. Off unless explicitly enabled. */
+  mixedFlavours?: boolean;
+  ingredients?: string;
+  allergens?: string;
+  fullDescription?: string;
+  variants?: ProductVariantOption[];
+  lineSlug?: string;
+  lineName?: string;
+  categorySlug?: string;
+}
+
+export interface ProductVariantOption {
+  sku: string;
+  label: string;
+  displayName: string;
+  price: number;
+  packSize: number;
+  available: boolean;
+  category: Product["category"];
 }
 
 export type MilkType = "whole" | "oat" | "soy" | "coconut" | "almond";

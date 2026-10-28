@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "arial",
+        "files": [
+          "src/lib/order.ts"
+        ],
+        "createdAt": "2026-10-28T10:16:25.263Z",
+        "reason": "Existing order-email HTML uses Arial because email clients strip webfonts. Not a site UI font; Bebas Neue and Open Sans stay on the website."
+      }
+    ]
+  }
+}

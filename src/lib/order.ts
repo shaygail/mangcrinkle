@@ -4,7 +4,7 @@ import {
   getItemUnitPrice,
   getMilkLabel,
   isDrink,
-  isPack,
+  isConfigurablePack,
   isPackSelectionsComplete,
   getPackSize,
   normalizeCartItem,
@@ -124,6 +124,9 @@ export function buildOrderSummary(
     if (!product) {
       return { error: `Unknown product: ${payload.productId}` };
     }
+    if (product.available === false) {
+      return { error: `${product.name} is sold out.` };
+    }
 
     let cartItem: CartItem;
     try {
@@ -131,14 +134,16 @@ export function buildOrderSummary(
         product,
         quantity: payload.quantity,
         milk: isDrink(product) ? (payload.milk ?? "whole") : undefined,
-        packSelections: isPack(product) ? payload.packSelections : undefined,
+        packSelections: isConfigurablePack(product)
+          ? payload.packSelections
+          : undefined,
       });
     } catch {
       return { error: `Invalid configuration for ${product.name}.` };
     }
 
     if (
-      isPack(product) &&
+      isConfigurablePack(product) &&
       (!cartItem.packSelections ||
         !isPackSelectionsComplete(
           products,

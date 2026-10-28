@@ -21,7 +21,13 @@ export function isPack(product: Product): boolean {
   return product.category === "crinkle-pack";
 }
 
+/** Flavour-mixing packs only. Fixed packs sell at their own price. */
+export function isConfigurablePack(product: Product): boolean {
+  return isPack(product) && product.mixedFlavours === true;
+}
+
 export function getPackSize(product: Product): number {
+  if (product.packSize && product.packSize > 0) return product.packSize;
   if (product.id === "pack-3") return 3;
   if (product.id === "pack-6") return 6;
   if (product.id === "pack-12") return 12;
@@ -131,7 +137,7 @@ export function normalizeCartItem(
   raw: Partial<CartItem> & { product: Product }
 ): CartItem {
   const milk = isDrink(raw.product) ? (raw.milk ?? "whole") : undefined;
-  const packSelections = isPack(raw.product)
+  const packSelections = isConfigurablePack(raw.product)
     ? raw.packSelections ?? getDefaultPackSelections(raw.product)
     : undefined;
 

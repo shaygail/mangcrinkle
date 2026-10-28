@@ -70,24 +70,24 @@ export default function OverviewDashboard({ stats }: { stats: DashboardStats }) 
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
-          label="Published products"
+          label="Published"
           value={stats.publishedProducts}
-          hint="Visible on the shop when native CMS is live"
+          hint="Visible on the shop"
         />
         <StatCard
-          label="Draft products"
+          label="Drafts"
           value={stats.draftProducts}
-          hint="Never published"
+          hint="Not on the website yet"
         />
         <StatCard
           label="Unpublished edits"
           value={stats.unpublishedProductEdits}
-          hint="Saved drafts waiting to publish"
+          hint="Saved, still private"
         />
         <StatCard
-          label="Website drafts"
-          value={stats.websiteDrafts}
-          hint="Homepage & page copy"
+          label="Homepage"
+          value={stats.websiteDrafts > 0 ? "Draft" : "Published"}
+          hint="Publish homepage separately from products"
         />
       </div>
 
@@ -95,10 +95,10 @@ export default function OverviewDashboard({ stats }: { stats: DashboardStats }) 
         <section className="border border-mang-brown/20 bg-white p-5 shadow-[3px_3px_0_rgba(61,36,24,0.08)]">
           <div className="flex items-center justify-between gap-3">
             <h2 className="font-display text-[28px] tracking-wide">
-              Recent drafts
-            </h2>
+            Recent drafts
+          </h2>
             <Link
-              href="/admin/drafts"
+              href="/admin/products"
               className="text-[12px] font-bold uppercase tracking-[0.16em] text-mang-brown-mid underline-offset-4 hover:underline"
             >
               View all
@@ -109,7 +109,7 @@ export default function OverviewDashboard({ stats }: { stats: DashboardStats }) 
             <div className="mt-6 border border-dashed border-mang-brown/25 bg-mang-cream-light/60 px-4 py-8 text-center">
               <p className="text-[15px] text-mang-brown-mid">
                 {stats.databaseReady
-                  ? "No product drafts waiting. You’re caught up."
+                  ? "Open Products & Packs to change prices, photos, and sold-out status."
                   : "Connect the CMS database to see live draft activity."}
               </p>
             </div>
@@ -119,10 +119,7 @@ export default function OverviewDashboard({ stats }: { stats: DashboardStats }) 
                 <li key={draft.id} className="flex items-center justify-between gap-3 py-3">
                   <div>
                     <p className="font-bold text-mang-brown">{draft.title}</p>
-                    <p className="text-[12px] text-mang-brown-mid/70">
-                      {draft.kind === "product" ? "Product" : "Website"} ·{" "}
-                      {new Date(draft.updatedAt).toLocaleString()}
-                    </p>
+                    <p className="text-[12px] text-mang-brown-mid/70">On the shop</p>
                   </div>
                   <Link
                     href={`/admin/products/${draft.id}`}
@@ -169,17 +166,11 @@ export default function OverviewDashboard({ stats }: { stats: DashboardStats }) 
               Publishing tip
             </h2>
             <p className="mt-2 text-[14px] leading-relaxed text-mang-brown-mid">
-              Save a draft anytime. Only <strong>Publish changes</strong> updates
-              what customers see. The live shop still reads from{" "}
-              <strong>{source === "strapi" ? "Strapi" : "native CMS"}</strong>{" "}
-              until cutover is approved.
+              Saving here updates the website straight away.
+              {source === "strapi"
+                ? " Strapi is still the live source. Remove CONTENT_SOURCE=strapi to use these edits on the shop."
+                : " The shop reads this catalogue, so Strapi does not need to be connected."}
             </p>
-            {!stats.databaseReady ? (
-              <p className="mt-3 border border-mang-brown/15 bg-white px-3 py-2 text-[13px] text-mang-brown-mid">
-                Set <code className="text-[12px]">CMS_DATABASE_URL</code> and run
-                Drizzle migrations to connect Postgres.
-              </p>
-            ) : null}
           </div>
         </section>
       </div>

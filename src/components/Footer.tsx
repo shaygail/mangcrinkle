@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getHomepage } from "@/lib/strapi";
+import { getHomepage } from "@/lib/content/public";
 import { sanitizeHref } from "@/lib/urls";
 
 const footerLinkClass =

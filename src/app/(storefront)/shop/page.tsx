@@ -1,4 +1,4 @@
-import { getShopPage } from "@/lib/strapi";
+import { getShopPage } from "@/lib/content/public";
 import ShopContent from "@/components/shop/ShopContent";
 import { mergeShopSections } from "@/data/shop-page";
 import { ShopFilter } from "@/data/products";

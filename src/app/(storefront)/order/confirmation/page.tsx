@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import ConfirmationPageClient from "@/components/cart/ConfirmationPageClient";
-import { getStorefrontCopy, getStoreOutlet } from "@/lib/strapi";
+import { getStorefrontCopy, getStoreOutlet } from "@/lib/content/public";
 
 export const metadata: Metadata = {
   title: "Order Confirmed | Mang Crinkle",
