@@ -67,22 +67,26 @@ export default function Hero({ content }: HeroProps) {
               ))}
             </div>
 
-            <Button
-              href={ctaHref}
-              variant="brown"
-              pop
-              className="self-start"
-            >
-              🍪 {content.heroButtonText}
-            </Button>
+            {content.heroButtonText.trim() ? (
+              <Button
+                href={ctaHref}
+                variant="brown"
+                pop
+                className="self-start"
+              >
+                🍪 {content.heroButtonText}
+              </Button>
+            ) : null}
           </div>
         </div>
 
-        <div className="lg:hidden w-full flex justify-center">
-          <Button href={ctaHref} variant="brown" pop size="lg">
-            🍪 {content.heroButtonText}
-          </Button>
-        </div>
+        {content.heroButtonText.trim() ? (
+          <div className="lg:hidden w-full flex justify-center">
+            <Button href={ctaHref} variant="brown" pop size="lg">
+              🍪 {content.heroButtonText}
+            </Button>
+          </div>
+        ) : null}
       </div>
     </section>
   );

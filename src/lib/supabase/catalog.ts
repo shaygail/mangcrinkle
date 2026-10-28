@@ -312,28 +312,28 @@ export function blankCopy(): StorefrontCopy {
   };
 }
 
-export async function getPublishedHomepage(): Promise<HomepageContent> {
-  return (await getPublishedWebsite<HomepageContent>("homepage")) ?? blankHomepage();
+export async function getPublishedHomepage(): Promise<HomepageContent | null> {
+  return getPublishedWebsite<HomepageContent>("homepage");
 }
 
-export async function getPublishedShopPage(): Promise<ShopPageContent> {
-  return (await getPublishedWebsite<ShopPageContent>("shop_page")) ?? blankShopPage();
+export async function getPublishedShopPage(): Promise<ShopPageContent | null> {
+  return getPublishedWebsite<ShopPageContent>("shop_page");
 }
 
-export async function getPublishedOutlet(): Promise<StoreOutlet> {
-  return (await getPublishedWebsite<StoreOutlet>("store_outlet")) ?? blankOutlet();
+export async function getPublishedOutlet(): Promise<StoreOutlet | null> {
+  return getPublishedWebsite<StoreOutlet>("store_outlet");
 }
 
-export async function getPublishedCopy(): Promise<StorefrontCopy> {
-  return (await getPublishedWebsite<StorefrontCopy>("storefront_copy")) ?? blankCopy();
+export async function getPublishedCopy(): Promise<StorefrontCopy | null> {
+  return getPublishedWebsite<StorefrontCopy>("storefront_copy");
 }
 
-export async function getPublishedTestimonials(): Promise<HomepageTestimonial[]> {
-  return (await getPublishedWebsite<HomepageTestimonial[]>("testimonials")) ?? [];
+export async function getPublishedTestimonials(): Promise<HomepageTestimonial[] | null> {
+  return getPublishedWebsite<HomepageTestimonial[]>("testimonials");
 }
 
-export async function getPublishedOrderSteps(): Promise<OrderStep[]> {
-  return (await getPublishedWebsite<OrderStep[]>("order_steps")) ?? [];
+export async function getPublishedOrderSteps(): Promise<OrderStep[] | null> {
+  return getPublishedWebsite<OrderStep[]>("order_steps");
 }
 
 export type MediaAsset = {

@@ -377,10 +377,8 @@ export function getBoxBuilderFlavours(products: Product[]): Product[] {
 
   if (flagged.length > 0) return flagged;
 
-  return DEFAULT_BOX_BUILDER_FLAVOUR_IDS.map(
-    (id) =>
-      products.find((p) => p.id === id) ??
-      fallbackProducts.find((p) => p.id === id)
+  return DEFAULT_BOX_BUILDER_FLAVOUR_IDS.map((id) =>
+    products.find((p) => p.id === id)
   ).filter((p): p is Product => Boolean(p));
 }
 
@@ -401,11 +399,11 @@ export function getFeaturedShopProducts(products: Product[]): Product[] {
 
   if (flagged.length > 0) return flagged;
 
-  return DEFAULT_SHOP_FEATURED_IDS.map(
-    (id) =>
-      products.find((p) => p.id === id) ??
-      fallbackProducts.find((p) => p.id === id)
+  const curated = DEFAULT_SHOP_FEATURED_IDS.map((id) =>
+    products.find((p) => p.id === id)
   ).filter((p): p is Product => Boolean(p));
+
+  return curated.length > 0 ? curated : products;
 }
 
 export function getProductById(
