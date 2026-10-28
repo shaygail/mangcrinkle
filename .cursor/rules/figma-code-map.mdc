@@ -76,7 +76,7 @@ When implementing from a Figma URL or selection:
 
 ## Assets
 
-Downloaded Figma media lives under `public/images/figma/` (e.g. `hero-crinkles.jpg`, `signature-ube.jpg`). Prefer these (or Strapi URLs) over temporary MCP asset URLs.
+Downloaded Figma media lives under `public/images/figma/` (e.g. `hero-crinkles.jpg`, `signature-ube.jpg`). Prefer these, or Supabase Storage URLs, over temporary MCP asset URLs.
 
 ## Do not
 

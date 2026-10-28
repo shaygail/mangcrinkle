@@ -1,7 +1,8 @@
 "use client";
 
 import { useActionState, type ReactNode } from "react";
-import { saveWebsiteAction, type EditorState } from "@/app/admin/content-actions";
+import { deleteWebsiteItemAction, saveWebsiteAction, type EditorState } from "@/app/admin/content-actions";
+import ConfirmSubmit from "@/components/admin/ConfirmSubmit";
 import type { HomepageContent, HomepageTestimonial, OrderStep } from "@/data/homepage";
 import type { ShopPageContent } from "@/data/shop-page";
 import type { StoreOutlet } from "@/data/store-outlet";
@@ -31,6 +32,7 @@ export default function WebsiteEditor({
   const [state, action, pending] = useActionState(saveWebsiteAction, initial);
 
   return (
+    <>
     <form action={action} className="mx-auto max-w-3xl space-y-6">
       <input type="hidden" name="revision" value={revision} />
       <input type="hidden" name="heroImage" value={homepage.heroImage} />
@@ -42,7 +44,7 @@ export default function WebsiteEditor({
           Edit the website
         </h1>
         <p className="mt-3 text-[15px] text-mang-brown-mid">
-          These words are stored with the shop catalogue. Saving updates the live pages without Strapi.
+          These words are stored in Supabase. Save a draft, then publish when the live site should change.
         </p>
       </div>
 
@@ -68,7 +70,9 @@ export default function WebsiteEditor({
         <Text label="Shop title" name="shopTitle" defaultValue={shopPage.title} />
         <Text label="Shop subtitle" name="shopSubtitle" defaultValue={shopPage.subtitle} />
         <Area label="Shop introduction" name="shopDescription" defaultValue={shopPage.description} />
-        {shopPage.sections.map((section) => (
+        {shopPage.sections
+          .filter((section) => section.sectionKey !== "hot-drinks")
+          .map((section) => (
           <div key={section.sectionKey} className="space-y-3 border border-mang-tan p-3">
             <input type="hidden" name="sectionKey" value={section.sectionKey} />
             <p className="text-[12px] font-bold uppercase tracking-[0.14em] text-mang-brown-mid">
@@ -92,6 +96,13 @@ export default function WebsiteEditor({
           <div key={step.id} className="space-y-3 border border-mang-tan p-3">
             <Text label={`Step ${step.stepNumber} title`} name={`stepTitle:${index}`} defaultValue={step.title} />
             <Area label="Step text" name={`stepDescription:${index}`} defaultValue={step.description} />
+            <ConfirmSubmit
+              form={`delete-step-${index}`}
+              message={`Delete step ${step.stepNumber}?`}
+              className="text-[12px] font-bold uppercase tracking-[0.14em] text-mang-brown"
+            >
+              Delete step
+            </ConfirmSubmit>
           </div>
         ))}
       </Section>
@@ -101,6 +112,13 @@ export default function WebsiteEditor({
           <div key={item.id} className="space-y-3 border border-mang-tan p-3">
             <Area label="Quote" name={`quote:${index}`} defaultValue={item.quote} />
             <Text label="Name" name={`author:${index}`} defaultValue={item.author} />
+            <ConfirmSubmit
+              form={`delete-quote-${index}`}
+              message="Delete this quote?"
+              className="text-[12px] font-bold uppercase tracking-[0.14em] text-mang-brown"
+            >
+              Delete quote
+            </ConfirmSubmit>
           </div>
         ))}
       </Section>
@@ -143,6 +161,19 @@ export default function WebsiteEditor({
         </button>
       </div>
     </form>
+    {orderSteps.map((step, index) => (
+      <form id={`delete-step-${index}`} key={`delete-step-${step.id}`} action={deleteWebsiteItemAction}>
+        <input type="hidden" name="kind" value="step" />
+        <input type="hidden" name="index" value={index} />
+      </form>
+    ))}
+    {testimonials.map((item, index) => (
+      <form id={`delete-quote-${index}`} key={`delete-quote-${item.id}`} action={deleteWebsiteItemAction}>
+        <input type="hidden" name="kind" value="testimonial" />
+        <input type="hidden" name="index" value={index} />
+      </form>
+    ))}
+    </>
   );
 }
 

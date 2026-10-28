@@ -1,4 +1,5 @@
 import { deleteMediaAction, updateAltTextAction, uploadMediaAction } from "@/app/admin/content-actions";
+import ConfirmSubmit from "@/components/admin/ConfirmSubmit";
 import { listMedia } from "@/lib/supabase/catalog";
 
 export const dynamic = "force-dynamic";
@@ -60,7 +61,12 @@ export default async function AdminMediaPage({
             <form action={deleteMediaAction} className="mt-2">
               <input type="hidden" name="id" value={item.id} />
               <input type="hidden" name="path" value={item.storage_path} />
-              <button type="submit" className="text-[12px] font-bold uppercase tracking-[0.14em] text-mang-brown-mid">Delete</button>
+              <ConfirmSubmit
+                message="Delete this image?"
+                className="text-[12px] font-bold uppercase tracking-[0.14em] text-mang-brown-mid"
+              >
+                Delete
+              </ConfirmSubmit>
             </form>
           </li>
         ))}

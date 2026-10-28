@@ -12,7 +12,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 /**
- * Isolated schema so native CMS tables never collide with Strapi's public tables.
+ * Unused by the live site. Shop content is stored in Supabase.
  */
 export const cms = pgSchema("cms");
 

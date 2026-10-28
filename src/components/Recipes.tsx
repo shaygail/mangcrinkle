@@ -50,7 +50,7 @@ export default function Recipes({ content, steps }: RecipesProps) {
         <ol className="hidden sm:grid sm:grid-cols-3 gap-6 max-w-6xl mx-auto mb-10">
           {displaySteps.map((item) => (
             <li key={item.id}>
-              <article className="h-full bg-mang-cream-light border-2 border-mang-brown/10 rounded-2xl p-8 shadow-[2px_2px_0_rgba(61,36,24,0.06)]">
+              <article className="h-full bg-mang-cream-light border-2 border-mang-brown rounded-2xl p-8 shadow-[3px_3px_0_rgba(61,36,24,0.14)]">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-mang-brown text-mang-cream font-extrabold text-lg">
                     {item.stepNumber}

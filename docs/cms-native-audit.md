@@ -3,7 +3,7 @@
 **Date:** 2026-10-20  
 **Repo:** [shaygail/mangcrinkle](https://github.com/shaygail/mangcrinkle)  
 **Production site:** https://mangcrinkle.vercel.app  
-**Strapi (live):** `strapi-production-2a0b.up.railway.app`  
+**Status:** historical. The live site no longer uses Strapi. Content is in Supabase.  
 **Status:** Investigation only — no production data modified.
 
 ---

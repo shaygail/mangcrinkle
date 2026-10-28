@@ -1,6 +1,6 @@
 # Mang Crinkle — Project Plan & Phase Tracker
 
-A menu-poster style storefront for **Mang Crinkle** (crinkle cookies, packs, drinks). Customers browse the menu, build a cart, and place pickup orders. Content is managed in Strapi; the Next.js site is the public-facing shop.
+A menu-poster style storefront for **Mang Crinkle** (crinkle cookies, packs, drinks). Customers browse the menu, build a cart, and place pickup orders. Content is managed in Supabase. The notes below that mention Strapi are the old plan.
 
 **Repo:** [shaygail/mangcrinkle](https://github.com/shaygail/mangcrinkle)
 

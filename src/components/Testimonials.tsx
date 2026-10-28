@@ -40,7 +40,7 @@ export default function Testimonials({
                 onClick={() => setCurrent(i)}
                 className="min-h-11 min-w-11 flex items-center justify-center"
                 aria-label={`Go to testimonial ${i + 1}`}
-                aria-current={i === current}
+                aria-current={i === current ? "true" : undefined}
               >
                 <span
                   className={`w-2 h-2 rounded-full transition-colors ${

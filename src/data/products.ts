@@ -11,9 +11,8 @@ const lavaChocoImg = "/images/lava/choco.jpeg";
 const drinkNote = "Whole milk included. Alternative milk +$1.00 in cart.";
 
 /**
- * Offline / error fallback catalogue. Live product data is fetched from Strapi
- * via `getProducts()` in `src/lib/strapi.ts`. Keep this array in sync with the
- * seed script so the site still works when the CMS is unreachable.
+ * Sample catalogue used by seeds and local helpers. The public shop reads
+ * published Supabase products only.
  */
 export const fallbackProducts: Product[] = [
   // Standard crinkles – $4.50 each
@@ -405,7 +404,6 @@ export type ShopFilter =
   | "crinkles"
   | "packs"
   | "lava"
-  | "hot-drinks"
   | "iced-drinks";
 
 export const shopFilters: { id: ShopFilter; label: string }[] = [
@@ -413,7 +411,6 @@ export const shopFilters: { id: ShopFilter; label: string }[] = [
   { id: "crinkles", label: "Crinkles" },
   { id: "packs", label: "Packs" },
   { id: "lava", label: "Lava Crinkles" },
-  { id: "hot-drinks", label: "Hot Drinks" },
   { id: "iced-drinks", label: "Iced Drinks" },
 ];
 
@@ -428,7 +425,7 @@ export const shopSections = [
   {
     id: "packs",
     title: "Crinkle Packs",
-    subtitle: "Mix & match your favourite flavours. Premium +$0.50, Signature +$1.00 per crinkle.",
+    subtitle: "One flavour per box. The price on the card is the pack price.",
     filter: "packs" as ShopFilter,
     categories: ["crinkle-pack"],
   },
@@ -440,16 +437,9 @@ export const shopSections = [
     categories: ["lava"],
   },
   {
-    id: "hot-drinks",
-    title: "Hot Drinks",
-    subtitle: "410 ml — whole milk included. Swap to alternative milk in your cart (+$1.00).",
-    filter: "hot-drinks" as ShopFilter,
-    categories: ["hot-drink"],
-  },
-  {
     id: "iced-drinks",
     title: "Iced Drinks",
-    subtitle: "530 ml — whole milk included. Swap to alternative milk in your cart (+$1.00).",
+    subtitle: "12oz. Whole milk included. Alternative milk is +$1.00 in your box.",
     filter: "iced-drinks" as ShopFilter,
     categories: ["iced-drink"],
   },
@@ -461,7 +451,7 @@ export function getProductsForFilter(
 ): Product[] {
   if (filter === "all") return products;
   const section = shopSections.find((s) => s.filter === filter);
-  if (!section) return products;
+  if (!section) return [];
   return products.filter((p) => section.categories.includes(p.category));
 }
 
@@ -474,15 +464,33 @@ export function getProductsForSection(
 
 const BEST_SELLER_IDS = [
   "classic-chocolate",
-  "ube",
-  "coconut-pandan",
-  "lava-choco",
-  "iced-ube-marble-matcha",
-  "pack-6",
+  "classic-ube",
+  "classic-coconut-pandan",
+  "lava-champorado",
+  "drink-ube-matcha",
+  "classic-chocolate-pack-6",
 ] as const;
 
 export function getBestSellers(products: Product[]): Product[] {
-  return BEST_SELLER_IDS.map((id) => products.find((p) => p.id === id)).filter(
-    (p): p is Product => Boolean(p)
+  const byId = new Map(products.map((product) => [product.id, product]));
+  const picked: Product[] = [];
+  const seen = new Set<string>();
+
+  const add = (product: Product | undefined) => {
+    if (!product || seen.has(product.id) || product.available === false) return;
+    seen.add(product.id);
+    picked.push(product);
+  };
+
+  for (const id of BEST_SELLER_IDS) add(byId.get(id));
+
+  const rest = products.filter(
+    (product) => product.category !== "crinkle-pack"
   );
+  for (const product of [...rest, ...products]) {
+    if (picked.length >= 6) break;
+    add(product);
+  }
+
+  return picked.slice(0, 6);
 }

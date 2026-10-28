@@ -1,12 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import {
   shopFilters,
   getProductsForSection,
-  getProductsForFilter,
-  getFeaturedShopProducts,
   ShopFilter,
   shopSections,
 } from "@/data/products";
@@ -42,13 +40,6 @@ export default function ShopContent({
     activeFilter === "all"
       ? sections
       : sections.filter((s) => s.filter === activeFilter);
-
-  const flatProducts = useMemo(() => {
-    if (activeFilter === "all") {
-      return getFeaturedShopProducts(products);
-    }
-    return getProductsForFilter(products, activeFilter);
-  }, [products, activeFilter]);
 
   const mobileFilters = shopFilters.filter((f) =>
     PRIMARY_FILTERS.includes(f.id)
@@ -86,7 +77,7 @@ export default function ShopContent({
               className={`inline-flex items-center min-h-11 px-3.5 py-2.5 rounded-full text-[12px] uppercase tracking-wide whitespace-nowrap transition-colors ${
                 activeFilter === filter.id
                   ? "bg-mang-cream border-2 border-mang-brown text-mang-brown font-extrabold"
-                  : "bg-white border border-gray-200 text-mang-brown-mid font-bold"
+                  : "bg-mang-cream-light border border-mang-tan text-mang-brown-mid font-bold"
               }`}
             >
               {filter.id === "lava" ? "Lava" : filter.label}
@@ -108,7 +99,7 @@ export default function ShopContent({
               className={`inline-flex items-center min-h-11 px-4 py-2.5 rounded-full text-[12px] font-extrabold uppercase tracking-wide whitespace-nowrap transition-colors ${
                 activeFilter === filter.id
                   ? "bg-mang-cream border-2 border-mang-brown text-mang-brown"
-                  : "bg-white border border-gray-200 text-mang-brown-mid hover:border-mang-brown/40"
+                  : "bg-mang-cream-light border border-mang-tan text-mang-brown-mid hover:border-mang-brown"
               }`}
             >
               {filter.label}
@@ -117,17 +108,42 @@ export default function ShopContent({
         </div>
       </section>
 
-      {/* Mobile: full-width stacked cards (Figma 32:190) */}
-      <div className="lg:hidden px-4 pt-2 pb-8 space-y-6">
-        {flatProducts.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            shopMobile
-            onAdded={(name) => setAddedItem(name)}
-          />
-        ))}
-        {flatProducts.length === 0 && (
+      {/* Mobile: same sections as desktop, full-width cards (Figma 32:190) */}
+      <div className="lg:hidden px-4 pt-6 pb-8 space-y-10">
+        {visibleSections.map((section) => {
+          const sectionProducts = getProductsForSection(
+            products,
+            section.categories
+          );
+          if (sectionProducts.length === 0) return null;
+
+          return (
+            <section key={section.id}>
+              <div className="mb-4">
+                <h2 className="menu-title-3d text-[32px] leading-none mb-1.5">
+                  {section.title}
+                </h2>
+                <p className="text-[13px] italic text-mang-brown-mid leading-5">
+                  {section.subtitle}
+                </p>
+              </div>
+              <div className="space-y-6">
+                {sectionProducts.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    shopMobile
+                    onAdded={(name) => setAddedItem(name)}
+                  />
+                ))}
+              </div>
+            </section>
+          );
+        })}
+        {visibleSections.every(
+          (section) =>
+            getProductsForSection(products, section.categories).length === 0
+        ) && (
           <p className="text-center text-sm text-mang-brown-mid py-10">
             No products in this category yet.
           </p>
@@ -155,7 +171,10 @@ export default function ShopContent({
               </div>
 
               {section.id === "packs" ? (
-                <PackSection packs={sectionProducts} />
+                <PackSection
+                  packs={sectionProducts}
+                  onAdded={(name) => setAddedItem(name)}
+                />
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
                   {sectionProducts.map((product) => (

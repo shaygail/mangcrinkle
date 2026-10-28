@@ -169,7 +169,12 @@ export default function ProductDetailClient({
                     : getProductPlaceholder(product)
                 }
                 fill
-                className="object-cover"
+                className={
+                  !product.image &&
+                  getProductPlaceholder(product).includes("/placeholders/iced-")
+                    ? "object-contain"
+                    : "object-cover"
+                }
                 priority
                 sizes="(max-width: 1024px) 100vw, 600px"
               />

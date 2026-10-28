@@ -60,7 +60,7 @@ export interface OrderStep {
 }
 
 /**
- * Offline / error fallback homepage content. Live data is fetched from Strapi.
+ * Designed homepage copy used until a Supabase homepage is published.
  */
 export const fallbackHomepage: HomepageContent = {
   announcementText:
@@ -166,7 +166,7 @@ export const fallbackOrderSteps: OrderStep[] = [
     stepNumber: "2",
     title: "Choose A Flavour",
     emoji: "🍪",
-    description: "Mix & match standard, premium, or signature crinkles.",
+    description: "Each box is one flavour — classic, crunch, or lava.",
   },
   {
     id: "3",

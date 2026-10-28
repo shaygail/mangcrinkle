@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Product } from "@/types";
 import { isConfigurablePack, isDrink } from "@/lib/cart";
-import { getProductPlaceholder } from "@/lib/images";
+import { flavourSwatch, getProductPlaceholder } from "@/lib/images";
 import ProductImage from "@/components/ProductImage";
 import Button from "@/components/Button";
 
@@ -22,6 +22,9 @@ export default function ProductCard({
   shopMobile = false,
 }: ProductCardProps) {
   const configurablePack = isConfigurablePack(product);
+  const resolvedImage = product.image || getProductPlaceholder(product);
+  const temporaryDrink = resolvedImage.includes("/placeholders/iced-");
+  const swatch = resolvedImage.endsWith(".svg") ? flavourSwatch(product) : null;
   const soldOut = product.available === false;
   const productHref = configurablePack
     ? `/shop/build/${product.id}`
@@ -48,11 +51,13 @@ export default function ProductCard({
       <Link
         href={productHref}
         className={`relative w-full shrink-0 overflow-hidden bg-mang-cream block ${
-          compact
-            ? "h-[130px]"
-            : shopMobile
-              ? "h-[180px]"
-              : "h-[180px] sm:h-[220px] lg:h-[260px]"
+          temporaryDrink
+            ? "h-[280px]"
+            : compact
+              ? "h-[130px]"
+              : shopMobile
+                ? "h-[180px]"
+                : "h-[180px] sm:h-[220px] lg:h-[260px]"
         }`}
       >
         <ProductImage
@@ -60,7 +65,11 @@ export default function ProductCard({
           alt={product.name}
           fallback={getProductPlaceholder(product)}
           fill
-          className="object-cover group-hover:scale-105 transition-transform duration-300"
+          className={
+            temporaryDrink
+              ? "object-contain"
+              : "object-cover group-hover:scale-105 transition-transform duration-300"
+          }
           sizes={
             compact
               ? "(max-width: 1024px) 50vw, 410px"
@@ -74,6 +83,13 @@ export default function ProductCard({
             {product.badge}
           </span>
         )}
+        {swatch ? (
+          <span
+            aria-hidden
+            className="absolute bottom-3 right-3 z-[1] size-4 rounded-full border-2 border-mang-cream-light shadow-[1px_1px_0_#3d2418]"
+            style={{ backgroundColor: swatch }}
+          />
+        ) : null}
       </Link>
 
       <div

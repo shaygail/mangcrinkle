@@ -16,9 +16,7 @@ const header = `-- Mang Crinkle product catalogue
 -- Generated from src/data/products.ts (fallbackProducts)
 -- Compatible with PostgreSQL (e.g. Railway Postgres)
 --
--- NOTE: If you use Strapi, do NOT import this into Strapi's DB.
--- Strapi owns its own tables. Use: npx tsx scripts/seed-strapi.ts
--- This SQL is for a standalone products table / backup / migration reference.
+-- Reference SQL only. The live catalogue is seeded with npm run cms:seed.
 
 CREATE TABLE IF NOT EXISTS products (
   id TEXT PRIMARY KEY,

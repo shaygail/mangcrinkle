@@ -1,7 +1,7 @@
 "use client";
 
 import { Product } from "@/types";
-import { getProductPlaceholder } from "@/lib/images";
+import { flavourSwatch, getProductPlaceholder } from "@/lib/images";
 import Button from "@/components/Button";
 import ProductImage from "@/components/ProductImage";
 
@@ -16,6 +16,9 @@ export default function PackGridCard({
   isActive,
   onChoose,
 }: PackGridCardProps) {
+  const resolvedImage = pack.image || getProductPlaceholder(pack);
+  const swatch = resolvedImage.endsWith(".svg") ? flavourSwatch(pack) : null;
+
   return (
     <article
       className={`group flex flex-col bg-mang-cream-light border-2 rounded-2xl overflow-hidden shadow-[3px_3px_0_rgba(61,36,23,0.12)] h-full transition-colors ${
@@ -38,6 +41,13 @@ export default function PackGridCard({
             {pack.badge}
           </span>
         )}
+        {swatch ? (
+          <span
+            aria-hidden
+            className="absolute bottom-3 right-3 z-[1] size-4 rounded-full border-2 border-mang-cream-light shadow-[1px_1px_0_#3d2418]"
+            style={{ backgroundColor: swatch }}
+          />
+        ) : null}
       </div>
 
       <div className="relative z-[1] flex flex-col flex-1 min-w-0 p-4 sm:p-5 lg:p-6 gap-3">

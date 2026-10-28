@@ -9,7 +9,7 @@ See **[PHASES.md](./PHASES.md)** for the full architecture, phase tracker, deplo
 | Phase | Status |
 |-------|--------|
 | 1 — Storefront & cart | ✅ Complete |
-| 2 — Strapi CMS + order emails | ✅ Code complete (Resend config pending) |
+| 2 — Supabase CMS + order emails | ✅ Catalogue and admin use Supabase |
 | 3 — Tie it all together | 🔲 Go-live checklist in PHASES.md |
 
 ## Set up on a new laptop
@@ -37,8 +37,9 @@ cp .env.local.example .env.local
 Required today:
 
 ```env
-STRAPI_URL=https://strapi-production-2a0b.up.railway.app
-STRAPI_API_TOKEN=your-token
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ```
 
 Optional (when you set up orders):
@@ -62,17 +63,7 @@ Open [http://localhost:3000](http://localhost:3000).
 | Service | Where it lives |
 |---------|----------------|
 | Source code | GitHub — `shaygail/mangcrinkle` |
-| Strapi CMS + products | Railway |
-| Postgres (Strapi data) | Railway |
-
-### Corporate network note
-
-If Strapi seed/fetch fails with SSL errors on your work network, run locally with:
-
-```bash
-# PowerShell (Windows)
-$env:NODE_TLS_REJECT_UNAUTHORIZED="0"; npx tsx scripts/seed-strapi.ts
-```
+| Products, website copy, media, admin login | Supabase |
 
 ---
 
@@ -90,8 +81,7 @@ Open [http://localhost:3000](http://localhost:3000).
 ```bash
 npm run build          # production build
 npm run lint           # ESLint
-npx tsx scripts/seed-strapi.ts    # seed products (needs .env.local)
-npx tsx scripts/seed-homepage.ts  # seed homepage content
+npm run cms:seed       # seed Supabase drafts (needs .env.local)
 ```
 
 ## Deploy on Vercel

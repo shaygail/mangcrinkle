@@ -2,7 +2,8 @@
 
 import { useActionState } from "react";
 import Link from "next/link";
-import { saveProductAction, type EditorState } from "@/app/admin/content-actions";
+import { deleteProductAction, saveProductAction, type EditorState } from "@/app/admin/content-actions";
+import ConfirmSubmit from "@/components/admin/ConfirmSubmit";
 import type { Product } from "@/types";
 
 const categories: { id: Product["category"]; label: string }[] = [
@@ -11,7 +12,6 @@ const categories: { id: Product["category"]; label: string }[] = [
   { id: "crinkle-signature", label: "Signature crinkle" },
   { id: "crinkle-pack", label: "Crinkle pack" },
   { id: "lava", label: "Lava crinkle" },
-  { id: "hot-drink", label: "Hot drink" },
   { id: "iced-drink", label: "Iced drink" },
 ];
 
@@ -28,6 +28,7 @@ export default function ProductEditor({
   const isNew = !product;
 
   return (
+    <>
     <form action={action} className="mx-auto max-w-3xl space-y-6">
       <div>
         <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-mang-brown-mid/70">
@@ -219,6 +220,19 @@ export default function ProductEditor({
         </Link>
       </div>
     </form>
+    {product ? (
+      <form action={deleteProductAction} className="mx-auto max-w-3xl">
+        <input type="hidden" name="sku" value={product.id} />
+        <input type="hidden" name="dbId" value={product.dbId ?? ""} />
+        <ConfirmSubmit
+          message={`Delete ${product.name}? It will leave the shop and this list.`}
+          className="border border-mang-brown/40 px-4 py-3 text-[12px] font-extrabold uppercase tracking-[0.16em] text-mang-brown"
+        >
+          Delete this item
+        </ConfirmSubmit>
+      </form>
+    ) : null}
+    </>
   );
 }
 

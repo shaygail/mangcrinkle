@@ -19,7 +19,7 @@ export interface ShopPageContent {
 }
 
 /**
- * Offline / error fallback shop page copy. Live data is fetched from Strapi.
+ * Designed shop page copy used until a Supabase shop page is published.
  */
 export const fallbackShopPage: ShopPageContent = {
   title: "The Crinkle Shop",

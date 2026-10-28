@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { DashboardStats } from "@/lib/cms/dashboard";
-import { getContentSource } from "@/lib/content/source";
 
 function StatCard({
   label,
@@ -27,7 +26,6 @@ function StatCard({
 }
 
 export default function OverviewDashboard({ stats }: { stats: DashboardStats }) {
-  const source = getContentSource();
   const statusLabel =
     stats.websiteStatus === "live"
       ? "Website live"
@@ -140,10 +138,16 @@ export default function OverviewDashboard({ stats }: { stats: DashboardStats }) 
             </h2>
             <div className="mt-5 flex flex-col gap-2">
               <Link
-                href="/admin/products"
+                href="/admin/products/new"
                 className="border border-mang-orange-bright bg-mang-orange-bright px-4 py-3 text-center text-[12px] font-extrabold uppercase tracking-[0.16em] text-mang-brown"
               >
-                Manage products
+                Add product
+              </Link>
+              <Link
+                href="/admin/products"
+                className="border border-white/25 px-4 py-3 text-center text-[12px] font-extrabold uppercase tracking-[0.16em] text-mang-cream hover:bg-white/5"
+              >
+                Edit products
               </Link>
               <Link
                 href="/admin/website"
@@ -166,10 +170,7 @@ export default function OverviewDashboard({ stats }: { stats: DashboardStats }) 
               Publishing tip
             </h2>
             <p className="mt-2 text-[14px] leading-relaxed text-mang-brown-mid">
-              Saving here updates the website straight away.
-              {source === "strapi"
-                ? " Strapi is still the live source. Remove CONTENT_SOURCE=strapi to use these edits on the shop."
-                : " The shop reads this catalogue, so Strapi does not need to be connected."}
+              Drafts stay in Supabase until you publish. Published products and homepage copy are what the shop shows.
             </p>
           </div>
         </section>

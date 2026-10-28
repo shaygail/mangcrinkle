@@ -19,7 +19,6 @@ const CATEGORIES = [
   "crinkle-signature",
   "crinkle-pack",
   "lava",
-  "hot-drink",
   "iced-drink",
 ] as const;
 
@@ -239,7 +238,7 @@ export async function saveWebsiteAction(
     title: String(formData.get("shopTitle") ?? "").trim(),
     subtitle: String(formData.get("shopSubtitle") ?? "").trim(),
     description: String(formData.get("shopDescription") ?? "").trim(),
-    sections: sectionKeys.map((sectionKey) => ({
+    sections: sectionKeys.filter((sectionKey) => sectionKey !== "hot-drinks").map((sectionKey) => ({
       sectionKey,
       title: String(formData.get(`sectionTitle:${sectionKey}`) ?? "").trim(),
       subtitle: String(formData.get(`sectionSubtitle:${sectionKey}`) ?? "").trim(),
@@ -336,6 +335,82 @@ export async function updateAltTextAction(formData: FormData): Promise<void> {
     .eq("id", String(formData.get("id") ?? ""));
   revalidatePath("/admin/media");
   redirect("/admin/media?saved=1");
+}
+
+export async function deleteProductAction(formData: FormData): Promise<void> {
+  const session = await getCmsSession();
+  if (!session) redirect("/admin/login");
+
+  const sku = String(formData.get("sku") ?? "").trim();
+  const dbId = String(formData.get("dbId") ?? "").trim();
+  if (!sku) redirect("/admin/products?error=delete");
+
+  const supabase = await createSessionClient();
+  const archived = await supabase
+    .from("product_variants")
+    .update({
+      status: "archived",
+      available: false,
+      published_available: false,
+      published_price_cents: null,
+      published_display_name: null,
+    })
+    .eq("sku", sku)
+    .neq("status", "archived")
+    .select("id");
+  if (archived.error || !archived.data?.length) {
+    redirect("/admin/products?error=delete");
+  }
+
+  if (dbId) {
+    const remaining = await supabase
+      .from("product_variants")
+      .select("id")
+      .eq("product_id", dbId)
+      .neq("status", "archived");
+    if (!remaining.error && (remaining.data?.length ?? 0) === 0) {
+      await supabase
+        .from("products")
+        .update({
+          status: "archived",
+          published_payload: null,
+          has_unpublished_changes: false,
+        })
+        .eq("id", dbId);
+    }
+  }
+
+  refreshSite(sku);
+  redirect("/admin/products?deleted=1");
+}
+
+export async function deleteWebsiteItemAction(formData: FormData): Promise<void> {
+  const session = await getCmsSession();
+  if (!session) redirect("/admin/login");
+
+  const kind = String(formData.get("kind") ?? "");
+  const index = Number(formData.get("index"));
+  const key = kind === "testimonial" ? "testimonials" : kind === "step" ? "order_steps" : "";
+  if (!key || !Number.isInteger(index) || index < 0) {
+    redirect("/admin/website?error=delete");
+  }
+
+  const row = await getDraftWebsite(key);
+  const list = Array.isArray(row?.draft_payload) ? [...row.draft_payload] : [];
+  if (!row || index >= list.length) redirect("/admin/website?error=delete");
+  list.splice(index, 1);
+
+  const supabase = await createSessionClient();
+  const { error } = await supabase.rpc("save_website_content", {
+    doc_key: key,
+    payload: list,
+    expected_revision: row.revision ?? 0,
+    do_publish: row.status === "published",
+  });
+  if (error) redirect("/admin/website?error=delete");
+
+  refreshSite();
+  redirect("/admin/website?deleted=1");
 }
 
 export async function deleteMediaAction(formData: FormData): Promise<void> {
