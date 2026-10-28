@@ -382,16 +382,7 @@ export function getBoxBuilderFlavours(products: Product[]): Product[] {
   ).filter((p): p is Product => Boolean(p));
 }
 
-/** Mobile shop “All” curated feed — driven by CMS featured flags when set. */
-const DEFAULT_SHOP_FEATURED_IDS = [
-  "classic-chocolate",
-  "ube",
-  "coconut-pandan",
-  "lava-choco",
-  "pack-6",
-  "iced-calamansi",
-] as const;
-
+/** Mobile shop “All” feed. Featured flags narrow it; otherwise every catalogue item shows. */
 export function getFeaturedShopProducts(products: Product[]): Product[] {
   const flagged = products
     .filter((p) => p.featuredOnShop)
@@ -399,11 +390,7 @@ export function getFeaturedShopProducts(products: Product[]): Product[] {
 
   if (flagged.length > 0) return flagged;
 
-  const curated = DEFAULT_SHOP_FEATURED_IDS.map((id) =>
-    products.find((p) => p.id === id)
-  ).filter((p): p is Product => Boolean(p));
-
-  return curated.length > 0 ? curated : products;
+  return products;
 }
 
 export function getProductById(
