@@ -41,6 +41,8 @@ export interface Product {
   lineSlug?: string;
   lineName?: string;
   categorySlug?: string;
+  /** Shared line photo. Variant photos live in `image`. */
+  sharedImage?: string;
 }
 
 export interface ProductVariantOption {

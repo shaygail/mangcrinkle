@@ -1,13 +1,9 @@
-import ProductManager from "@/components/admin/ProductManager";
 import WebsiteEditor from "@/components/admin/WebsiteEditor";
-import { getAdminProducts } from "@/lib/supabase/catalog";
 import { fallbackHomepage, fallbackOrderSteps, fallbackTestimonials } from "@/data/homepage";
-import { fallbackShopPage } from "@/data/shop-page";
 import { fallbackStorefrontCopy } from "@/data/storefront-copy";
 import { fallbackStoreOutlet } from "@/data/store-outlet";
 import { getDraftWebsite } from "@/lib/supabase/catalog";
 import type { HomepageContent, HomepageTestimonial, OrderStep } from "@/data/homepage";
-import type { ShopPageContent } from "@/data/shop-page";
 import type { StoreOutlet } from "@/data/store-outlet";
 import type { StorefrontCopy } from "@/data/storefront-copy";
 
@@ -24,10 +20,8 @@ export default async function AdminWebsitePage({
     deleted?: string;
     error?: string;
   };
-  const [products, homepageRow, shopRow, outletRow, copyRow, quotesRow, stepsRow] = await Promise.all([
-    getAdminProducts(),
+  const [homepageRow, outletRow, copyRow, quotesRow, stepsRow] = await Promise.all([
     getDraftWebsite("homepage"),
-    getDraftWebsite("shop_page"),
     getDraftWebsite("store_outlet"),
     getDraftWebsite("storefront_copy"),
     getDraftWebsite("testimonials"),
@@ -44,19 +38,11 @@ export default async function AdminWebsitePage({
           ? "Draft saved. The website stays the same until you publish."
           : undefined;
 
-  const shopPage = (shopRow?.draft_payload as ShopPageContent | undefined) ?? fallbackShopPage;
-
   return (
-    <div className="space-y-16">
-    <ProductManager products={products} embedded />
     <WebsiteEditor
       notice={notice}
       revision={homepageRow?.revision ?? 0}
       homepage={(homepageRow?.draft_payload as HomepageContent | undefined) ?? fallbackHomepage}
-      shopPage={{
-        ...shopPage,
-        sections: shopPage.sections.filter((section) => section.sectionKey !== "hot-drinks"),
-      }}
       outlet={(outletRow?.draft_payload as StoreOutlet | undefined) ?? fallbackStoreOutlet}
       copy={(copyRow?.draft_payload as StorefrontCopy | undefined) ?? fallbackStorefrontCopy}
       testimonials={
@@ -64,6 +50,5 @@ export default async function AdminWebsitePage({
       }
       orderSteps={(stepsRow?.draft_payload as OrderStep[] | undefined) ?? fallbackOrderSteps}
     />
-    </div>
   );
 }

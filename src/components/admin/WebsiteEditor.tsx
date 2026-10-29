@@ -4,7 +4,6 @@ import { useActionState, type ReactNode } from "react";
 import { deleteWebsiteItemAction, saveWebsiteAction, type EditorState } from "@/app/admin/content-actions";
 import ConfirmSubmit from "@/components/admin/ConfirmSubmit";
 import type { HomepageContent, HomepageTestimonial, OrderStep } from "@/data/homepage";
-import type { ShopPageContent } from "@/data/shop-page";
 import type { StoreOutlet } from "@/data/store-outlet";
 import type { StorefrontCopy } from "@/data/storefront-copy";
 
@@ -12,7 +11,6 @@ const initial: EditorState = {};
 
 export default function WebsiteEditor({
   homepage,
-  shopPage,
   outlet,
   copy,
   testimonials,
@@ -21,7 +19,6 @@ export default function WebsiteEditor({
   notice,
 }: {
   homepage: HomepageContent;
-  shopPage: ShopPageContent;
   outlet: StoreOutlet;
   copy: StorefrontCopy;
   testimonials: HomepageTestimonial[];
@@ -41,10 +38,10 @@ export default function WebsiteEditor({
           Website
         </p>
         <h1 className="mt-2 font-display text-[44px] leading-none tracking-wide">
-          Edit the website
+          Edit the homepage
         </h1>
         <p className="mt-3 text-[15px] text-mang-brown-mid">
-          These words are stored in Supabase. Save a draft, then publish when the live site should change.
+          Homepage, pickup, quotes, and cart. Products and shop headings have their own pages.
         </p>
       </div>
 
@@ -64,24 +61,6 @@ export default function WebsiteEditor({
         <Area label="Banner text" name="ctaBody" defaultValue={homepage.ctaBody} />
         <Text label="Footer line" name="footerTagline" defaultValue={homepage.footerTagline} />
         <Area label="Search description" name="siteDescription" defaultValue={homepage.siteDescription} />
-      </Section>
-
-      <Section title="Shop page">
-        <Text label="Shop title" name="shopTitle" defaultValue={shopPage.title} />
-        <Text label="Shop subtitle" name="shopSubtitle" defaultValue={shopPage.subtitle} />
-        <Area label="Shop introduction" name="shopDescription" defaultValue={shopPage.description} />
-        {shopPage.sections
-          .filter((section) => section.sectionKey !== "hot-drinks")
-          .map((section) => (
-          <div key={section.sectionKey} className="space-y-3 border border-mang-tan p-3">
-            <input type="hidden" name="sectionKey" value={section.sectionKey} />
-            <p className="text-[12px] font-bold uppercase tracking-[0.14em] text-mang-brown-mid">
-              {section.sectionKey}
-            </p>
-            <Text label="Section title" name={`sectionTitle:${section.sectionKey}`} defaultValue={section.title} />
-            <Area label="Section text" name={`sectionSubtitle:${section.sectionKey}`} defaultValue={section.subtitle} />
-          </div>
-        ))}
       </Section>
 
       <Section title="Pickup">

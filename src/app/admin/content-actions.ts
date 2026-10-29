@@ -69,7 +69,6 @@ export async function saveProductAction(
   const fullDescription = String(formData.get("fullDescription") ?? "").trim();
   const price = Number(formData.get("price"));
   const category = String(formData.get("category") ?? "");
-  const image = String(formData.get("image") ?? "").trim();
   const requestedId = slugify(String(formData.get("productId") ?? (existingId || name)));
 
   if (name.length < 2) return { error: "Add a product name." };
@@ -135,6 +134,14 @@ export async function saveProductAction(
     }
   }
 
+  let image = String(formData.get("currentImage") ?? "").trim();
+  const photo = formData.get("photo");
+  if (photo instanceof File && photo.size > 0) {
+    const stored = await storeProductPhoto(photo);
+    if ("error" in stored) return { error: stored.error };
+    image = stored.url;
+  }
+
   const payload = {
     id: String(formData.get("dbId") ?? "") || null,
     expectedRevision: Number(formData.get("revision") ?? 0),
@@ -147,7 +154,7 @@ export async function saveProductAction(
     ingredients: String(formData.get("ingredients") ?? ""),
     allergens: String(formData.get("allergens") ?? ""),
     badge: String(formData.get("badge") ?? ""),
-    imageUrl: image,
+    imageUrl: String(formData.get("sharedImage") ?? "").trim(),
     featured: formData.get("featuredOnShop") === "on",
     available,
     allowsMixedFlavours: false,
@@ -168,6 +175,20 @@ export async function saveProductAction(
       return { error: "You do not have permission to edit the shop." };
     }
     return { error: "Couldn’t save that change. Please try again." };
+  }
+
+  const imageKey = `product_image:${requestedId}`;
+  const existingImage = await getDraftWebsite(imageKey);
+  if (image || existingImage) {
+    const imageError = await supabase.rpc("save_website_content", {
+      doc_key: imageKey,
+      payload: { url: image },
+      expected_revision: existingImage?.revision ?? 0,
+      do_publish: intent === "publish",
+    });
+    if (imageError.error) {
+      return { error: "The item saved, but the photo didn’t. Try uploading it again." };
+    }
   }
 
   refreshSite(requestedId);
@@ -233,22 +254,6 @@ export async function saveWebsiteAction(
     return { error: "Couldn’t save the website changes. Please try again." };
   }
 
-  const sectionKeys = formData.getAll("sectionKey").map(String);
-  await saveDoc("shop_page", {
-    title: String(formData.get("shopTitle") ?? "").trim(),
-    subtitle: String(formData.get("shopSubtitle") ?? "").trim(),
-    description: String(formData.get("shopDescription") ?? "").trim(),
-    sections: sectionKeys.filter((sectionKey) => sectionKey !== "hot-drinks").map((sectionKey) => ({
-      sectionKey,
-      title: String(formData.get(`sectionTitle:${sectionKey}`) ?? "").trim(),
-      subtitle: String(formData.get(`sectionSubtitle:${sectionKey}`) ?? "").trim(),
-    })),
-    howToOrderEyebrow: "",
-    howToOrderTitle: "",
-    howToOrderBody: "",
-    howToOrderLinkText: "",
-    howToOrderLinkHref: "/#order",
-  });
   const outletDraft = await getDraftWebsite("store_outlet");
   const previousWindows =
     (outletDraft?.draft_payload as { pickupWindows?: string[] } | null)?.pickupWindows ?? [];
@@ -292,6 +297,76 @@ export async function saveWebsiteAction(
 
   refreshSite();
   redirect(`/admin/website?${intent === "publish" ? "published=1" : "saved=1"}`);
+}
+
+export async function saveShopAction(
+  _prev: EditorState,
+  formData: FormData
+): Promise<EditorState> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
+  const title = String(formData.get("shopTitle") ?? "").trim();
+  if (!title) return { error: "The shop needs a title." };
+
+  const current = await getDraftWebsite("shop_page");
+  const existing = (current?.draft_payload ?? {}) as Record<string, unknown>;
+  const sectionKeys = formData
+    .getAll("sectionKey")
+    .map(String)
+    .filter((sectionKey) => sectionKey !== "hot-drinks");
+  const supabase = await createSessionClient();
+  const intent = String(formData.get("intent") ?? "draft");
+  const { error } = await supabase.rpc("save_website_content", {
+    doc_key: "shop_page",
+    payload: {
+      ...existing,
+      title,
+      subtitle: String(formData.get("shopSubtitle") ?? "").trim(),
+      description: String(formData.get("shopDescription") ?? "").trim(),
+      sections: sectionKeys.map((sectionKey) => ({
+        sectionKey,
+        title: String(formData.get(`sectionTitle:${sectionKey}`) ?? "").trim(),
+        subtitle: String(formData.get(`sectionSubtitle:${sectionKey}`) ?? "").trim(),
+      })),
+    },
+    expected_revision: Number(formData.get("revision") ?? current?.revision ?? 0),
+    do_publish: intent === "publish",
+  });
+  if (error) {
+    if (error.message.includes("revision conflict")) {
+      return { error: "Someone else saved the shop. Reload, then try again." };
+    }
+    return { error: "Couldn’t save the shop. Please try again." };
+  }
+
+  refreshSite();
+  redirect(`/admin/shop?${intent === "publish" ? "published=1" : "saved=1"}`);
+}
+
+async function storeProductPhoto(file: File): Promise<{ url: string } | { error: string }> {
+  if (file.size > 5_000_000) return { error: "Photos need to be 5 MB or smaller." };
+  if (!file.type.startsWith("image/")) return { error: "Choose a JPG, PNG, or WebP photo." };
+
+  const safeName = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, "-");
+  const path = `products/${crypto.randomUUID()}-${safeName}`;
+  const supabase = await createSessionClient();
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  const uploaded = await supabase.storage.from("media").upload(path, bytes, {
+    contentType: file.type,
+    upsert: false,
+  });
+  if (uploaded.error) return { error: "Couldn’t upload that photo. Please try again." };
+  const url = supabase.storage.from("media").getPublicUrl(path).data.publicUrl;
+  const inserted = await supabase.from("media_assets").insert({
+    storage_path: path,
+    public_url: url,
+    alt_text: "",
+    mime_type: file.type,
+    byte_size: file.size,
+  });
+  if (inserted.error) return { error: "Couldn’t save that photo. Please try again." };
+  return { url };
 }
 
 export async function uploadMediaAction(formData: FormData): Promise<void> {
@@ -380,6 +455,16 @@ export async function deleteProductAction(formData: FormData): Promise<void> {
     }
   }
 
+  const imageRow = await getDraftWebsite(`product_image:${sku}`);
+  if (imageRow) {
+    await supabase.rpc("save_website_content", {
+      doc_key: `product_image:${sku}`,
+      payload: { url: "" },
+      expected_revision: imageRow.revision,
+      do_publish: true,
+    });
+  }
+
   refreshSite(sku);
   redirect("/admin/products?deleted=1");
 }
@@ -425,6 +510,20 @@ export async function deleteMediaAction(formData: FormData): Promise<void> {
     .eq("media_id", id)
     .limit(1);
   if (used.data && used.data.length > 0) redirect("/admin/media?error=used");
+  const asset = await supabase.from("media_assets").select("public_url").eq("id", id).maybeSingle();
+  const photoUrl = asset.data?.public_url;
+  if (photoUrl) {
+    const photos = await supabase
+      .from("website_content")
+      .select("draft_payload, published_payload")
+      .like("key", "product_image:%");
+    const inUse = (photos.data ?? []).some((row) => {
+      const draft = row.draft_payload as { url?: string } | null;
+      const published = row.published_payload as { url?: string } | null;
+      return draft?.url === photoUrl || published?.url === photoUrl;
+    });
+    if (inUse) redirect("/admin/media?error=used");
+  }
   await supabase.storage.from("media").remove([path]);
   await supabase.from("media_assets").delete().eq("id", id);
   revalidatePath("/admin/media");

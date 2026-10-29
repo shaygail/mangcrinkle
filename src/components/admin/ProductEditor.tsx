@@ -45,6 +45,8 @@ export default function ProductEditor({
       {product?.lineSlug ? <input type="hidden" name="lineSlug" value={product.lineSlug} /> : null}
       {product?.lineName ? <input type="hidden" name="lineName" value={product.lineName} /> : null}
       {product?.categorySlug ? <input type="hidden" name="categorySlug" value={product.categorySlug} /> : null}
+      <input type="hidden" name="currentImage" value={product?.image ?? ""} />
+      <input type="hidden" name="sharedImage" value={product?.sharedImage ?? ""} />
 
       <div className="space-y-4 border border-mang-brown/20 bg-white p-5">
         <Field label="Name" name="name" defaultValue={product?.name ?? ""} required />
@@ -108,12 +110,29 @@ export default function ProductEditor({
             className="w-full border border-mang-brown/25 px-3 py-2.5 text-[15px]"
           />
         </label>
-        <Field
-          label="Photo"
-          name="image"
-          defaultValue={product?.image ?? ""}
-          hint="A site path such as /images/figma/signature-ube.jpg, or a full image URL."
-        />
+        <label className="block space-y-1.5">
+          <span className="text-[11px] font-bold uppercase tracking-[0.16em]">Photo</span>
+          {product?.image ? (
+            <img
+              src={product.image}
+              alt=""
+              className="h-40 w-40 border border-mang-brown/20 bg-mang-cream object-contain"
+            />
+          ) : (
+            <p className="text-[14px] text-mang-brown-mid">
+              No photo yet. The shop shows a placeholder until you upload one.
+            </p>
+          )}
+          <input
+            type="file"
+            name="photo"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            className="block w-full text-[14px] file:mr-3 file:border file:border-mang-brown file:bg-mang-orange-bright file:px-3 file:py-2 file:text-[11px] file:font-extrabold file:uppercase file:tracking-[0.14em] file:text-mang-brown"
+          />
+          <span className="block text-[12px] text-mang-brown-mid">
+            JPG, PNG, or WebP. 5 MB max. This photo is only for this item.
+          </span>
+        </label>
         <Field label="Badge" name="badge" defaultValue={product?.badge ?? ""} hint="Shown on the card, e.g. Signature." />
         <Field label="Note" name="note" defaultValue={product?.note ?? ""} />
         <div className="flex flex-col gap-2 text-[14px]">

@@ -109,17 +109,68 @@ export function mapPublishedRow(row: PublishedRow): Product | null {
   };
 }
 
-export async function getPublishedProducts(): Promise<Product[]> {
+const PRODUCT_IMAGE_PREFIX = "product_image:";
+
+function imageUrlFromPayload(payload: unknown): string {
+  if (!payload || typeof payload !== "object") return "";
+  const url = (payload as { url?: unknown }).url;
+  return typeof url === "string" ? url.trim() : "";
+}
+
+function applyProductImages(products: Product[], images: Record<string, string>): Product[] {
+  return products.map((product) => {
+    const image = images[product.id];
+    return image ? { ...product, image } : product;
+  });
+}
+
+export async function getPublishedProductImages(): Promise<Record<string, string>> {
   const supabase = createPublicClient();
   const { data, error } = await supabase
-    .from("published_catalogue")
-    .select("*")
-    .order("display_order", { ascending: true })
-    .order("variant_sort", { ascending: true });
+    .from("published_website")
+    .select("key, published_payload")
+    .like("key", `${PRODUCT_IMAGE_PREFIX}%`);
   if (error) throw new Error(error.message);
-  return ((data ?? []) as PublishedRow[])
+  const images: Record<string, string> = {};
+  for (const row of data ?? []) {
+    const url = imageUrlFromPayload(row.published_payload);
+    if (!url) continue;
+    images[String(row.key).slice(PRODUCT_IMAGE_PREFIX.length)] = url;
+  }
+  return images;
+}
+
+export async function getDraftProductImages(): Promise<Record<string, string>> {
+  const supabase = await createSessionClient();
+  const { data, error } = await supabase
+    .from("website_content")
+    .select("key, draft_payload")
+    .like("key", `${PRODUCT_IMAGE_PREFIX}%`);
+  if (error) throw new Error(error.message);
+  const images: Record<string, string> = {};
+  for (const row of data ?? []) {
+    const url = imageUrlFromPayload(row.draft_payload);
+    if (!url) continue;
+    images[String(row.key).slice(PRODUCT_IMAGE_PREFIX.length)] = url;
+  }
+  return images;
+}
+
+export async function getPublishedProducts(): Promise<Product[]> {
+  const supabase = createPublicClient();
+  const [{ data, error }, images] = await Promise.all([
+    supabase
+      .from("published_catalogue")
+      .select("*")
+      .order("display_order", { ascending: true })
+      .order("variant_sort", { ascending: true }),
+    getPublishedProductImages(),
+  ]);
+  if (error) throw new Error(error.message);
+  const products = ((data ?? []) as PublishedRow[])
     .map(mapPublishedRow)
     .filter((product): product is Product => product !== null);
+  return applyProductImages(products, images);
 }
 
 function mapAdminVariant(product: AdminProductRow, variant: AdminVariant): Product {
@@ -133,6 +184,7 @@ function mapAdminVariant(product: AdminProductRow, variant: AdminVariant): Produ
     fullDescription: product.full_description,
     price: centsToDollars(variant.price_cents),
     image: product.image_url,
+    sharedImage: product.image_url,
     category,
     badge: product.badge || undefined,
     featuredOnShop: product.featured,
@@ -170,10 +222,14 @@ export async function getAdminProducts(): Promise<Product[]> {
     .neq("status", "archived")
     .order("display_order", { ascending: true });
   if (error) throw new Error(error.message);
-  return ((data ?? []) as AdminProductRow[]).flatMap((product) =>
-    (product.product_variants ?? [])
-      .filter((variant) => variant.status !== "archived")
-      .map((variant) => mapAdminVariant(product, variant))
+  const images = await getDraftProductImages();
+  return applyProductImages(
+    ((data ?? []) as AdminProductRow[]).flatMap((product) =>
+      (product.product_variants ?? [])
+        .filter((variant) => variant.status !== "archived")
+        .map((variant) => mapAdminVariant(product, variant))
+    ),
+    images
   );
 }
 

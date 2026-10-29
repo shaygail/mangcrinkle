@@ -57,7 +57,7 @@ export default function ProductManager({
             </h1>
           )}
           <p className="mt-3 max-w-xl text-[15px] text-mang-brown-mid">
-            Add a product to the database, then open it to change the name, price, or photo. Publish when it should appear on the shop. Delete takes that item off the shop.
+            Add a product, then open it to change the name, price, or photo. Publish when it should appear on the shop. Delete takes that item off the shop.
           </p>
         </div>
         <Link
@@ -102,6 +102,13 @@ export default function ProductManager({
           const available = product.available !== false;
           return (
             <li key={product.id} className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center">
+              {product.image ? (
+                <img
+                  src={product.image}
+                  alt=""
+                  className="size-14 shrink-0 border border-mang-brown/20 object-cover"
+                />
+              ) : null}
               <div className="min-w-0 flex-1">
                 <p className="font-bold text-mang-brown">{product.name}</p>
                 <p className="mt-1 text-[13px] text-mang-brown-mid">

@@ -150,6 +150,12 @@ export default function OverviewDashboard({ stats }: { stats: DashboardStats }) 
                 Edit products
               </Link>
               <Link
+                href="/admin/shop"
+                className="border border-white/25 px-4 py-3 text-center text-[12px] font-extrabold uppercase tracking-[0.16em] text-mang-cream hover:bg-white/5"
+              >
+                Edit shop
+              </Link>
+              <Link
                 href="/admin/website"
                 className="border border-white/25 px-4 py-3 text-center text-[12px] font-extrabold uppercase tracking-[0.16em] text-mang-cream hover:bg-white/5"
               >
